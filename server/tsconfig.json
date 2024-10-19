@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "ESNext",
+      "moduleResolution": "Node",
+      "outDir": "./dist",
+      "rootDir": "./src",
+      "esModuleInterop": true,
+      "strict": false,
+      "skipLibCheck": true,
+      "allowSyntheticDefaultImports": true,
+      "noEmit": true,
+      "allowImportingTsExtensions": true,
+      "forceConsistentCasingInFileNames": true,
+      "typeRoots": [
+        "./node_modules/@types",
+        "./src/types/express.d.ts"
+      ],
+      "baseUrl": "./",
+      "paths": {
+        "controller/*": ["src/controller/*"],
+        "models/*": ["src/models/*"],
+        "middleware/*": ["src/middleware/*"],
+        "helpers/*": ["src/helpers/*"],
+        "services/*": ["src/services/*"],
+        "types/*": ["src/types/*"],
+        "utils/*": ["src/utils/*"],
+        "validator/*": ["src/validator/*"]
+      }
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+  }
