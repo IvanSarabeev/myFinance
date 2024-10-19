@@ -12,9 +12,10 @@
       "noEmit": true,
       "allowImportingTsExtensions": true,
       "forceConsistentCasingInFileNames": true,
+      "types": ["node"],
       "typeRoots": [
         "./node_modules/@types",
-        "./src/types/express.d.ts"
+        "./src/types"
       ],
       "baseUrl": "./",
       "paths": {

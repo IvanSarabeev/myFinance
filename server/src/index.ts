@@ -1,5 +1,5 @@
 import express from "express";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 
 // Express Routes
 import statusRouter from "middleware/HealthCheck";
