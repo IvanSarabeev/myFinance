@@ -1,0 +1,1 @@
+export const EUROPE_ZONE = "Europe/Sofia";
