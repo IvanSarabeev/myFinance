@@ -1,6 +1,6 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import { format, toZonedTime } from "date-fns-tz";
-import { EUROPE_ZONE } from "utils/defaults";
+import { EUROPE_ZONE } from './../utils/defaults.js';
 
 const router = express();
 const date = Date.now();
@@ -11,12 +11,12 @@ const formattedZoneDate = format(currentZoneDate, `EEEE, dd MM yyyy HH:mm:ss ${t
     timeZone: timeZone
 });
 
-router.use('/health', (req: Request, res: Response, next: NextFunction) => {
+router.use('/health', (req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET');
     next();
 });
 
-router.get('/status', (req: Request, res: Response) => {
+router.get('/status', (req, res) => {
     const healthStatus = {
         uptime: process.uptime(),
         message: 'OK',

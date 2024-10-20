@@ -1,11 +1,12 @@
 # Client Dockerfile
 FROM node:20
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install --frozen-lockfile  # Use the lockfile to ensure consistent installs
+
+RUN npm install
 
 # Copy all the project files
 COPY . .

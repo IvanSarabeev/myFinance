@@ -13,8 +13,9 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Build the TypeScript files
-RUN npm run build
+# Build the TypeScript files if you're using TypeScript
+# Uncomment this line if you have a build step
+# RUN npm run build 
 
 # Use a lightweight image for the final server
 FROM node:20
@@ -32,5 +33,5 @@ ENV PORT=3000
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Command to run the application using node
-CMD ["node", "./dist/index.js"]
+# Command to run the application using Node.js with ES modules
+CMD ["node", "--loader", "ts-node/esm", "./src/index.js"]
