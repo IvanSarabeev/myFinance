@@ -6,7 +6,7 @@ import statusRouter from "middleware/HealthCheck";
 
 dotenv.config();
 
-const PORT = parseInt(process.env.NODE_ENV ?? process.env.RESERVE_PORT);
+const PORT = parseInt(process.env.PORT ?? process.env.RESERVE_PORT);
 
 const app = express();
 
