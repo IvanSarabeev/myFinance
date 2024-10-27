@@ -24,5 +24,22 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
+    settings: {
+      'import/resover': {
+        alias: {
+          map: [
+          ['@', './src'],
+          ['@/app', './src/app'],
+          ['@/components', './src/components'],
+          ['@/features', './src/features'],
+          ['@/hooks', './src/hooks'],
+          ['@/lib', './src/lib'],
+          ['@/stores', './src/stores'],
+          ['@/types', './src/types']
+          ],
+          extension: ['.ts', '.js', '.jsx', '.tsx']
+        }
+      }
+    }
   },
 )

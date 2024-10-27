@@ -4,17 +4,23 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src")
+      '@': path.resolve(__dirname, './src'),
+      '@/app': path.resolve(__dirname, './src/app'),
+      '@/components': path.resolve(__dirname, './src/components'),
+      '@/features': path.resolve(__dirname, './src/features'),
+      '@/hooks': path.resolve(__dirname, './src/hooks'),
+      '@/lib': path.resolve(__dirname, './src/lib'),
+      '@/stores': path.resolve(__dirname, './src/stores'),
+      '@/types': path.resolve(__dirname, './src/types'),
     }
   },
   define: {
     'proccess.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'development')
   },
-  build: { // Ensure React is build in production via Docker
+  build: {
     minify: 'esbuild', // Ensure production minification
     sourcemap: false, // Remove sourcemaps in prod
     rollupOptions: {
@@ -26,10 +32,6 @@ export default defineConfig({
         },
       }
     }
-  },
-  preview: {
-    port: 8080,
-    strictPort: true
   },
   server: {
     port: 8080,
