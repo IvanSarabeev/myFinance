@@ -34,12 +34,6 @@ async function main() {
   }
 } 
 
-app.use(express.static(path.join(__dirname, '/client/dust')));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
@@ -47,3 +41,18 @@ app.listen(PORT, () => {
 app.use('/health', statusRouter); // Health check Route
 
 main().catch(console.error);
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, 'client', 'dist', 'index.html');
+
+  console.log('Resolved index path:', indexPath);
+
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error("Failed to send index.html:", err);
+      res.status(404).send('File not found');
+    }
+  });
+});

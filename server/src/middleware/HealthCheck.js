@@ -2,7 +2,7 @@ import express from 'express';
 import { format, toZonedTime } from "date-fns-tz";
 import { EUROPE_ZONE } from './../utils/defaults.js';
 
-const router = express();
+const router = express.Router();
 const date = Date.now();
 const timeZone = 'GMT';
 const currentZoneDate = toZonedTime(date, EUROPE_ZONE);

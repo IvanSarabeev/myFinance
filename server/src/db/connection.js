@@ -11,7 +11,9 @@ const client = new MongoClient(URI, {
         strict: true,
         deprecationErrors: true,
     },
-    ssl: true, // Add this if you're using SSL
+    tls: true,
+    tlsInsecure: false,
+    // ssl: true, // Add this if you're using SSL
 });
 
 async function connect() {    
