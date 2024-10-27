@@ -81,4 +81,46 @@
       @apply bg-background text-foreground;
     }
   }
+
+  @layer components {
+    .padding-container{
+      @apply p-6 md:p-12 lg:px-16 xl:py-16 xl:px-20;
+    }
+
+    .common-transition {
+      @apply transition-all ease-in-out duration-100;
+    }
+
+    .bold-24 {
+      @apply text-2xl font-bold;
+    }
+    
+    .bold-20 {
+      @apply text-xl font-bold;
+    }
+    
+    .regular-18 {
+      @apply text-lg font-medium;
+    }
+
+    .regular-bold-18 {
+      @apply text-lg font-bold;
+    }
+    
+    .regular-16 {
+        @apply text-base font-normal;
+    }
+
+    .regular-bold-16 {
+      @apply text-base font-bold;
+    }
+    
+    .regular-14 {
+        @apply text-sm font-normal;
+    }
+    
+    .regular-12 {
+        @apply text-xs font-normal;
+    }
+  }
   
