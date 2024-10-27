@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import path from "path";
 import { client, connect } from "./db/connection.js";
 
 // Express Routes
@@ -8,6 +9,8 @@ import statusRouter from "./middleware/HealthCheck.js";
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT ?? process.env.RESERVE_PORT);
+
+const __dirname = path.resolve();
 
 const app = express();
 
@@ -31,8 +34,13 @@ async function main() {
   }
 } 
 
+app.use(express.static(path.join(__dirname, '/client/dust')));
 
-app.listen(PORT, '0.0.0.0', () => {
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
+
+app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
 });
 
