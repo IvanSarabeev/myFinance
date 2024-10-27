@@ -5,11 +5,20 @@ import {
   Routes as RouteInstance,
 } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes";
+import TriangleLoader from "@/components/icons/TriangleLoader";
 
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
-      <Suspense fallback={<div></div>}>
+      <Suspense
+        fallback={
+          <TriangleLoader
+            height={250}
+            width={250}
+            customCss="h-screen flexCenter max-container"
+          />
+        }
+      >
         <RouteInstance>
           <Route path="/*" element={<AuthRoutes />} />
         </RouteInstance>

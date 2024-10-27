@@ -5,7 +5,11 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  return <main className="padding-container">{children}</main>;
+  return (
+    <main className="relative w-full h-fit lg:min-h-screen overflow-x-hidden bg-white">
+      {children}
+    </main>
+  );
 };
 
 export default Layout;
