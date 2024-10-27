@@ -18,7 +18,7 @@ export default defineConfig({
     }
   },
   define: {
-    'proccess.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'development')
+    'proccess.env.CLIENT_NODE_ENV': JSON.stringify(process.env.CLIENT_NODE_ENV ?? 'development')
   },
   build: {
     minify: 'esbuild', // Ensure production minification
