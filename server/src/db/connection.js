@@ -11,8 +11,6 @@ const client = new MongoClient(URI, {
         strict: true,
         deprecationErrors: true,
     },
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     ssl: true, // Add this if you're using SSL
 });
 
