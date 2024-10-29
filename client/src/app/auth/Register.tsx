@@ -1,9 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import Layout from "../Layout";
 import RegisterForm from "@/features/security/components/forms/RegisterForm";
 import { Link } from "react-router-dom";
 
-const SignIn: React.FC = () => {
+const Register: React.FC = () => {
   return (
     <Layout>
       <section className="flexColStart items-start flexCenter padding-container max-container">
@@ -20,4 +20,6 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+const MemoRegister = memo(Register);
+
+export default MemoRegister;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -12,4 +12,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   );
 };
 
-export default Layout;
+const MemoLayout = memo(Layout);
+
+export default MemoLayout;

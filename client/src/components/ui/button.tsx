@@ -19,6 +19,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        auth: "w-full md:w-56 xl:w-64 2xl:w-72 inline-flex items-center justify-center font-semibold regular-12 xl:regular-14 text-black border rounded-lg px-5 py-2.5 xl:py-3 text-center bg-white hover:bg-[#f3f4f6]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50",
+        submit:
+          "block size-full max-h-11 flexCenter rounded-2xl text-center text-white bg-blue-700",
       },
       size: {
         default: "h-9 px-4 py-2",

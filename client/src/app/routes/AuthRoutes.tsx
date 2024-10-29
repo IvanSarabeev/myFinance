@@ -1,7 +1,7 @@
 import TriangleLoader from "@/components/icons/TriangleLoader";
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-import SignIn from "../auth/SignIn";
+import Register from "../auth/Register";
 
 const AuthRoutes: React.FC = () => {
   return (
@@ -15,7 +15,7 @@ const AuthRoutes: React.FC = () => {
       }
     >
       <Routes>
-        <Route path="/" element={<SignIn />} />
+        <Route path="/" element={<Register />} />
         <Route path="sign-up" element={<div></div>} />
       </Routes>
     </Suspense>
