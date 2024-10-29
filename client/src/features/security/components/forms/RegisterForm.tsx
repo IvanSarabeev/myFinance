@@ -37,63 +37,65 @@ const RegisterForm: React.FC = () => {
       onSubmit={formik.handleSubmit}
       className="regular-12 lg:regular-14 font-sans"
     >
-      <div className="space-y-2 lg:space-y-4">
-        <Label
-          htmlFor="name"
-          aria-label="Name Label"
-          className="regular-14 lg:regular-16 font-semibold"
-        >
-          Name
-        </Label>
-        <Input
-          id="name"
-          type="text"
-          title="Name input"
-          placeholder="Your name"
-          disabled={false} // TODO: Disable when the form is submitted or it's loading
-          className="px-4 py-2 rounded-2xl border border-slate-200"
-          {...formik.getFieldProps("name")}
-        />
-      </div>
-      <div className="space-y-2 lg:space-y-4">
-        <Label
-          htmlFor="email"
-          aria-label="Email Label"
-          className="regular-14 lg:regular-16 font-semibold"
-        >
-          Email address
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          title="Email input"
-          placeholder="Your email address"
-          disabled={false} // TODO: Disable when the form is submitted or it's loading
-          className="px-4 py-2 rounded-2xl border border-slate-200"
-          {...formik.getFieldProps("email")}
-        />
-      </div>
-
-      <div className="flexColStart space-y-1 md:space-y-2">
-        <div className="w-full h-fit flexCol md:flex-row flexBetween">
+      <div className="space-y-2 lg:space-y-3">
+        <div className="space-y-2">
           <Label
-            htmlFor="password"
-            aria-label="Password input"
+            htmlFor="name"
+            aria-label="Name Label"
             className="regular-14 lg:regular-16 font-semibold"
           >
-            Password
+            Name
           </Label>
-          <Link
-            title="Forgotten password link"
-            aria-label="fogotten password link"
-            className="text-blue-600 underline common-transition hover:blue-700"
-            to={"/forgotten-password"}
+          <Input
+            id="name"
+            type="text"
+            title="Name input"
+            placeholder="Your name"
+            disabled={false} // TODO: Disable when the form is submitted or it's loading
+            className="px-4 py-2 rounded-2xl border border-slate-200"
+            {...formik.getFieldProps("name")}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label
+            htmlFor="email"
+            aria-label="Email Label"
+            className="regular-14 lg:regular-16 font-semibold"
           >
-            Forgot password?
-          </Link>
+            Email address
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            title="Email input"
+            placeholder="Your email address"
+            disabled={false} // TODO: Disable when the form is submitted or it's loading
+            className="px-4 py-2 rounded-2xl border border-slate-200"
+            {...formik.getFieldProps("email")}
+          />
         </div>
 
-        <div className="relative w-full h-fit">
+        <div className="flexColStart space-y-1">
+          <span className="w-full h-fit flexCol md:flex-row flexBetween">
+            <Label
+              htmlFor="password"
+              aria-label="Password input"
+              className="regular-14 lg:regular-16 font-semibold"
+            >
+              Password
+            </Label>
+            <Link
+              title="Forgotten password link"
+              aria-label="fogotten password link"
+              className="text-blue-600 common-transition hover:blue-700 hover:underline"
+              to={"/forgotten-password"}
+            >
+              Forgot password?
+            </Link>
+          </span>
+        </div>
+
+        <div className="relative w-full h-fit my-2">
           <Input
             id="password"
             title="Password input"
@@ -106,33 +108,32 @@ const RegisterForm: React.FC = () => {
           <span className="absolute inset-y-1/3 right-[3%]">
             <Eye
               aria-label="toggle password input"
-              className="size-4 common-transition duration-150 hover:cursor-pointer hover:scale-105"
+              className="size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600"
               onClick={handleToggle}
             />
           </span>
         </div>
       </div>
-
-      <div className="inline-flex gap-x-2 mt-6">
+      <div className="inline-flex items-center gap-x-2 my-4 lg:my-5">
         <Checkbox
           id="terms"
           title="terms"
-          className="border-slate-900"
+          className="border-slate-700"
           {...formik.getFieldProps("terms")}
         />
         <Label
           htmlFor="terms"
           aria-label="terms"
-          className="regular-12 lg:regular-14 font-semibold"
+          className="regular-12 lg:regular-14 text-slate-800"
         >
-          I agree to the <strong className="underline">Terms & Policy</strong>
+          I agree to the <span className="underline">Terms & Policy</span>
         </Label>
       </div>
-
       <Button
         type="submit"
         title="Register"
         variant="submit"
+        size="submitBtn"
         aria-label="Register button"
       >
         Register
