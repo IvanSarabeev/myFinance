@@ -124,6 +124,14 @@
         @apply flex items-center justify-around;
     }
 
+    .flexInline {
+      @apply inline-flex items-center gap-x-2 md:gap-x-4;
+    }
+
+    .flexCol {
+      @apply flex flex-col;
+    }
+
     .flexColCenter {
         @apply flex flex-col justify-center;
     }

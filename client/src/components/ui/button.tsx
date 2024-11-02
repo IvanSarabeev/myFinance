@@ -26,7 +26,7 @@ const buttonVariants = cva(
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
-        authBtn: "md:w-56 xl:w-64 2xl:w-72 px-5 py-2.5 xl:py-3",
+        authBtn: "w-full md:w-56 xl:w-64 2xl:w-72 px-5 py-2.5 xl:py-3",
         submitBtn: "size-full max-h-11 py-3 md:py-3.5 lg:py-4",
         icon: "size-9",
       },

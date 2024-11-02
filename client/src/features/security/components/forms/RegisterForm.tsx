@@ -76,7 +76,7 @@ const RegisterForm: React.FC = () => {
         </div>
 
         <div className="flexColStart space-y-1">
-          <span className="w-full h-fit flexCol md:flex-row flexBetween">
+          <span className="w-full h-fit flexBetween">
             <Label
               htmlFor="password"
               aria-label="Password input"
