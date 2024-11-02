@@ -57,7 +57,7 @@ export default {
   			}
   		},
 		backgroundColor: {
-			primary: '#959eef',
+			primary: '#4353f0',
 		}
   	}
   },

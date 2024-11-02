@@ -6,7 +6,7 @@ type SideBackgroundProps = {
 
 const SideBackgroundSection: React.FC<SideBackgroundProps> = ({ children }) => {
   return (
-    <section className="px-5 rounded-lg text-white bg-primary">
+    <section className="flexColStart p-5 rounded-lg text-white bg-primary">
       {children}
     </section>
   );
