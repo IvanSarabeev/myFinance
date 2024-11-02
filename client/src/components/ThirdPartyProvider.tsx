@@ -5,7 +5,7 @@ import MemoGitHubProvider from "@/app/auth/providers/GitHubProvider";
 const ThirdPartyProvider: React.FC = () => {
   return (
     <>
-      <div className="size-full inline-flex gap-2 gap-x-4 flexCenter lg:justify-start my-6">
+      <div className="size-full inline-flex flex-wrap gap-2 gap-x-4 flexCenter lg:justify-start my-6">
         <MemoGoogleProvider title="Log in with Google" />
         <MemoGitHubProvider title="Log in with GitHub" />
       </div>

@@ -8,14 +8,7 @@ import {
   responsive,
   accessibility,
 } from "@cloudinary/react";
-
-interface CloudinaryImageProps {
-  imgName: string;
-  imgFormamt: string;
-  imgAltText: string;
-  className?: string;
-  width?: string | number | undefined;
-}
+import { AccessibilityMode, CloudinaryImageProps } from "@/types/utilTypes";
 
 const CloudinaryImage: React.FC<CloudinaryImageProps> = ({
   imgName,
@@ -23,6 +16,8 @@ const CloudinaryImage: React.FC<CloudinaryImageProps> = ({
   imgAltText,
   className,
   width = "auto",
+  imgAccessibility = false,
+  accessibilityMode = AccessibilityMode.MONOCHROME,
 }) => {
   const cloudImage = cloudinary.image(imgName);
 
@@ -34,12 +29,20 @@ const CloudinaryImage: React.FC<CloudinaryImageProps> = ({
     cloudImage.format(imgFormamt);
   }
 
+  const imagePlugins = [lazyload(), responsive(), placeholder()];
+
+  if (imgAccessibility) {
+    imagePlugins.push(
+      accessibility({ mode: accessibilityMode ?? AccessibilityMode.DARK_MODE })
+    );
+  }
+
   return (
     <AdvancedImage
       cldImg={cloudImage.format(imgFormamt)}
       alt={imgAltText}
       className={className}
-      plugins={[accessibility(), lazyload(), responsive(), placeholder()]}
+      plugins={imagePlugins}
     />
   );
 };

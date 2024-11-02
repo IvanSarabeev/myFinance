@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import MemoLayout from "@/components/layouts/Layout";
 import ThirdPartyProvider from "@/components/ThirdPartyProvider";
 import MemoSideBackgroundSection from "@/components/SideBackgroundSection";
+import MemoCloudinaryImage from "@/components/CloudinaryImage";
 
 const Register: React.FC = () => {
   return (
@@ -34,12 +35,20 @@ const Register: React.FC = () => {
         </div>
         <MemoSideBackgroundSection>
           <div className="flexColStart space-y-2">
-            <h2>
+            <h2 className="bold-20 2xl:bold-24 font-semibold">
               The simplest way to manage <br /> your workforce
             </h2>
-            <p>Access your account</p>
+            <p className="regular-14 2xl:regular-16 font-medium">
+              Access your account
+            </p>
           </div>
-          <img src="" alt="" />
+          <MemoCloudinaryImage
+            imgName="image/dashboard"
+            imgFormamt="png"
+            imgAltText="dashbord-preview"
+            className=""
+            imgAccessibility={false}
+          />
           {/* Add Dashboard Image from Cloudinary */}
           <div>{/* Add Logos */}</div>
         </MemoSideBackgroundSection>
