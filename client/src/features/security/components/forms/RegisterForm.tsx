@@ -42,7 +42,7 @@ const RegisterForm: React.FC = () => {
           <Label
             htmlFor="name"
             aria-label="Name Label"
-            className="regular-14 lg:regular-16 font-semibold"
+            className="regular-14 lg:regular-16 2xl:regular-18 font-semibold"
           >
             Name
           </Label>
@@ -52,7 +52,7 @@ const RegisterForm: React.FC = () => {
             title="Name input"
             placeholder="Your name"
             disabled={false} // TODO: Disable when the form is submitted or it's loading
-            className="px-4 py-2 rounded-2xl border border-slate-200"
+            className="rounded-2xl border border-slate-200"
             {...formik.getFieldProps("name")}
           />
         </div>
@@ -60,7 +60,7 @@ const RegisterForm: React.FC = () => {
           <Label
             htmlFor="email"
             aria-label="Email Label"
-            className="regular-14 lg:regular-16 font-semibold"
+            className="regular-14 lg:regular-16 2xl:regular-18 font-semibold"
           >
             Email address
           </Label>
@@ -70,17 +70,17 @@ const RegisterForm: React.FC = () => {
             title="Email input"
             placeholder="Your email address"
             disabled={false} // TODO: Disable when the form is submitted or it's loading
-            className="px-4 py-2 rounded-2xl border border-slate-200"
+            className="rounded-2xl border border-slate-200"
             {...formik.getFieldProps("email")}
           />
         </div>
 
         <div className="flexColStart space-y-1">
-          <span className="w-full h-fit flexBetween">
+          <span className="w-full h-fit flexBetween regular-14 lg:regular-16">
             <Label
               htmlFor="password"
               aria-label="Password input"
-              className="regular-14 lg:regular-16 font-semibold"
+              className="regular-14 lg:regular-16 2xl:regular-18 font-semibold"
             >
               Password
             </Label>
@@ -101,7 +101,7 @@ const RegisterForm: React.FC = () => {
             title="Password input"
             type={show ? "text" : "password"}
             placeholder="Minimum 8 characters"
-            className="px-4 py-2 rounded-2xl border border-slate-200"
+            className="rounded-2xl border border-slate-200"
             disabled={false} // TODO: Disable when the form is submitted or it's loading
             {...formik.getFieldProps("password")}
           />
@@ -124,7 +124,7 @@ const RegisterForm: React.FC = () => {
         <Label
           htmlFor="terms"
           aria-label="terms"
-          className="regular-12 lg:regular-14 text-slate-800"
+          className="regular-12 lg:regular-14 2xl:regular-16 text-slate-800"
         >
           I agree to the <span className="underline">Terms & Policy</span>
         </Label>

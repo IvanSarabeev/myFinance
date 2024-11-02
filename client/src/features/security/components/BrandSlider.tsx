@@ -21,7 +21,7 @@ const BrandSlider: React.FC = () => {
       row.scrollLeft += 1;
 
       if (row.scrollLeft >= row?.scrollWidth / 2) {
-        row.scrollLeft = 0;
+        row.scrollLeft = 10;
       }
     }
   }, []);
@@ -49,7 +49,7 @@ const BrandSlider: React.FC = () => {
               aria-label={item.altText}
               loading="lazy"
               decoding="async"
-              className="w-24 h-full max-h-24 aspect-auto object-cover"
+              className="w-24 h-full max-h-24 drop-shadow-md aspect-auto object-cover"
             />
           );
         })}

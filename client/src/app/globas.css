@@ -146,6 +146,14 @@
 
     /* End Common Flex Classes */
 
+    .bold-36 {
+      @apply text-4xl font-bold;
+    }
+
+    .bold-30 {
+      @apply text-3xl font-bold;
+    }
+
     .bold-24 {
       @apply text-2xl font-bold;
     }

@@ -10,8 +10,7 @@ import MemoBrandSlider from "@/features/security/components/BrandSlider";
 const Register: React.FC = () => {
   return (
     <MemoLayout>
-      {/* Maybe remove: flexCol from the <section> */}
-      <section className="size-full flexCenter md:items-start padding-container max-container">
+      <section className="size-full flexCenter lg:justify-around md:items-start padding-container max-container">
         <div className="size-full flexCol max-w-xl">
           <MemoCloudinaryImage
             imgName="logos/my-finance"
@@ -21,16 +20,16 @@ const Register: React.FC = () => {
             className="size-14 drop-shadow aspect-square object-cover object-center mb-8 md:mb-12 lg:mb-14"
           />
           <div className="flexColStart space-y-2">
-            <h1 className="regular-18 lg:bold-20 xl:bold-24 font-semibold">
+            <h1 className="regular-18 lg:bold-20 xl:bold-24 2xl:bold-30 font-semibold">
               Get Started Now
             </h1>
-            <p className="regular-12 md:regular-14 xl:regular-16 font-medium">
+            <p className="regular-12 md:regular-14 xl:regular-16 2xl:regular-18 font-medium">
               Enter your credentials to access your account
             </p>
           </div>
           <ThirdPartyProvider />
           <RegisterForm />
-          <p className="regular-12 lg:regular-14 font-medium font-sans mt-4 lg:mt-6">
+          <p className="regular-12 lg:regular-14 xl:regular-16 font-medium font-sans mt-4 lg:mt-6">
             Have an account ?
             <Link
               to={"/login"}
@@ -47,18 +46,18 @@ const Register: React.FC = () => {
         </div>
         <MemoSideBackgroundSection>
           <div className="flexColStart space-y-2">
-            <h2 className="bold-24 font-semibold">
+            <h2 className="bold-24 2xl:bold-30 font-semibold">
               The simplest way to manage <br /> your workforce
             </h2>
-            <p className="regular-14 xl:regular-16 font-medium">
-              Access your account
+            <p className="regular-14 xl:regular-16 2xl:regular-18 font-medium">
+              Access your account features, instantaneously
             </p>
           </div>
           <MemoCloudinaryImage
-            imgName="image/dashboard-preview"
+            imgName="image/auth-dashboard"
             imgFormamt="png"
-            imgAltText="dashbord-preview"
-            className="size-full rounded-xl my-4 shadow-sm aspect-auto object-cover object-center"
+            imgAltText="auth-dashbord"
+            className="w-full h-max rounded-xl my-4 xl:mt-8 2xl:mt-12 2xl:mb-8 shadow-sm aspect-auto object-cover object-center"
             imgAccessibility={false}
           />
           <MemoBrandSlider />

@@ -24,7 +24,7 @@ const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
         <FcGoogle
           title="Google Icon"
           aria-label="Google Icon"
-          className="size-4 md:size-5"
+          className="size-10"
         />
         <span className="sr-only">Google Icon</span>
       </span>
