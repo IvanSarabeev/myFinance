@@ -80,6 +80,21 @@
     body {
       @apply bg-background text-foreground;
     }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+        box-shadow: 0 0 0px 1000px transparent inset !important;
+        -webkit-text-fill-color: inherit !important;
+        background-color: transparent !important;
+    }
+
+    input.input-error,
+    select.input-error {
+      border-color: #fc8181;
+    }
   }
 
   @layer components {

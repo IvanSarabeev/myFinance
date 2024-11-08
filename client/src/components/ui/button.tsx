@@ -21,7 +21,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         auth: "regular-12 xl:regular-14 2xl:regular-16 text-black border rounded-lg text-center bg-white hover:bg-[#f3f4f6]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50",
         submit:
-          "regular-14 lg:regular-16 rounded-2xl text-center text-white bg-blue-700",
+          "regular-14 lg:regular-16 rounded-2xl text-center text-white bg-blue-700 hover:scale-105 duration-150 hover:bg-primary",
       },
       size: {
         default: "h-9 px-4 py-2",

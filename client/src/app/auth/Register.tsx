@@ -17,7 +17,7 @@ const Register: React.FC = () => {
             imgFormamt="png"
             imgAltText="logo"
             imgAccessibility={false}
-            className="size-14 drop-shadow aspect-square object-cover object-center mb-8 md:mb-12 lg:mb-14"
+            className="size-10 md:size-12 lg:size-14 drop-shadow aspect-square object-cover object-center mb-8 md:mb-12 lg:mb-14"
           />
           <div className="flexColStart space-y-2">
             <h1 className="regular-18 lg:bold-20 xl:bold-24 2xl:bold-30 font-semibold">

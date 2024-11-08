@@ -6,8 +6,12 @@ import { cn } from "@/lib/utils";
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
+    checked?: boolean;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  }
+>(({ className, checked, onChange, onBlur, name, ...props }, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
@@ -15,6 +19,22 @@ const Checkbox = React.forwardRef<
       className
     )}
     {...props}
+    name={name}
+    checked={checked}
+    onCheckedChange={(isChecked) => {
+      if (onChange) {
+        const event = {
+          target: {
+            type: "checkbox",
+            name: name,
+            checked: isChecked,
+          },
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        onChange(event);
+      }
+    }}
+    onBlur={onBlur}
   >
     <CheckboxPrimitive.Indicator
       className={cn("flex items-center justify-center text-current")}

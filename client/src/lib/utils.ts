@@ -8,3 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export function removeTrailingSlash(path: string) {
   return path.replace(/\/$/, "")
 }
+
+export function hasUpperCase(str: string) {
+  return str !== str.toLocaleLowerCase();
+}
