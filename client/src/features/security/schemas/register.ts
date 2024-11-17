@@ -24,10 +24,3 @@ export const registerSchema = object().shape({
         .oneOf([true], "You must accept the terms and conditions")
         .default(false),
 });
-
-export interface RegisterFormData {
-    name: string;
-    email: string;
-    password: string;
-    terms: boolean;
-}

@@ -1,24 +1,22 @@
-import { MongoClient, MongoServerSelectionError, ServerApiVersion } from "mongodb";
+import mongoose from "mongoose";
 import dotenv from 'dotenv';
+import { MongoServerSelectionError } from "mongodb";
 
 dotenv.config();
 
 const URI = process.env.ATLAS_URI ?? "";
-const DB_NAME = process.env.ATLAS_DB_NAME ?? "";
 
-const client = new MongoClient(URI, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    },
-});
+if (!URI) {
+    console.error("Missing DB URI variable");
+}
 
 async function connect() {    
     try {
-        await client.connect();
+        await mongoose.connect(URI, {
+            serverSelectionTimeoutMS: 10000,
+        });
         
-        console.log(`Connection to MongoDB/${DB_NAME} was successful!`);
+        console.log(`Connection to MongoDB was successful!`);
     } catch (error) {
         console.error("Database Connection Error: ", error);
 
@@ -28,4 +26,4 @@ async function connect() {
     }
 }
 
-export { client, connect };
+export { connect };

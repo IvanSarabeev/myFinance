@@ -1,5 +1,5 @@
 import React from "react";
-import { RegisterFormData, registerSchema } from "../../schemas/register";
+import { registerSchema } from "../../schemas/register";
 import { useFormik } from "formik";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -10,11 +10,15 @@ import useToggle from "@/hooks/useToggle";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MemoErrorMessage from "@/components/ErrorMessage";
+import { UserSignUpData } from "@/types/userTypes";
+import { registerUser } from "@/app/api/auth";
+import { userStore } from "@/stores";
 
 const RegisterForm: React.FC = () => {
   const [show, handleToggle] = useToggle();
+  const { user, setUser } = userStore;
 
-  const initialValues: RegisterFormData = {
+  const initialValues: UserSignUpData = {
     name: "",
     email: "",
     password: "",
@@ -23,14 +27,26 @@ const RegisterForm: React.FC = () => {
 
   const validationSchema = registerSchema;
 
-  const formik = useFormik<RegisterFormData>({
+  const formik = useFormik<UserSignUpData>({
     initialValues,
     validationSchema,
-    onSubmit: async (values, actions) => {
-      console.log(values);
-      console.log(actions, actions.resetForm);
+    onSubmit: async (values) => {
+      try {
+        const response = await registerUser(values);
 
-      alert(values);
+        setUser(values);
+
+        console.log(response, user);
+
+        // if (response) {
+        //   // Set State in UserStore()
+        //   actions.resetForm();
+
+        //   // Go to the OTP Section or Modal
+        // }
+      } catch (error) {
+        console.error("Error", error);
+      }
     },
   });
 
