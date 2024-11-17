@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { FormikProps } from "formik";
-import { RegisterFormData } from "@/features/security/schemas/register";
+import { UserSignUpData } from "@/types/userTypes";
 
 interface ErrorMessageProps {
-  formik: FormikProps<RegisterFormData>;
-  field: keyof RegisterFormData;
+  formik: FormikProps<UserSignUpData>;
+  field: keyof UserSignUpData;
 }
 
 const ErrorMessage = ({ formik, field }: ErrorMessageProps) => {
