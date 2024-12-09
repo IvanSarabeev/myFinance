@@ -1,14 +1,24 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
+import MemoEmailOtpDialog from "@/features/security/components/EmailOtpDialog";
+import { toast } from "@/hooks/use-toast";
 
 type GoogleProviderProps = {
   title: string;
 };
 
 const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleGoogleAuthentication = () => {
-    console.log(title);
+    setIsLoading(!isLoading);
+
+    toast({
+      variant: "success",
+      title: "Success",
+      description: "WORKS",
+    });
   };
 
   return (
@@ -29,6 +39,7 @@ const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
         <span className="sr-only">Google Icon</span>
       </span>
       {title}
+      {isLoading && <MemoEmailOtpDialog showDialog={true} message="vlizam" />}
     </Button>
   );
 };

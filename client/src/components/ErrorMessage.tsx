@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { FormikProps } from "formik";
-import { UserSignUpData } from "@/types/userTypes";
+import { User } from "@/types/userTypes";
 
 interface ErrorMessageProps {
-  formik: FormikProps<UserSignUpData>;
-  field: keyof UserSignUpData;
+  formik: FormikProps<User>;
+  field: keyof User;
 }
 
 const ErrorMessage = ({ formik, field }: ErrorMessageProps) => {

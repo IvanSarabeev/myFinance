@@ -22,7 +22,7 @@ export const validateUserRegistration = () => {
         ,
         body("password")
             .trim()
-            .isStrongPassword({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
+            .isStrongPassword({ minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
             .withMessage("Weak password provided")
         ,
         body("terms")
@@ -47,8 +47,7 @@ export const securityValidation = (req, res, next) => {
         res.status(400).json({
             status: false,
             message: "Error: Invalid Credentials",
-            errors: errors.array().map(item => ({
-                field: item.param,
+            errorsFields: errors.array().map(item => ({
                 value: item.value,
                 message: item.msg,
             })),

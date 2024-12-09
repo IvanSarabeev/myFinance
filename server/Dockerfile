@@ -27,8 +27,8 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app .
 
 # Set environment variables
-ENV CLIENT_NODE_ENV=production
-ENV PORT=3000
+ENV VITE_CLIENT_NODE_ENV=production
+ENV PORT=0001
 
 # Expose the port the app runs on
 EXPOSE 3000

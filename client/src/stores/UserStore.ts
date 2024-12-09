@@ -1,10 +1,10 @@
 import { makeObservable, observable, action } from "mobx";
 import { ClientJS } from 'clientjs';
-import { UserFingerPrint, UserSignUpData } from '@/types/userTypes';
+import { UserFingerPrint, User } from '@/types/userTypes';
 import { format } from "date-fns";
 
 class UserStore {
-    user:UserSignUpData = {
+    user: User = {
         name: "",
         email: "",
         password: "",
@@ -37,7 +37,7 @@ class UserStore {
         return this.user;
     }
 
-    setUser(data: Partial<UserSignUpData>) {
+    setUser(data: Partial<User>) {
         this.user = {
             ...this.user, // Preserve existing data
             ...data, // Override with new data

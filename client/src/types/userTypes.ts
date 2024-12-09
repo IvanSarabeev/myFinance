@@ -1,4 +1,4 @@
-export interface UserSignUpData {
+export interface User {
     name: string;
     email: string;
     password: string;
@@ -13,7 +13,7 @@ export interface ApiResponse {
 }
 
 export interface UserApiResponse extends ApiResponse {
-    userData: UserSignUpData;
+    userData: User;
 }
 
 export interface UserFingerPrint {

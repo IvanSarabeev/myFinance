@@ -11,20 +11,22 @@ const tokenId = process.env.TOKEN_ID ?? "";
  * @param res 
  * @param next 
  */
-export function registerUser(req, res, next){
+export async function registerUser(req, res, next){
     try {   
         const { name, email, password, terms, fingerPrint } = req.body;
-    
-        console.log(req.body);
 
-        const result = registerUserService({ name, email, password, terms, fingerPrint });
-
-        console.log(result);
+        const result = await registerUserService({ name, email, password, terms, fingerPrint });
         
+        console.log("Controller Result:", result, result.message);
+
         if (result.statusCode !== 201) {
             res.status(400).json(result);
         } else {
-            res.status(result.statusCode).json(result);
+            res.status(result.statusCode).json({
+                status: result.status,
+                showModal: result.showOtpModal,
+                message: result.message,
+            });
         }
     } catch (error) {
         console.error(`Unexpected Server Error: ${error}`);

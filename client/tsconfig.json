@@ -14,6 +14,7 @@
       "@/lib/*": ["./src/lib/*"],
       "@/stores/*": ["./src/stores/*"],
       "@/types/*": ["./src/types/*"],
+      "@/utils/*": ["./src/utils/*"],
     },
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

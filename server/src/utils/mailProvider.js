@@ -19,3 +19,11 @@ export const emailTransportProvider = nodemailer.createTransport({
         pass: pwd
     }
 });
+
+emailTransportProvider.verify((error, success) => {
+    if (error) {
+        console.error(`Transport verification failed: ${error}`);
+    } else {
+        console.info(`Transport ready: ${success}`);
+    }
+})

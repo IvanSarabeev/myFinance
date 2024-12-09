@@ -10,15 +10,15 @@ import useToggle from "@/hooks/useToggle";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MemoErrorMessage from "@/components/ErrorMessage";
-import { UserSignUpData } from "@/types/userTypes";
+import { User } from "@/types/userTypes";
 import { registerUser } from "@/app/api/auth";
-import { userStore } from "@/stores";
+import useStore from "@/hooks/useStore";
 
 const RegisterForm: React.FC = () => {
   const [show, handleToggle] = useToggle();
-  const { user, setUser } = userStore;
+  const { userStore, commonStore } = useStore();
 
-  const initialValues: UserSignUpData = {
+  const initialValues: User = {
     name: "",
     email: "",
     password: "",
@@ -27,16 +27,23 @@ const RegisterForm: React.FC = () => {
 
   const validationSchema = registerSchema;
 
-  const formik = useFormik<UserSignUpData>({
+  const formik = useFormik<User>({
     initialValues,
     validationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await registerUser(values);
+        const response = await registerUser(values).then((responseData) => {
+          if (responseData.status && responseData) {
+            commonStore.showEmailOtpModal(
+              responseData.data.message,
+              responseData.data.showModal
+            );
+          }
+        });
 
-        setUser(values);
+        userStore.setUser(values);
 
-        console.log(response, user);
+        console.log(response, userStore.user);
 
         // if (response) {
         //   // Set State in UserStore()

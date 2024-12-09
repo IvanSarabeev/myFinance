@@ -15,22 +15,17 @@ export default defineConfig({
       '@/lib': path.resolve(__dirname, './src/lib'),
       '@/stores': path.resolve(__dirname, './src/stores'),
       '@/types': path.resolve(__dirname, './src/types'),
+      '@/utils': path.resolve(__dirname, './src/utils'),
     }
   },
-  define: {
-    'proccess.env.CLIENT_NODE_ENV': JSON.stringify(process.env.CLIENT_NODE_ENV ?? 'development')
-  },
-  build: {
-    minify: 'esbuild', // Ensure production minification
-    sourcemap: false, // Remove sourcemaps in prod
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            return id.split('node_modules/')[1].split('/')[0].toString(); // Separate vendor chunks
-          }
-        },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        secure: false
       }
     }
-  },
+  }
 })

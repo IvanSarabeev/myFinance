@@ -26,14 +26,18 @@ export async function emailVerification(email, otpCode) {
         from: `"myFinance EOOD" ${corpEmailAddress}`,
         to: email,
         subject: "Account Verification",
-        text: `Your OTP Verification Code: ${otpCode}`
+        text: `Your OTP Verification Code: ${otpCode}`,
     };
 
     try {
         const result = await emailTransportProvider.sendMail(mailTemplate);
 
-        if (result) {
-            return { status: true, statusCode: 200, message: "Message delivered." };
+        if (
+            result.accepted.length > 0 &&
+            result.rejected.length === 0 &&
+            result.response.startsWith("250")
+        ) {
+            return { status: true, statusCode: 200, message: "Email sent! Use the OTP provided in the email to verify your account." };
         }
 
         return { status: false, statusCode: 406, message: "Failed to send email message." };
@@ -54,6 +58,7 @@ export async function emailVerification(email, otpCode) {
  */
 export async function verifyOtpCode(email, otpCode) {
     try {
+        // TODO: Think for a query with Criteria...
         const user = await User.findOne({ email: email });
         
         console.log("User is Found", user);
