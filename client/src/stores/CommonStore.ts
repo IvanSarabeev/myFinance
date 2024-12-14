@@ -1,6 +1,6 @@
+import { action, makeObservable, observable } from "mobx";
 import { toast } from "@/hooks/use-toast";
 import { ToastVariants } from "@/types/commonTypes";
-import { action, makeObservable, observable } from "mobx";
 
 class CommonStore {
     isLoading = false;

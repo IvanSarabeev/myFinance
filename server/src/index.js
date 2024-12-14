@@ -27,8 +27,12 @@ app.use(helmet.noSniff());
 app.use(helmet.frameguard({ action: "deny"}));
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
+
+// Cors Configuration
 app.use(cors({
   origin: function (origin, callback) {
+    console.log(`Incoming Origin: ${origin}`);
+    
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }

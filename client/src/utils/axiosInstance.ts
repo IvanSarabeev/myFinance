@@ -29,18 +29,22 @@ api.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     if (error.response) {
-        console.log(`Server error: ${error.response.data.message}`);
+        if (import.meta.env.VITE_CLIENT_NODE_ENV === "development") {
+            console.error(`Bad Server Error: ${error}, Response:  ${error.response.data.message}`);
+        }
 
-        return Promise.reject(error.response.data);
+        return Promise.reject(Error(error.response.data));
     }
 
     if (error.request) {
-        console.error(`Server Down`);
+        if (import.meta.env.VITE_CLIENT_NODE_ENV === "development") {
+            console.error(`Server Down: ${error}`);
+        }
 
-        return Promise.reject({ message: "Under Maintaince" });
+        return Promise.reject(Error("Under Maintaince"));
     }
 
-    return Promise.reject({ message: "Unexpected error occured." });
+    return Promise.reject(Error("Internal Server Error"));
 });
 
 export default api;
