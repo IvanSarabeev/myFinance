@@ -1,9 +1,10 @@
 import React, { memo } from "react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "./ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { MAX_OTP_SLOTS, MIN_OTP_SLOTS } from "@/defines";
 
 type InputOTPProps = {
-  slots: number;
+  slots: typeof MAX_OTP_SLOTS | typeof MIN_OTP_SLOTS;
   value?: string;
   onChange?: (otpCode: string) => void;
 };

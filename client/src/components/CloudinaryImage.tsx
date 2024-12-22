@@ -10,43 +10,45 @@ import {
 } from "@cloudinary/react";
 import { AccessibilityMode, CloudinaryImageProps } from "@/types/utilTypes";
 
-const CloudinaryImage: React.FC<CloudinaryImageProps> = ({
-  imgName,
-  imgFormamt = "auto",
-  imgAltText,
-  className,
-  width = "auto",
-  imgAccessibility = false,
-  accessibilityMode = AccessibilityMode.MONOCHROME,
-}) => {
-  const cloudImage = cloudinary.image(imgName);
+const CloudinaryImage: React.FC<CloudinaryImageProps> = memo(
+  ({
+    imgName,
+    imgFormamt = "auto",
+    imgAltText,
+    className,
+    width = "auto",
+    imgAccessibility = false,
+    accessibilityMode = AccessibilityMode.MONOCHROME,
+  }) => {
+    const cloudImage = cloudinary.image(imgName);
 
-  if (width !== "") {
-    cloudImage.resize(scale().width(width ?? ""));
-  }
+    if (width !== "") {
+      cloudImage.resize(scale().width(width ?? ""));
+    }
 
-  if (imgFormamt) {
-    cloudImage.format(imgFormamt);
-  }
+    if (imgFormamt) {
+      cloudImage.format(imgFormamt);
+    }
 
-  const imagePlugins = [lazyload(), responsive(), placeholder()];
+    const imagePlugins = [lazyload(), responsive(), placeholder()];
 
-  if (imgAccessibility) {
-    imagePlugins.push(
-      accessibility({ mode: accessibilityMode ?? AccessibilityMode.DARK_MODE })
+    if (imgAccessibility) {
+      imagePlugins.push(
+        accessibility({
+          mode: accessibilityMode ?? AccessibilityMode.DARK_MODE,
+        })
+      );
+    }
+
+    return (
+      <AdvancedImage
+        cldImg={cloudImage.format(imgFormamt)}
+        alt={imgAltText}
+        className={className}
+        plugins={imagePlugins}
+      />
     );
   }
+);
 
-  return (
-    <AdvancedImage
-      cldImg={cloudImage.format(imgFormamt)}
-      alt={imgAltText}
-      className={className}
-      plugins={imagePlugins}
-    />
-  );
-};
-
-const MemoCloudinaryImage = memo(CloudinaryImage);
-
-export default MemoCloudinaryImage;
+export default CloudinaryImage;

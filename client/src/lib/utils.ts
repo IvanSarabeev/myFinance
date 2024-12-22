@@ -12,3 +12,7 @@ export function removeTrailingSlash(path: string) {
 export function hasUpperCase(str: string) {
   return str !== str.toLocaleLowerCase();
 }
+
+export function capitalizeFirstLetter(value: string) {
+  return value.replace(/^./, value[0].toLocaleUpperCase()); 
+}

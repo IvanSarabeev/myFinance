@@ -1,11 +1,11 @@
-import React, { Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import {
   BrowserRouter,
   Route,
   Routes as RouteInstance,
 } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes";
-import TriangleLoader from "@/components/icons/TriangleLoader";
+const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 
 const Routes: React.FC = () => {
   return (

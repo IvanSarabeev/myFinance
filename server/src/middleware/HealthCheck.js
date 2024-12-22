@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { format, toZonedTime } from "date-fns-tz";
-import { EUROPE_ZONE } from './../utils/defaults.js';
+import { EUROPE_ZONE } from './../defines.js';
 import { allowedIpLists } from './../helpers/utils.js';
 
 dotenv.config();

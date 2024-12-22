@@ -6,3 +6,12 @@ export type ToastNotification = {
     message: string,
     showModa: boolean,
 }
+
+export enum NOTIFICATION_TYPES {
+    INFO = "info",
+    WARNING = "warning",
+    SUCCESS = "success",
+    DESTRUCTIVE = "destructive",
+    ERROR = "error",
+    DEFAULT = "default",
+}

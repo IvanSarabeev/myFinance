@@ -1,14 +1,14 @@
 import React, { memo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
-import MemoEmailOtpDialog from "@/features/security/components/EmailOtpDialog";
 import { toast } from "@/hooks/use-toast";
+import RequestEmailValidationModal from "@/features/security/components/RequestEmailValidationModal";
 
 type GoogleProviderProps = {
   title: string;
 };
 
-const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
+const GoogleProvider: React.FC<GoogleProviderProps> = memo(({ title }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleAuthentication = () => {
@@ -17,7 +17,7 @@ const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
     toast({
       variant: "success",
       title: "Success",
-      description: "WORKS",
+      description: "Use the OTP provided in the email to verify your account.",
     });
   };
 
@@ -39,11 +39,11 @@ const GoogleProvider: React.FC<GoogleProviderProps> = ({ title }) => {
         <span className="sr-only">Google Icon</span>
       </span>
       {title}
-      {isLoading && <MemoEmailOtpDialog showDialog={true} message="vlizam" />}
+      {isLoading && (
+        <RequestEmailValidationModal showDialog={true} message="vlizam" />
+      )}
     </Button>
   );
-};
+});
 
-const MemoGoogleProvider = memo(GoogleProvider);
-
-export default MemoGoogleProvider;
+export default GoogleProvider;

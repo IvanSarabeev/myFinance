@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import { emailTransportProvider } from '../utils/mailProvider.js';
 import User from './../model/user.js';
+import { HTTP_RESPONSE_STATUS } from '../defines.js';
 
 dotenv.config();
 
@@ -8,9 +9,10 @@ dotenv.config();
  * Create/Send email OTP Code after an
  * User Registration workflow with an Email Template
  * 
- * @param {String} email 
- * @param {Number} otpCode 
- * @returns 
+ * @param {String} email - Client email address 
+ * @param {Number} otpCode - Client generated OTP code
+ * 
+ * @returns {Object} - Returns status, statusCode and message
  */
 export async function emailVerification(email, otpCode) {
     const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
@@ -18,7 +20,7 @@ export async function emailVerification(email, otpCode) {
     if (!corpEmailAddress) {
         console.error("Missing Corp. Email Address");
         
-        return { status: false, statusCode: 401, message: "Internal Server Error" };
+        return { status: false, statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, message: "Internal Server Error" };
     }
 
     // TODO Create a Email Template
@@ -37,14 +39,14 @@ export async function emailVerification(email, otpCode) {
             result.rejected.length === 0 &&
             result.response.startsWith("250")
         ) {
-            return { status: true, statusCode: 200, message: "Email sent! Use the OTP provided in the email to verify your account." };
+            return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK, message: "Email sent! Use the OTP provided in the email to verify your account." };
         }
 
-        return { status: false, statusCode: 406, message: "Failed to send email message." };
+        return { status: false, statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, message: "Failed to send email message." };
     } catch (error) {
         console.error(`Fatal Error: ${error}`);
     
-        return { status: false, statusCode: 500, message:"Internal Server Error" };
+        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message:"Internal Server Error" };
     }
 }
 
@@ -52,18 +54,19 @@ export async function emailVerification(email, otpCode) {
  * Verify User's email and compare OTP password
  * Then persist the User Entity
  * 
- * @param {String} email 
- * @param {Number} otpCode 
- * @returns {Object}
+ * @param {String} email - Client email address
+ * @param {Number} otpCode - Client OTP code
+ * 
+ * @returns {Object} - Returns status, statusCode, otpMethod and message
  */
-export async function verifyOtpCode(email, otpCode) {
+export async function verifyEmailOtpCode(email, otpCode) {
     try {
         // TODO: Think for a query with Criteria...
         const user = await User.findOne({ email: email });
         
         console.log("User is Found", user);
         if (!user) {
-            return { status: false, statusCode: 404, message: "User not Found" };
+            return { status: false, statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND, message: "User not Found" };
         }
         
         const checkTimezoneTime = Date.now();
@@ -88,15 +91,15 @@ export async function verifyOtpCode(email, otpCode) {
             
             await user.save();
             
-            return { status: true, statusCode: 200, message: "User verified successfully" };
+            return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK, message: "User verified successfully" };
         } else {
             console.log("Unable to Proceed");
 
-            return { status: false, statusCode: 400, message: "Invalid or Expirated OTP" };
+            return { status: false, statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, message: "Invalid or Expirated OTP" };
         }
     } catch (error) {
         console.error(`Unexpected error: ${error}`);
 
-        return { status: false, statusCode: 500, message: "Internal Server Error" };
+        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Internal Server Error" };
     }
 }

@@ -1,30 +1,46 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { FormikProps } from "formik";
 import { User } from "@/types/userTypes";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 interface ErrorMessageProps {
   formik: FormikProps<User>;
   field: keyof User;
+  errorFields: Set<string>;
 }
 
-const ErrorMessage = ({ formik, field }: ErrorMessageProps) => {
+export const isFieldInvalid = (
+  field: keyof User,
+  formik: FormikProps<User>,
+  errorFields: Set<string>
+) => {
   return (
-    <>
-      {formik.touched[field] && formik.errors[field] ? (
-        <div className="text-red-600">
-          {formik.errors[field]}
-          <span
-            title={`required ${field}`}
-            aria-label={`Required ${field} input`}
-          >
-            *
-          </span>
-        </div>
-      ) : null}
-    </>
+    formik.touched[field] && (formik.errors[field] || errorFields.has(field))
   );
 };
 
-const MemoErrorMessage = memo(ErrorMessage);
+const ErrorMessage = memo(
+  ({ formik, field, errorFields }: ErrorMessageProps) => {
+    const errorValues = errorFields.values().next().value;
 
-export default MemoErrorMessage;
+    return (
+      <React.Fragment>
+        {formik.touched[field] &&
+          (formik.errors[field] || errorFields.has(field)) && (
+            <div className="text-red-600">
+              {formik.errors[field] ??
+                `Existing ${capitalizeFirstLetter(errorValues ?? "")}`}
+              <span
+                title={`required ${field}`}
+                aria-label={`Required ${field} input`}
+              >
+                *
+              </span>
+            </div>
+          )}
+      </React.Fragment>
+    );
+  }
+);
+
+export default ErrorMessage;

@@ -10,6 +10,7 @@ export const validateOtpCode = () => {
             .isEmail().withMessage("Invalid email address")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
         body('otpCode')
+            .isNumeric()
             .isLength({ min: 5, max: 6}).withMessage("Invalid Code")
             .customSanitizer(value => xssFilters.inHTMLData(value))
     ];
@@ -21,9 +22,8 @@ export const codeValidation = (req, res, next) => {
     if (!errors.isEmpty()) {
         res.status(400).json({
             status: false,
-            message: "Error: Invalid Credentials",
+            message: "Invalid Credentials",
             errors: errors.array().map(item => ({
-                field: item.param,
                 value: item.value,
                 message: item.msg,
             })),

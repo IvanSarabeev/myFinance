@@ -6,7 +6,7 @@ type GitHubProviderProps = {
   title: string;
 };
 
-const GitHubProvider: React.FC<GitHubProviderProps> = ({ title }) => {
+const GitHubProvider: React.FC<GitHubProviderProps> = memo(({ title }) => {
   const handleGitHubAuthentication = () => {
     console.log(title);
   };
@@ -31,8 +31,6 @@ const GitHubProvider: React.FC<GitHubProviderProps> = ({ title }) => {
       {title}
     </Button>
   );
-};
+});
 
-const MemoGitHubProvider = memo(GitHubProvider);
-
-export default MemoGitHubProvider;
+export default GitHubProvider;

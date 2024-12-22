@@ -19,32 +19,27 @@ const api = axios.create({
         "X-Content-Type-Options": String(import.meta.env.VITE_X_CONTENT_OPTIONS),
         "Referrer-Policy": String(import.meta.env.VITE_REF_POLICY),
         "Strict-Transport-Security": String(TSP_SECURITY),
+        "Accept": String(import.meta.env.VITE_CONTENT_TYPE),
     },
     withCredentials: true,
 });
 
-api.interceptors.response.use((response) => {
-    console.log("Axios Response: ", response);
-
-    return response;
-}, (error) => {
-    if (error.response) {
-        if (import.meta.env.VITE_CLIENT_NODE_ENV === "development") {
-            console.error(`Bad Server Error: ${error}, Response:  ${error.response.data.message}`);
-        }
-
-        return Promise.reject(Error(error.response.data));
-    }
-
-    if (error.request) {
-        if (import.meta.env.VITE_CLIENT_NODE_ENV === "development") {
-            console.error(`Server Down: ${error}`);
-        }
-
-        return Promise.reject(Error("Under Maintaince"));
-    }
-
-    return Promise.reject(Error("Internal Server Error"));
-});
+// api.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//       if (error.response) {
+//         // API returned an error response
+//         return Promise.reject(error);
+//       } else if (error.request) {
+//         // No response was received
+//         return Promise.reject(
+//           new Error("Network error: Unable to connect to the server.")
+//         );
+//       } else {
+//         // Other unexpected error
+//         return Promise.reject(new Error(error.message || "Unexpected error."));
+//       }
+//     }
+//   );
 
 export default api;

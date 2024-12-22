@@ -1,10 +1,10 @@
 import React, { memo } from "react";
-import RegisterForm from "@/features/security/components/forms/RegisterForm";
+import RegisterContainer from "@/features/security/components/RegisterContainer";
 import { Link } from "react-router-dom";
 import MemoLayout from "@/components/layouts/Layout";
 import ThirdPartyProvider from "@/components/ThirdPartyProvider";
-import MemoSideBackgroundSection from "@/components/SideBackgroundSection";
-import MemoCloudinaryImage from "@/components/CloudinaryImage";
+import SideBackgroundSection from "@/components/SideBackgroundSection";
+import CloudinaryImage from "@/components/CloudinaryImage";
 import MemoBrandSlider from "@/features/security/components/BrandSlider";
 
 const Register: React.FC = () => {
@@ -12,7 +12,7 @@ const Register: React.FC = () => {
     <MemoLayout>
       <section className="size-full flexCenter lg:justify-around md:items-start padding-container max-container">
         <div className="size-full flexCol max-w-xl">
-          <MemoCloudinaryImage
+          <CloudinaryImage
             imgName="logos/my-finance"
             imgFormamt="png"
             imgAltText="logo"
@@ -28,7 +28,7 @@ const Register: React.FC = () => {
             </p>
           </div>
           <ThirdPartyProvider />
-          <RegisterForm />
+          <RegisterContainer />
           <p className="regular-12 lg:regular-14 xl:regular-16 font-medium font-sans mt-4 lg:mt-6">
             Have an account ?
             <Link
@@ -44,7 +44,7 @@ const Register: React.FC = () => {
             &copy; 2024 Acme, All right Reserved
           </p>
         </div>
-        <MemoSideBackgroundSection>
+        <SideBackgroundSection>
           <div className="flexColStart space-y-2">
             <h2 className="bold-24 2xl:bold-30 font-semibold">
               The simplest way to manage <br /> your workforce
@@ -53,7 +53,7 @@ const Register: React.FC = () => {
               Access your account features, instantaneously
             </p>
           </div>
-          <MemoCloudinaryImage
+          <CloudinaryImage
             imgName="image/auth-dashboard"
             imgFormamt="png"
             imgAltText="auth-dashbord"
@@ -61,7 +61,7 @@ const Register: React.FC = () => {
             imgAccessibility={false}
           />
           <MemoBrandSlider />
-        </MemoSideBackgroundSection>
+        </SideBackgroundSection>
       </section>
     </MemoLayout>
   );

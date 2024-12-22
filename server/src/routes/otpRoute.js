@@ -1,6 +1,6 @@
 import express from 'express';
 import { codeValidation, validateOtpCode } from './../middleware/otpMiddleware.js';
-import { verifyOtp } from '../controller/otpController.js';
+import { verifyEmail } from '../controller/otpController.js';
 
 const router = express.Router();
 
@@ -11,6 +11,6 @@ const securityHeaders = (req, res, next) => {
 };
 
 router.use(securityHeaders);
-router.post("/validate-email", validateOtpCode(), codeValidation, verifyOtp);
+router.post("/validate-email", validateOtpCode(), codeValidation, verifyEmail);
 
 export default router;

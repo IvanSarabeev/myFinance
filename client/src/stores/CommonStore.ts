@@ -14,7 +14,7 @@ class CommonStore {
             // # Actions
             showLoader: action,
             hideLoader: action, 
-            showEmailOtpModal: action,
+            openNotification: action,
         });
     }
 
@@ -26,19 +26,19 @@ class CommonStore {
         this.isLoading = false;
     }
 
-    // TODO: Think is it neccessery to be used in here ?
-    showEmailOtpModal(
-        type: ToastVariants = "default",
-        message: string,
-        showModal: boolean = false,
-        ) {
+    /**
+     * Open Notification Toast, to inform user actions
+     * 
+     * @param type
+     * @param title 
+     * @param message 
+     */
+    openNotification(type: ToastVariants = "default", title: string,message: string) {
         toast({
             variant: type,
-            title: type === "success" ? "Success!": "Notification",
+            title: title,
             description: message,
         });
-        
-        console.log(showModal);
     }
 };
 

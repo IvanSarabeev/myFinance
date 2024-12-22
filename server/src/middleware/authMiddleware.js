@@ -46,9 +46,9 @@ export const securityValidation = (req, res, next) => {
     if (!errors.isEmpty()) {
         res.status(400).json({
             status: false,
-            message: "Error: Invalid Credentials",
+            message: "Invalid Credentials",
             errorsFields: errors.array().map(item => ({
-                value: item.value,
+                // value: item.value,
                 message: item.msg,
             })),
         });

@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from "mobx";
+import { makeObservable, observable, action, runInAction } from "mobx";
 import { ClientJS } from 'clientjs';
 import { UserFingerPrint, User } from '@/types/userTypes';
 import { format } from "date-fns";
@@ -9,7 +9,7 @@ class UserStore {
         email: "",
         password: "",
         terms: false,
-    }
+    };
     userFingerPrintData: UserFingerPrint = {
         userAgent: "",
         browser: "",
@@ -26,24 +26,41 @@ class UserStore {
         makeObservable(this, {
             user: observable, // User Model
             userFingerPrintData: observable,
-
-            setUser: action,
             getUser: action,
+            setUser: action,
             getFingerPrint: action,
         });
     }
 
+    /**
+     * Get User
+     * 
+     * @returns {Object}
+     */
     getUser() {
         return this.user;
     }
 
+    /**
+     * set User Data
+     * 
+     * @param data 
+     */
     setUser(data: Partial<User>) {
-        this.user = {
-            ...this.user, // Preserve existing data
-            ...data, // Override with new data
-        };
+        console.log("setUser this:", this);
+        runInAction(() => {
+            this.user = {
+                ...this.user, // Preserve existing data
+                ...data, // Override with new data
+            };
+        })
     }
 
+    /**
+     * Get User's internal Browser information
+     * 
+     * @returns {Object}
+     */
     getFingerPrint() {
         const client = new ClientJS();
         const todayDate = new Date;

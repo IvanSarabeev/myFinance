@@ -1,7 +1,8 @@
-import TriangleLoader from "@/components/icons/TriangleLoader";
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import Register from "../auth/Register";
+
+const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
+const Register = lazy(() => import("../auth/Register"));
 
 const AuthRoutes: React.FC = () => {
   return (

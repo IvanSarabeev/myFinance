@@ -11,7 +11,7 @@ const imgData = [
   { id: 4, imgSrc: Stripe, altText: "stripe" },
 ];
 
-const BrandSlider: React.FC = () => {
+const BrandSlider: React.FC = memo(() => {
   const imgRow = useRef<HTMLDivElement>(null);
 
   const scrollRow = useCallback(() => {
@@ -41,9 +41,11 @@ const BrandSlider: React.FC = () => {
         className="size-full flex items-center flex-nowrap overflow-x-hidden gap-14 flex-shrink-0"
       >
         {[...imgData, ...imgData].map((item, index) => {
+          const indexKey = new Set([index]);
+
           return (
             <img
-              key={index}
+              key={typeof indexKey}
               src={item.imgSrc}
               alt={item.altText}
               aria-label={item.altText}
@@ -56,8 +58,6 @@ const BrandSlider: React.FC = () => {
       </div>
     </article>
   );
-};
+});
 
-const MemoBrandSlider = memo(BrandSlider);
-
-export default MemoBrandSlider;
+export default BrandSlider;

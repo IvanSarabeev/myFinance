@@ -1,4 +1,5 @@
-import React, { memo, useState } from "react";
+import React, { useState } from "react";
+import useStore from "@/hooks/useStore";
 import {
   Dialog,
   DialogClose,
@@ -8,21 +9,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import MemoCloudinaryImage from "@/components/CloudinaryImage";
+import CloudinaryImage from "@/components/CloudinaryImage";
 import InputOTP from "@/components/CommonOTP";
 import { Button } from "@/components/ui/button";
 import { MAX_OTP_SLOTS } from "@/defines";
-import useStore from "@/hooks/useStore";
 
-type EmailOtpDialogProps = {
+type RequestEmailValidationModalProps = {
   showDialog: boolean;
   message: string;
 };
 
-const EmailOtpDialog: React.FC<EmailOtpDialogProps> = ({
-  showDialog,
-  message,
-}) => {
+const RequestEmailValidationModal: React.FC<
+  RequestEmailValidationModalProps
+> = ({ showDialog, message }) => {
   const { commonStore } = useStore();
 
   const [otp, setOtp] = useState("");
@@ -31,11 +30,13 @@ const EmailOtpDialog: React.FC<EmailOtpDialogProps> = ({
     setOtp(inputOtp);
   }
 
+  // TODO: Add the LOGIC for actually sending OTP to the Server
+
   return (
     <Dialog open={showDialog}>
       <DialogContent className="h-fit w-80 sm:w-96 md:w-[440px] space-y-2 rounded-lg">
         <DialogHeader className="flexColCenter items-center">
-          <MemoCloudinaryImage
+          <CloudinaryImage
             imgName="logos/my-finance"
             imgFormamt="png"
             imgAltText="logo"
@@ -43,7 +44,7 @@ const EmailOtpDialog: React.FC<EmailOtpDialogProps> = ({
             className="size-10 md:size-12 lg:size-14 drop-shadow aspect-square object-cover object-center mb-8 md:mb-12 lg:mb-14"
           />
           <DialogTitle className="regular-18 xl:bold-24">
-            Veryfy Email
+            Authentication Step
           </DialogTitle>
           <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
@@ -85,6 +86,4 @@ const EmailOtpDialog: React.FC<EmailOtpDialogProps> = ({
   );
 };
 
-const MemoEmailOtpDialog = memo(EmailOtpDialog);
-
-export default MemoEmailOtpDialog;
+export default RequestEmailValidationModal;

@@ -5,15 +5,15 @@ export interface User {
     terms: boolean;
 }
 
-export interface ApiResponse {
-    status: boolean,
-    statusCode: number;
-    token: string;
-    message: string;
-}
-
-export interface UserApiResponse extends ApiResponse {
-    userData: User;
+export interface RegisterResponse {
+    data: {
+        status: boolean;
+        showModal: boolean;
+        message: string;
+        token?: string;
+        errorFields?: string[];
+    },
+    status: number;
 }
 
 export interface UserFingerPrint {

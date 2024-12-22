@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { registerUserService } from '../service/securityService.js';
+import { HTTP_RESPONSE_STATUS } from '../defines.js';
 
 dotenv.config();
 
@@ -17,15 +18,16 @@ export async function registerUser(req, res, next){
 
         const result = await registerUserService({ name, email, password, terms, fingerPrint });
         
-        console.log("Controller Result:", result, result.message);
+        console.log("Controller Response:", result);
 
-        if (result.statusCode !== 201) {
-            res.status(400).json(result);
+        if (result.statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
+            res.status(HTTP_RESPONSE_STATUS.BAD_REQUEST).json(result);
         } else {
             res.status(result.statusCode).json({
                 status: result.status,
                 showModal: result.showOtpModal,
                 message: result.message,
+                errorFields: result.errorFields
             });
         }
     } catch (error) {
@@ -46,7 +48,7 @@ export async function registerUser(req, res, next){
 export function logoutUser(req, res, next){
     try {
         res.clearCookie(tokenId);
-        res.status(200).json({
+        res.status(HTTP_RESPONSE_STATUS.OK).json({
             status: true, 
             message: "User Logout Succesfully"
         });
