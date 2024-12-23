@@ -49,25 +49,24 @@ const RegisterContainer: React.FC = () => {
             if (
               response.data.status &&
               response.status === HTTP_RESPONSE_STATUS.CREATED &&
-              response.data.data.showModal
+              response.data.showModal
             ) {
               openNotification(
                 NOTIFICATION_TYPES.SUCCESS,
                 NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
-                response.data.data.message
+                response.data.message
               );
 
-              setData(response.data.data);
-              setUser(values);
+              setData(response.data);
+              setUser(values); // TODO | Fix the User Store, currently not working
               actions.resetForm();
             }
           })
           .catch((error) => {
             setIsLoading(false);
-            console.log("GET THE ERROR:", error);
 
-            if (error.response.data) {
-              const response = error.response.data;
+            if (error.response) {
+              const response = error.response;
 
               if (response) {
                 openNotification(
@@ -86,6 +85,14 @@ const RegisterContainer: React.FC = () => {
                   setErrorFields(new Set(response.errorFields));
                 }
               }
+            } else {
+              // Network Error or Unexpected Error
+              openNotification(
+                NOTIFICATION_TYPES.DESTRUCTIVE,
+                NOTIFICATION_TYPES.ERROR.toUpperCase(),
+                error.message ||
+                  "An unexpected error occurred. Please try again."
+              );
             }
           });
       } catch (error) {
@@ -101,14 +108,12 @@ const RegisterContainer: React.FC = () => {
     },
   });
 
-  console.log("Get DATA", data);
-
   return (
     <>
       <RegisterForm formik={formik} errorFields={errorFields} />
       <RequestEmailValidationModal
         showDialog={isLoading}
-        message={"Check me"}
+        message={data?.message ?? "Check me"}
       />
     </>
   );

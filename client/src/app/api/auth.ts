@@ -9,21 +9,18 @@ import { RegisterResponse, User } from "@/types/userTypes";
  * 
  * @param {User} user 
  * @returns {User | undefined}
+ * @throws {Error}
  */
 export async function registerUser(user: User): Promise<AxiosResponse<RegisterResponse>> {
+    const fingerPrint = userStore.getFingerPrint();
+    const userData = { ...user, fingerPrint };
+
     try {
-        const fingerPrint = userStore.getFingerPrint();
-        const userData = { ...user, fingerPrint };
-
         const response = await api.post("/auth/register", userData);
-
-        console.log("API RESPONSE:", response);
         
-        return response.data;
+        return response;
     } catch (error) {
-        console.error("Axios Error Response: ", error);       
-        
-        console.log("API RESPONSE:", error);
+        console.error("API RESPONSE:", error);
         throw error;
     }
 };

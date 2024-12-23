@@ -6,14 +6,11 @@ export interface User {
 }
 
 export interface RegisterResponse {
-    data: {
-        status: boolean;
-        showModal: boolean;
-        message: string;
-        token?: string;
-        errorFields?: string[];
-    },
-    status: number;
+    status: boolean;
+    showModal: boolean;
+    message: string;
+    token?: string;
+    errorFields?: string[];
 }
 
 export interface UserFingerPrint {

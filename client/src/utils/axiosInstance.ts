@@ -24,22 +24,25 @@ const api = axios.create({
     withCredentials: true,
 });
 
-// api.interceptors.response.use(
-//     (response) => response,
-//     (error) => {
-//       if (error.response) {
-//         // API returned an error response
-//         return Promise.reject(error);
-//       } else if (error.request) {
-//         // No response was received
-//         return Promise.reject(
-//           new Error("Network error: Unable to connect to the server.")
-//         );
-//       } else {
-//         // Other unexpected error
-//         return Promise.reject(new Error(error.message || "Unexpected error."));
-//       }
-//     }
-//   );
+api.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    if (error.response) { 
+        // API returned an error response
+        const message = new Error(error.response.data.message || "API Error");
+        
+        return Promise.reject({message, response: error.response.data});
+    } else if (error.request) {
+        // No response was received - Network Issue
+        const err = new Error("Network error: Unable to connect to the server.");
+        
+        return Promise.reject(err);
+    } else {
+        // Handle Unexpected Errors
+        const err = new Error(error.message || "Unexpected error.");
+
+        return Promise.reject(err);
+    }
+});
 
 export default api;
