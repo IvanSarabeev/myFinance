@@ -1,5 +1,6 @@
 import xssFilters from 'xss-filters';
 import { body, validationResult } from "express-validator";
+import { HTTP_RESPONSE_STATUS } from '../defines.js';
 
 export const validateOtpCode = () => {
     return [
@@ -20,7 +21,7 @@ export const codeValidation = (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        res.status(400).json({
+        res.status(HTTP_RESPONSE_STATUS.BAD_REQUEST).json({
             status: false,
             message: "Invalid Credentials",
             errors: errors.array().map(item => ({

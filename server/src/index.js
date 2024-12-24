@@ -29,32 +29,22 @@ app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
 
 // Cors Configuration
-app.use(cors({
-  // origin: function (origin, callback) {
-  //   console.log(`Incoming Origin: ${origin}`);
-    
-  //   if (!origin || allowedOrigins.includes(origin)) {
-  //     return callback(null, true);
-  //   }
-
-  //   callback(new Error('Not allowed by CORS'));
-  // },
-  credentials: true,
-}));
-
 /**
- *   origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins) {
-      const message = `The CORS policy for this site doesn't allow access from the specified Origin.`;
-
-      return callback(new Error(message), false);
+app.use(cors({  
+  origin: function(origin, callback) {
+  if (!origin) return callback(null, true);
+  
+  if (allowedOrigins) {
+    const message = `The CORS policy for this site doesn't allow access from the specified Origin.`;
+    
+    return callback(new Error(message), false);
     }
-
+    
     return callback(null, true);
-  },
- */
+    },
+    credentials: true,
+  }));
+*/
 
 connect().then(() => {
   console.log("Database connected and it's ready to handle requests.")
