@@ -22,29 +22,36 @@ const allowedOrigins = [
   process.env.SERVER_PROD_URL,
 ];
 
+console.log('Allowed Origins:', allowedOrigins);
+
 // Helmet Headers
 app.use(helmet.noSniff());
 app.use(helmet.frameguard({ action: "deny"}));
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
+app.use(helmet({ crossOriginEmbedderPolicy: false }));
 
 // Cors Configuration
-/**
-app.use(cors({  
-  origin: function(origin, callback) {
-  if (!origin) return callback(null, true);
-  
-  if (allowedOrigins) {
-    const message = `The CORS policy for this site doesn't allow access from the specified Origin.`;
-    
-    return callback(new Error(message), false);
+app.use(cors({
+  origin: (origin, callback) => {
+    console.log('Server Expected Origin:', origin);
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    
-    return callback(null, true);
-    },
-    credentials: true,
-  }));
-*/
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: [
+    'Content-Type', 'Authorization', 'Referrer-Policy', 
+    'Strict-Transport-Security', 'X-Content-Type-Options',
+    'X-Frame-Options', 'X-XSS-Protection',
+  ],
+  credentials: false,
+}));
+
+// Handle Preflight Request
+app.options('*', cors());
 
 connect().then(() => {
   console.log("Database connected and it's ready to handle requests.")

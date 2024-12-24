@@ -34,7 +34,7 @@ api.interceptors.response.use((response) => {
         return Promise.reject({message, response: error.response.data});
     } else if (error.request) {
         // No response was received - Network Issue
-        const err = new Error("Network error: Unable to connect to the server.");
+        const err = new Error("Network error: Unable establish connection.");
         
         return Promise.reject(err);
     } else {
