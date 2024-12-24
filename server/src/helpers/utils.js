@@ -1,3 +1,5 @@
+import { HTTP_RESPONSE_STATUS } from "../defines.js";
+
 /**
  * Restrict Access to specific Endpoint/s
  * 
@@ -8,8 +10,8 @@
  */
 export function allowedIpLists(allowedIps, clientIp) {
     if (!allowedIps.includes(clientIp)) {
-        return { statusCode: 403, message: "Forbidden: Your IP is not allowed to access this resource" };
+        return { statusCode: HTTP_RESPONSE_STATUS.FORBIDDEN, message: "Forbidden: Access Denied!" };
     }
 
-    return { statusCode: 200, message: "Access Granted" };
+    return { statusCode: HTTP_RESPONSE_STATUS.OK, message: "Access Granted" };
 }

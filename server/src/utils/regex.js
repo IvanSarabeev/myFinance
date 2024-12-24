@@ -9,3 +9,6 @@ export const UPPER_CASE_CHARACTER = /[A-Z]/;
 export const NUMERIC_CHARACTER = /\d/;
 export const SPECIAL_CHARACTER = /[!@#$%^&*]/;
 export const IS_NUMERIC =  /\d/;
+
+
+export const REMOVE_LEADING_TRAILING_QUOTES = /^['"]|['"]$/g;
