@@ -2,16 +2,17 @@
 import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
-import { RegisterResponse, User } from "@/types/userTypes";
+import { User } from "@/types/userTypes";
+import { RegisterUserResponse } from "@/types/authTypes";
 
 /**
  * Add new User to the system
  * 
  * @param {User} user 
- * @returns {User | undefined}
+ * @returns {Promise<AxiosResponse<RegisterUserResponse>>}
  * @throws {Error}
  */
-export async function registerUser(user: User): Promise<AxiosResponse<RegisterResponse>> {
+export async function registerUser(user: User): Promise<AxiosResponse<RegisterUserResponse>> {
     const fingerPrint = userStore.getFingerPrint();
     const data = { ...user, fingerPrint };
 

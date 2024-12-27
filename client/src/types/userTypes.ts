@@ -5,14 +5,6 @@ export interface User {
     terms: boolean;
 }
 
-export interface RegisterResponse {
-    status: boolean;
-    showModal: boolean;
-    message: string;
-    token?: string;
-    errorFields?: string[];
-}
-
 export interface UserFingerPrint {
     userAgent: string;
     browser: string;

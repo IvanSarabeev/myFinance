@@ -4,8 +4,6 @@ import { UserFingerPrint, User } from '@/types/userTypes';
 import { format } from "date-fns";
 
 class UserStore {
-    isLoading = false;
-
     user: User = {
         name: "",
         email: "",
@@ -29,7 +27,7 @@ class UserStore {
             user: observable, // User Type
             userFingerPrintData: observable, // UserFingerPrint Type
 
-            // Functions
+            // Actions
             getUser: action,
             setUser: action,
             getFingerPrint: action,

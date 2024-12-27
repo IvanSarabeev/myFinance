@@ -22,4 +22,5 @@ export interface ApiErrorResponse {
     response?: {
         [key: string]: unknown;
     };
+    errorFields?: string[];
 }
