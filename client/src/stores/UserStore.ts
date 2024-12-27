@@ -4,6 +4,8 @@ import { UserFingerPrint, User } from '@/types/userTypes';
 import { format } from "date-fns";
 
 class UserStore {
+    isLoading = false;
+
     user: User = {
         name: "",
         email: "",
@@ -24,11 +26,14 @@ class UserStore {
 
     constructor() {
         makeObservable(this, {
-            user: observable, // User Model
-            userFingerPrintData: observable,
+            user: observable, // User Type
+            userFingerPrintData: observable, // UserFingerPrint Type
+
+            // Functions
             getUser: action,
             setUser: action,
             getFingerPrint: action,
+            getUserDetails: action,
         });
     }
 
@@ -47,13 +52,12 @@ class UserStore {
      * @param data 
      */
     setUser(data: Partial<User>) {
-        console.log("setUser this:", this);
         runInAction(() => {
             this.user = {
                 ...this.user, // Preserve existing data
                 ...data, // Override with new data
             };
-        })
+        });
     }
 
     /**
@@ -76,6 +80,13 @@ class UserStore {
             timeZone: client.getTimeZone(),
             language: client.getLanguage(),
             lastActive: formattedDate,
+        }
+    }
+
+    getUserDetails() {
+        return {
+            user: this.user,
+            userFingerPrintData: this.userFingerPrintData,
         }
     }
 }

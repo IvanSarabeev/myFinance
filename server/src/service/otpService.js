@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
-import { emailTransportProvider } from '../utils/mailProvider.js';
 import User from './../model/user.js';
-import { HTTP_RESPONSE_STATUS } from '../defines.js';
+import { emailTransportProvider } from '../utils/mailProvider.js';
+import { HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js';
 
 dotenv.config();
 
@@ -39,14 +39,26 @@ export async function emailVerification(email, otpCode) {
             result.rejected.length === 0 &&
             result.response.startsWith("250")
         ) {
-            return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK, message: "Email sent! Use the OTP provided in the email to verify your account." };
+            return { 
+                status: true, 
+                statusCode: HTTP_RESPONSE_STATUS.OK, 
+                message: "Email sent! Use the OTP provided in the email to verify your account."
+            };
         }
 
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, message: "Failed to send email message." };
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+            message: "Failed to send email message."
+        };
     } catch (error) {
         console.error(`Fatal Error: ${error}`);
     
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message:"Internal Server Error" };
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message:"Internal Server Error"
+        };
     }
 }
 
@@ -61,45 +73,64 @@ export async function emailVerification(email, otpCode) {
  */
 export async function verifyEmailOtpCode(email, otpCode) {
     try {
-        // TODO: Think for a query with Criteria...
         const user = await User.findOne({ email: email });
-        
-        console.log("User is Found", user);
+
         if (!user) {
-            return { status: false, statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND, message: "User not Found" };
+            return { 
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND, 
+                message: "User not Found" 
+            };
         }
         
-        const checkTimezoneTime = Date.now();
+        const timestamp = Date.now();
+
+        // Validate otpExpiration
+        if (!(user.otpExpiration instanceof Date)) {
+            console.error("Invalid otpExpiration:", user.otpExpiration);
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+                message: "OTP Expirated. Please contact support.",
+            };
+        }
         
-        console.log(
-            otpCode,
-            user.otpCode,
-            user.otpCode === otpCode,
-            user?.otpExpiration,
-            user.otpExpiration.getTime(),
-            user.otpExpiration.getTime() > checkTimezoneTime
-        );
+        const otpExpiration = user.otpExpiration.getTime();
         
-        if (
-            user.otpCode === otpCode &&
-            user?.otpExpiration &&
-            user.otpExpiration.getTime() > checkTimezoneTime
-        ) {
+        if (user.otpCode === otpCode && otpExpiration > timestamp) {
             user.verified = true;
             user.otpCode = undefined;
             user.otpExpiration = undefined;
             
             await user.save();
             
-            return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK, message: "User verified successfully" };
+            return { 
+                status: true,
+                statusCode: HTTP_RESPONSE_STATUS.OK,
+                otpMethod: OTP_PUSH_TYPE,
+                message: "User verified successfully"
+            };
+        } else if (otpExpiration <= timestamp) {
+            // Add Logs to track the expiration
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                message: "Otp code has expired. Please request a new one.",
+            }
         } else {
-            console.log("Unable to Proceed");
-
-            return { status: false, statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, message: "Invalid or Expirated OTP" };
+            return { 
+                status: false, 
+                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, 
+                message: "Invalid or expirated code"
+            };
         }
     } catch (error) {
         console.error(`Unexpected error: ${error}`);
 
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Internal Server Error" };
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Internal Server Error"
+        };
     }
 }

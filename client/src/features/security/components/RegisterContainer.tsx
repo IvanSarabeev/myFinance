@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { observer } from "mobx-react-lite";
 import { useFormik } from "formik";
 import { User } from "@/types/userTypes";
 import { registerSchema } from "../schemas/register";
@@ -21,11 +20,12 @@ type ResponseData = {
 const RegisterContainer: React.FC = () => {
   const { userStore, commonStore } = useStore();
   const { openNotification } = commonStore;
-  const { setUser } = userStore;
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorFields, setErrorFields] = useState<Set<string>>(new Set());
   const [data, setData] = useState<ResponseData | null>(null);
+  const [showRequestEmailValidationModal, setShowRequestEmailValidationModal] =
+    useState(false);
 
   const initialValues: User = {
     name: "Jacob Smith",
@@ -58,7 +58,8 @@ const RegisterContainer: React.FC = () => {
               );
 
               setData(response.data);
-              setUser(values); // TODO | Fix the User Store, currently not working
+              setShowRequestEmailValidationModal(response.data.showModal);
+              userStore.setUser(values);
               actions.resetForm();
             }
           })
@@ -108,15 +109,22 @@ const RegisterContainer: React.FC = () => {
     },
   });
 
+  function closeModal() {
+    setShowRequestEmailValidationModal(!showRequestEmailValidationModal);
+  }
+
   return (
     <>
       <RegisterForm formik={formik} errorFields={errorFields} />
-      <RequestEmailValidationModal
-        showDialog={isLoading}
-        message={data?.message ?? "Check me"}
-      />
+      {isLoading && (
+        <RequestEmailValidationModal
+          isModalOpen={showRequestEmailValidationModal}
+          message={data?.message ?? ""}
+          onClose={closeModal}
+        />
+      )}
     </>
   );
 };
 
-export default observer(RegisterContainer);
+export default RegisterContainer;

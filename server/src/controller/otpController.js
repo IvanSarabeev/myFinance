@@ -1,12 +1,12 @@
 import { verifyEmailOtpCode } from "../service/otpService.js";
-import { OTP_PUSH_TYPE } from "../defines.js";
+import { HTTP_RESPONSE_STATUS } from "../defines.js";
 
 /**
  * Verify User's OTP password Code
  * 
  * @param {Request} req 
  * @param {Response} res 
- * @returns {Object}
+ * @returns {Object} - Response Object with status and message
  */
 export async function verifyEmail(req, res) {
     try {
@@ -16,14 +16,21 @@ export async function verifyEmail(req, res) {
 
         console.log("OTP Response", result);
 
-        if (result.status && result.statusCode === 200) {
-            return res.status(200).json({ status: true, otpMethod: OTP_PUSH_TYPE, message: result.message });
+        if (result.status && result.statusCode === HTTP_RESPONSE_STATUS.OK) {
+            return res.status(result.statusCode).json({ 
+                status: true, 
+                otpMethod: result.otpMethod, 
+                message: result.message
+            });
         } else {   
-            return res.status(result.statusCode).json({ status: false, message: result.message });
+            return res.status(result.statusCode).json({ 
+                status: false, 
+                message: result.message
+            });
         }
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);
 
-        return { status: false, statusCode: 500, message: "Unexpected Error" };
+        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Unexpected Error" };
     }
 }

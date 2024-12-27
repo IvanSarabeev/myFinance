@@ -3,7 +3,7 @@ export interface CloudinaryImageProps {
     imgFormamt: string;
     imgAltText: string;
     className?: string;
-    width?: string | number | undefined;
+    width?: string | number;
     imgAccessibility: boolean;
     accessibilityMode?: AccessibilityMode;
 }
@@ -13,4 +13,13 @@ export enum AccessibilityMode {
     BRIGHT_MODE = 'brightmode',
     MONOCHROME = 'monochrome', 
     COLOR_BLIND = 'colorblind',
+}
+
+export interface ApiErrorResponse {
+    status?: boolean;
+    statusCode?: number;
+    message?: string;
+    response?: {
+        [key: string]: unknown;
+    };
 }

@@ -37,17 +37,30 @@ export async function registerUserService(userRegistrationData) {
                 // Persist New User to DB
                 await parameters.save();
 
-                return { status: true, statusCode: HTTP_RESPONSE_STATUS.CREATED, message: emailResponse.message, showOtpModal: true };
+                return { 
+                    status: true, 
+                    statusCode: HTTP_RESPONSE_STATUS.CREATED, 
+                    message: emailResponse.message, 
+                    showOtpModal: true
+                };
             } catch (error) {
                 console.error(`Error saving User: ${error}`);
 
-                return { status: false, statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, message: "Failed to send verification email" };
+                return { 
+                    status: false, 
+                    statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, 
+                    message: "Failed to send verification email" 
+                };
             }
         }
     } catch (error) {
         console.error(`Fatal Error: ${error}`);
 
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Invalid Credentials" };
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Invalid Credentials"
+        };
     }
 };
 

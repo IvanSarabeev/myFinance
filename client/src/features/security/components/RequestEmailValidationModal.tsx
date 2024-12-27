@@ -12,41 +12,83 @@ import {
 import CloudinaryImage from "@/components/CloudinaryImage";
 import InputOTP from "@/components/CommonOTP";
 import { Button } from "@/components/ui/button";
-import { MAX_OTP_SLOTS } from "@/defines";
+import { HTTP_RESPONSE_STATUS, MAX_OTP_SLOTS } from "@/defines";
+import { NOTIFICATION_TYPES } from "@/types/commonTypes";
+import { redirectInstance } from "@/utils/redirectInstance";
 
 type RequestEmailValidationModalProps = {
-  showDialog: boolean;
+  isModalOpen: boolean;
   message: string;
+  onClose: () => void;
 };
 
 const RequestEmailValidationModal: React.FC<
   RequestEmailValidationModalProps
-> = ({ showDialog, message }) => {
-  const { commonStore } = useStore();
+> = ({ isModalOpen, message, onClose }) => {
+  const { commonStore, userStore, otpStore } = useStore();
 
   const [otp, setOtp] = useState("");
 
-  function handleOtpChange(inputOtp: string) {
-    setOtp(inputOtp);
+  const user = userStore.getUser();
+
+  function handleOtpChange(value: string) {
+    setOtp(value);
   }
 
-  // TODO: Add the LOGIC for actually sending OTP to the Server
+  async function handleEmailSubmit(event: React.FormEvent<HTMLButtonElement>) {
+    // TODO: Add validation for OTP, Update the UI to show the error OTP
+    event.preventDefault();
+
+    if (!user) return;
+
+    if (otp.length !== MAX_OTP_SLOTS) {
+      commonStore.openNotification(
+        NOTIFICATION_TYPES.DESTRUCTIVE,
+        "Error",
+        "Please enter the OTP sent to your email."
+      );
+
+      return;
+    }
+
+    try {
+      commonStore.showLoader();
+
+      const result = await otpStore.verifyEmail({
+        email: user?.email,
+        otpCode: Number(otp),
+      });
+
+      if (result.data.status && result.status === HTTP_RESPONSE_STATUS.OK) {
+        redirectInstance("/dashboard");
+        onClose();
+      }
+    } catch (error) {
+      console.error("OTP Error: ", error);
+
+      throw error;
+    } finally {
+      commonStore.hideLoader();
+    }
+  }
 
   return (
-    <Dialog open={showDialog}>
+    <Dialog open={isModalOpen}>
       <DialogContent className="h-fit w-80 sm:w-96 md:w-[440px] space-y-2 rounded-lg">
-        <DialogHeader className="flexColCenter items-center">
+        <DialogHeader className="flexColCenter items-center justify-center">
           <CloudinaryImage
             imgName="logos/my-finance"
             imgFormamt="png"
             imgAltText="logo"
             imgAccessibility={false}
-            className="size-10 md:size-12 lg:size-14 drop-shadow aspect-square object-cover object-center mb-8 md:mb-12 lg:mb-14"
+            className="size-10 md:size-12 lg:size-14 drop-shadow aspect-square object-cover object-center mb-2 md:mb-4"
           />
-          <DialogTitle className="regular-18 xl:bold-24">
+          <DialogTitle className="regular-18 lg:bold-20 2xl:bold-24">
             Authentication Step
           </DialogTitle>
-          <DialogDescription>{message}</DialogDescription>
+          <DialogDescription className="max-w-xs text-justify regular-14 xl:regular-16 font-sans">
+            {message}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flexColCenter items-center space-x-2 mx-auto">
@@ -60,22 +102,18 @@ const RequestEmailValidationModal: React.FC<
         <DialogFooter className="gap-x-4 flex flex-row items-center justify-center mx-auto">
           <Button
             type="button"
-            variant="submit"
+            variant="auth"
             title="Continue"
-            onClick={() => {
-              console.log("OTP Cliked");
-            }}
-            disabled={commonStore.isLoading}
+            onClick={handleEmailSubmit}
+            disabled={otpStore.isLoading}
           >
-            {commonStore.isLoading ? "Loading.." : "Submit"}
+            {otpStore.isLoading ? "Loading.." : "Submit"}
           </Button>
           <DialogClose
             type="button"
             title="Cancel Verification"
             aria-label="Close modal button"
-            onClick={() => {
-              console.log("Dialog Closed");
-            }}
+            onClick={onClose}
             className="h-9 flexCenter px-4 py-2 rounded-md text-center border border-slate-200 bg-white shadow-sm hover:text-slate-900 hover:bg-red-500 hover:scale-105 transition-all ease-in-out duration-150"
           >
             Close

@@ -33,7 +33,7 @@ class CommonStore {
      * @param title 
      * @param message 
      */
-    openNotification(type: ToastVariants = "default", title: string,message: string) {
+    openNotification(type: ToastVariants = "default", title: string, message: string) {
         toast({
             variant: type,
             title: title,

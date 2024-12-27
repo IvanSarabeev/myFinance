@@ -22,8 +22,6 @@ const allowedOrigins = [
   process.env.SERVER_PROD_URL,
 ];
 
-console.log('Allowed Origins:', allowedOrigins);
-
 // Helmet Headers
 app.use(helmet.noSniff());
 app.use(helmet.frameguard({ action: "deny"}));

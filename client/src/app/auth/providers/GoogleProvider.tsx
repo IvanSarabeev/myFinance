@@ -40,7 +40,13 @@ const GoogleProvider: React.FC<GoogleProviderProps> = memo(({ title }) => {
       </span>
       {title}
       {isLoading && (
-        <RequestEmailValidationModal showDialog={true} message="vlizam" />
+        <RequestEmailValidationModal
+          isModalOpen={true}
+          message="vlizam"
+          onClose={() => {
+            console.log("Vlizam prez Google Provider");
+          }}
+        />
       )}
     </Button>
   );

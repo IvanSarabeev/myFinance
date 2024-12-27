@@ -11,9 +11,14 @@ export const validateOtpCode = () => {
             .isEmail().withMessage("Invalid email address")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
         body('otpCode')
-            .isNumeric()
+            .trim()
+            .isNumeric().withMessage("Invalid Code")
             .isLength({ min: 5, max: 6}).withMessage("Invalid Code")
-            .customSanitizer(value => xssFilters.inHTMLData(value))
+            .customSanitizer(value => {
+                const sanitizedValue = xssFilters.inHTMLData(value);
+
+                return parseInt(sanitizedValue);
+            })
     ];
 }
 
