@@ -5,6 +5,10 @@ export interface User {
     terms: boolean;
 }
 
+export type LoginUser = Omit<User, "name" | "terms">;
+export type RegisterUser = Required<User>;
+export type PartialUser = Partial<User>;
+
 export interface UserFingerPrint {
     userAgent: string;
     browser: string;

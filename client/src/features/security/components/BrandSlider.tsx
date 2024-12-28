@@ -41,11 +41,9 @@ const BrandSlider: React.FC = memo(() => {
         className="size-full flex items-center flex-nowrap overflow-x-hidden gap-14 flex-shrink-0"
       >
         {[...imgData, ...imgData].map((item, index) => {
-          const indexKey = new Set([index]);
-
           return (
             <img
-              key={typeof indexKey}
+              key={`${item.id}-${index}`}
               src={item.imgSrc}
               alt={item.altText}
               aria-label={item.altText}

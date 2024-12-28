@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
-import { User } from "@/types/userTypes";
-import { registerSchema } from "../schemas/register";
+import { RegisterUser } from "@/types/userTypes";
+import { registerSchema } from "./schemas/formSchema";
 import { registerUser } from "@/app/api/auth";
 import useStore from "@/hooks/useStore";
-import RegisterForm from "./forms/RegisterForm";
+import RegisterForm from "./components/forms/RegisterForm";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { HTTP_RESPONSE_STATUS } from "@/defines";
-import RequestEmailValidationModal from "./RequestEmailValidationModal";
+import RequestEmailValidationModal from "./components/RequestEmailValidationModal";
 
 type ResponseData = {
   status: boolean;
@@ -27,7 +27,7 @@ const RegisterContainer: React.FC = () => {
   const [showRequestEmailValidationModal, setShowRequestEmailValidationModal] =
     useState(false);
 
-  const initialValues: User = {
+  const initialValues: RegisterUser = {
     name: "Jacob Smith",
     email: "jacob@example.com",
     password: "Deverge@312",
@@ -36,7 +36,7 @@ const RegisterContainer: React.FC = () => {
 
   const validationSchema = registerSchema;
 
-  const formik = useFormik<User>({
+  const formik = useFormik<RegisterUser>({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {

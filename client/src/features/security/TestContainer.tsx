@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import useStore from "@/hooks/useStore";
 import { useFormik } from "formik";
 import { User } from "@/types/userTypes";
-import { registerSchema } from "./schemas/register";
+import { registerSchema } from "./schemas/formSchema";
 import RegisterForm from "./components/forms/RegisterForm";
 import RequestEmailValidationModal from "./components/RequestEmailValidationModal";
 

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 
 const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 const Register = lazy(() => import("../auth/Register"));
+const Login = lazy(() => import("../auth/Login"));
 
 const AuthRoutes: React.FC = () => {
   return (
@@ -16,8 +17,8 @@ const AuthRoutes: React.FC = () => {
       }
     >
       <Routes>
-        <Route path="/" element={<Register />} />
-        <Route path="sign-up" element={<div></div>} />
+        <Route index element={<Register />} />
+        <Route path="login" element={<Login />} />
       </Routes>
     </Suspense>
   );

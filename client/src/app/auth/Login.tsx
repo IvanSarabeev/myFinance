@@ -1,13 +1,13 @@
-import React, { memo } from "react";
-import RegisterContainer from "@/features/security/RegisterContainer";
+import React from "react";
+import CloudinaryImage from "@/components/CloudinaryImage";
+import SideBackgroundSection from "@/components/SideBackgroundSection";
+import ThirdPartyProvider from "@/components/ThirdPartyProvider";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layouts/Layout";
-import ThirdPartyProvider from "@/components/ThirdPartyProvider";
-import SideBackgroundSection from "@/components/SideBackgroundSection";
-import CloudinaryImage from "@/components/CloudinaryImage";
+import LoginContainer from "@/features/security/LoginContainer";
 import BrandSlider from "@/features/security/components/BrandSlider";
 
-const Register: React.FC = () => {
+const Login: React.FC = () => {
   return (
     <Layout>
       <section className="size-full flexCenter lg:justify-around md:items-start padding-container max-container">
@@ -28,16 +28,16 @@ const Register: React.FC = () => {
             </p>
           </div>
           <ThirdPartyProvider />
-          <RegisterContainer />
+          <LoginContainer />
           <p className="regular-12 lg:regular-14 xl:regular-16 font-medium font-sans mt-4 lg:mt-6">
-            Have an account ?
+            Don't have an account ?
             <Link
-              to={"/login"}
-              title="Login link"
-              aria-label="Login link"
+              to={"/"}
+              title="Register link"
+              aria-label="Register link"
               className="ml-1 text-blue-700 transition-colors duration-150 hover:underline"
             >
-              Sign in
+              Register
             </Link>
           </p>
           <p className="size-full regular-12 lg:regular-14 text-center pt-8 md:pt-12 lg:pt-14 text-slate-900/60">
@@ -67,6 +67,4 @@ const Register: React.FC = () => {
   );
 };
 
-const MemoRegister = memo(Register);
-
-export default MemoRegister;
+export default Login;

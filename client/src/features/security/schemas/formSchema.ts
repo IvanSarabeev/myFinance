@@ -24,3 +24,18 @@ export const registerSchema = object().shape({
         .oneOf([true], "You must accept the terms and conditions")
         .default(false),
 });
+
+export const loginSchema = object().shape({
+    email: string()
+        .min(4, "Email is invalid")
+        .max(60, "Email cannot exceed 60 characters")
+        .matches(EMAIL_REGEX, "Invalid email address")
+        .required("Email is Required"),
+    password: string()
+        .min(8, "Password is invalid")
+        .max(20, "Password cannot exceed 20 characters")
+        .matches(UPPER_CASE_CHARACTER, "Must Contain at least 1 uppercase")
+        .matches(NUMERIC_CHARACTER, "Must contain at least one numeric character")
+        .matches(SPECIAL_CHARACTER, "Must contain at least one special character")
+        .required("Password is Required"),
+});
