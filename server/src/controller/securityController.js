@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { registerUserService } from '../service/securityService.js';
+import { registerUserService, loginUserService } from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 
 dotenv.config();
@@ -7,7 +7,8 @@ dotenv.config();
 const tokenId = process.env.TOKEN_ID ?? "";
 
 /**
- * Controller for Proceeding the User Registration workflow
+ * Proceeding the User Registration workflow
+ * 
  * @param req 
  * @param res 
  * @param next 
@@ -34,7 +35,58 @@ export async function registerUser(req, res, next){
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
-        res.status(500).json({ status: false, message: "Internal Server Error" });
+        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
+/**
+ * Proceed User to their account
+ * 
+ * @param req 
+ * @param res 
+ * @param next 
+ */
+export async function loginUser(req, res, next) {
+    try {
+        const { email, password } = req.body;
+
+        const result = await loginUserService({ email, password });
+
+        console.log("Controller Result:", result);
+        
+        if (result) {
+            const {status, message, token, statusCode} = result;
+            
+            console.log("Controller STATUS:", status);
+            console.log("Controller Code:", statusCode === HTTP_RESPONSE_STATUS.OK);
+            console.log("Controller Token:", token);
+            if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
+                res.status(statusCode).json({
+                    status: true,
+                    token: token,
+                    message: message,
+                });
+            } 
+        } else {
+            const { statusCode, message, errorFields } = result;
+            console.log("Bad Response:", statusCode, message, errorFields);
+            res.status(statusCode).json({
+                status: false,
+                message: message,
+                errorFields: errorFields,
+            });
+        }
+    } catch (error) {
+        console.error(`Unexpected Server Error: ${error}`);
+
+        next();
+        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: "Internal Server Error"
+        });
     }
 };
 
