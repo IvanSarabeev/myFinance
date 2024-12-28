@@ -29,6 +29,7 @@ const Register: React.FC = () => {
           </div>
           <ThirdPartyProvider />
           <RegisterContainer />
+          {/* <TestContainer /> */}
           <p className="regular-12 lg:regular-14 xl:regular-16 font-medium font-sans mt-4 lg:mt-6">
             Have an account ?
             <Link

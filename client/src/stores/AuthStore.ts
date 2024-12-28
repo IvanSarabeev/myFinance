@@ -1,13 +1,13 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { User } from "@/types/userTypes";
+import { RegisterUser } from "@/types/userTypes";
 import { RegisterUserResponse } from "@/types/authTypes";
 import { registerUser } from "@/app/api/auth";
 import { HTTP_RESPONSE_STATUS } from "@/defines";
-import { NOTIFICATION_TYPES, ToastVariants } from "@/types/commonTypes";
+import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
 import { FormikErrors } from "formik";
-
-type OpenNotificationType = (type: ToastVariants, title: string, message: string) => void;
+import userStore from "./UserStore";
+import commonStore from './CommonStore';
 
 class AuthStore {
     isLoading = false;
@@ -29,9 +29,7 @@ class AuthStore {
         });
     }
 
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async registerUser(user: User, userStore: any, openNotification: OpenNotificationType, setFormikErrors: (errors: FormikErrors<User>) => void) {
+    async registerUser(user: RegisterUser, setFormikErrors: (errors: FormikErrors<RegisterUser>) => void) {
         this.isLoading = true;
 
         try {
@@ -49,7 +47,7 @@ class AuthStore {
                     this.showRequestEmailValidationModal = showModal;
                     userStore.setUser(user);
 
-                    openNotification(
+                    commonStore.openNotification(
                         NOTIFICATION_TYPES.SUCCESS,
                         NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                         message,
@@ -65,7 +63,7 @@ class AuthStore {
                 const {errorFields, message} = this.error.response;
                 const newMessage = String(message ?? this.error.message);
                 
-                openNotification(
+                commonStore.openNotification(
                     NOTIFICATION_TYPES.DESTRUCTIVE,
                     NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
                     newMessage,
@@ -77,7 +75,7 @@ class AuthStore {
                         errorFields.map((field) => [field, `${field} is invalid`]),
                     ));
                 } else {
-                    openNotification(
+                    commonStore.openNotification(
                         NOTIFICATION_TYPES.DESTRUCTIVE,
                         NOTIFICATION_TYPES.ERROR.toUpperCase(),
                         newMessage ?? "An unexpected error occurred. Please try again."

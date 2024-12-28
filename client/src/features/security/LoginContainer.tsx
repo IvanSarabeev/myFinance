@@ -8,8 +8,8 @@ import { loginSchema } from "./schemas/formSchema";
 const LoginContainer: React.FC = observer(() => {
   const [errorFields, setErrorFields] = useState<Set<string>>(new Set());
   const initialValues: LoginUser = {
-    email: "",
-    password: "",
+    email: "jacob@example.com",
+    password: "Deverge@312",
   };
 
   const validationSchema = loginSchema;
