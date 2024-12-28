@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import { observer } from "mobx-react-lite";
 import LoginForm from "./components/forms/LoginForm";
 import { useFormik } from "formik";
 import { LoginUser } from "@/types/userTypes";
 import { loginSchema } from "./schemas/formSchema";
+import useStore from "@/hooks/useStore";
+import useRedirect from "@/hooks/useRedirect";
 
 const LoginContainer: React.FC = observer(() => {
-  const [errorFields, setErrorFields] = useState<Set<string>>(new Set());
+  const { authStore } = useStore();
+  const redirectToRoute = useRedirect("/");
+
   const initialValues: LoginUser = {
     email: "jacob@example.com",
     password: "Deverge@312",
@@ -18,13 +22,20 @@ const LoginContainer: React.FC = observer(() => {
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {
-      console.log(values, actions);
+      await authStore.loginUser(values, actions.setErrors);
 
-      setErrorFields(new Set(values.email));
+      console.log("Check the data", authStore.data);
+
+      if (authStore.data?.status) {
+        actions.resetForm();
+        if (redirectToRoute) {
+          return redirectToRoute();
+        }
+      }
     },
   });
 
-  return <LoginForm formik={formik} errorFields={errorFields} />;
+  return <LoginForm formik={formik} errorFields={authStore.errorFields} />;
 });
 
 export default LoginContainer;

@@ -14,7 +14,7 @@ import InputOTP from "@/components/CommonOTP";
 import { Button } from "@/components/ui/button";
 import { HTTP_RESPONSE_STATUS, MAX_OTP_SLOTS } from "@/defines";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
-import { redirectInstance } from "@/utils/redirectInstance";
+import useRedirect from "@/hooks/useRedirect";
 
 type RequestEmailValidationModalProps = {
   isModalOpen: boolean;
@@ -30,6 +30,7 @@ const RequestEmailValidationModal: React.FC<
   const [otp, setOtp] = useState("");
 
   const user = userStore.getUser();
+  const redirectToRoute = useRedirect("/login");
 
   function handleOtpChange(value: string) {
     setOtp(value);
@@ -60,8 +61,10 @@ const RequestEmailValidationModal: React.FC<
       });
 
       if (result.data.status && result.status === HTTP_RESPONSE_STATUS.OK) {
-        redirectInstance("/dashboard");
         onClose();
+        if (redirectToRoute) {
+          return redirectToRoute();
+        }
       }
     } catch (error) {
       console.error("OTP Error: ", error);

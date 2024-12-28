@@ -5,3 +5,5 @@ export interface RegisterUserResponse {
     token?: string;
     errorFields?: string[];
 }
+
+export type LoginUserResponse = RegisterUserResponse & {}

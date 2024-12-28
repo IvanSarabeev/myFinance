@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ErrorMessage";
 import { Link } from "react-router-dom";
 import { Eye } from "lucide-react";
-import ValidateField from "@/utils/isFieldValid";
+import isFieldValid from "@/utils/isFieldValid";
+import { Button } from "@/components/ui/button";
 
 type LoginFormProps = {
   formik: FormikProps<LoginUser>;
@@ -40,7 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
               className={cn(
                 "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
                 {
-                  "text-red-600": ValidateField("email", formik, errorFields),
+                  "text-red-600": isFieldValid("email", formik, errorFields),
                 }
               )}
             >
@@ -55,7 +56,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
             disabled={formik.isSubmitting}
             onInvalid={handleInvalidData("email")}
             className={cn("rounded-2xl border border-slate-200", {
-              "input-error": ValidateField("email", formik, errorFields),
+              "input-error": isFieldValid("email", formik, errorFields),
             })}
             {...formik.getFieldProps("email")}
           />
@@ -74,11 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
               className={cn(
                 "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
                 {
-                  "text-red-600": ValidateField(
-                    "password",
-                    formik,
-                    errorFields
-                  ),
+                  "text-red-600": isFieldValid("password", formik, errorFields),
                 }
               )}
             >
@@ -114,7 +111,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
               className={cn(
                 "size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600",
                 {
-                  "stroke-red-600": ValidateField(
+                  "stroke-red-600": isFieldValid(
                     "password",
                     formik,
                     errorFields
@@ -129,6 +126,16 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
           formik={formik}
           errorFields={errorFields}
         />
+        <Button
+          type="submit"
+          title="Login"
+          variant="submit"
+          size="submitBtn"
+          disabled={formik.isSubmitting}
+          aria-label="Login button"
+        >
+          {formik.isSubmitting ? "Loading.." : "Login"}
+        </Button>
       </div>
     </form>
   );

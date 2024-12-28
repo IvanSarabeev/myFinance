@@ -2,8 +2,8 @@
 import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
-import { User } from "@/types/userTypes";
-import { RegisterUserResponse } from "@/types/authTypes";
+import { LoginUser, User } from "@/types/userTypes";
+import { LoginUserResponse, RegisterUserResponse } from "@/types/authTypes";
 
 /**
  * Add new User to the system
@@ -27,17 +27,18 @@ export async function registerUser(user: User): Promise<AxiosResponse<RegisterUs
 /**
  * Authenticated existing User to the system
  * 
- * @param {User} user 
- * @returns {User | undefined}
+ * @param {LoginUser} user 
+ * @returns {Promise<AxiosResponse<LoginUserResponse>>}
+ * @throws {Error}
  */
-export async function loginUser(user: User): Promise<User | undefined> {
-    if (!user) {
-        console.error(`Invalid ${user}!`);
-        throw new Error(`Invalid ${user}!`);
+export async function loginUser(user: LoginUser): Promise<AxiosResponse<LoginUserResponse>> {
+    try {
+        return await api.post("/auth/login", user);
+    } catch (error) {
+        console.error("API RESPONSE:", error);
+        throw error;
     }
-
-    return user;
-};
+}
 
 /**
  * Logout User from the system
@@ -45,9 +46,13 @@ export async function loginUser(user: User): Promise<User | undefined> {
  * @returns {void}
  */
 export async function logoutUser() {
-    const response = api.post("./api/auth/logout");
+    try {
+        return await api.post("/auth/logout");
+    } catch (error) {
+        console.error("API RESPONSE", error);
 
-    return response;
+        throw error;
+    }
 };
 
 /**
