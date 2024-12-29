@@ -8,6 +8,7 @@ import {
 } from '../middleware/authMiddleware.js';
 import { 
     forgottenPassword, 
+    github, 
     google, 
     loginUser, 
     logoutUser, 
@@ -30,6 +31,6 @@ router.post("/logout", logoutUser);
 
 // Thirt Party APIs
 router.post("/google-login", validateProviders(), securityValidation, google);
-
+router.post("/github-login", validateProviders(), securityValidation, github);
 
 export default router;

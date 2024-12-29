@@ -6,6 +6,7 @@ import {
 } from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
+import { googleService, githubService } from '../service/authManager.js';
 
 dotenv.config();
 
@@ -137,9 +138,10 @@ export async function forgottenPassword(req, res, next) {
 /**
  * Clear a User, their Cookie Token 
  * 
- * @param req 
- * @param res 
- * @param next 
+ * @param {Request} req 
+ * @param {Respons} res 
+ * @param {NextFunction} next 
+ * @returns {Object}
  */
 export function logoutUser(req, res, next){
     try {
@@ -155,11 +157,61 @@ export function logoutUser(req, res, next){
     }
 }
 
+/**
+ * Authenticate/Register User through 3-th party API
+ * 
+ * @param {Request} req 
+ * @param {Respons} res 
+ * @param {NextFunction} next 
+ * @returns {Object}
+ */
 export async function google(req, res, next) {
     const { email, name, photo, fingerPrint } = req.body;
 
     try {
         const result = await googleService({ email, name, photo, fingerPrint });
+
+        const {status, statusCode, message, token } = result;
+
+        if (result) {
+            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
+                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+                    status: true,
+                    token: token,
+                    message: message,
+                });
+            }
+        } else {
+            return {
+                status: false,
+                statusCode: statusCode,
+                message: message,
+            }
+        }
+    } catch (error) {
+        console.error(`Unexpected Server Error: ${error}`);
+
+        next();
+        res.status(HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE).json({
+            status: false,
+            message: "Current service is unavailable, Please contanct our support center!"
+        });
+    }
+};
+
+/**
+ * Authentica/Register User thorugh 3-th party API
+ * 
+ * @param {Request} req 
+ * @param {Respons} res 
+ * @param {NextFunction} next 
+ * @returns {Object}
+ */
+export async function github(req, res, next) {
+    const { email, name, photo, fingerPrint } = req.body;
+
+    try {
+        const result = await githubService({ email, name, photo, fingerPrint });
 
         const {status, statusCode, message, token } = result;
 

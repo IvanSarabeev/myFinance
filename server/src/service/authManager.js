@@ -52,6 +52,43 @@ export async function googleService(parameters) {
     }
 };
 
+export async function githubService(parameters) {
+    const { email, name, photo, fingerPrint } = parameters;
+
+    try {
+        const user = await User.findOne({ email: email });
+
+        if (user) {
+            const response = await createUserToken(user._id);
+            const {status, statusCode, token, message} = response;
+            
+            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
+                const { ...data } = user.toObject();
+
+                return {
+                    status: status,
+                    statusCode: HTTP_RESPONSE_STATUS.OK,
+                    data: data,
+                    token: token,
+                    message: message,
+                };
+            }
+
+            return response;
+        } else {
+            return await createUser({ email, name, photo, fingerPrint });
+        }
+    } catch (error) {
+        console.error(`Fatal Error: ${error}`);
+        
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Invalid Credentials"
+        };
+    }
+}
+
 /**
  * User has already been registrated to the system
  * 
