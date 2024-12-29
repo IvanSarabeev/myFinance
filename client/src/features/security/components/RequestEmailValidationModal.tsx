@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import CloudinaryImage from "@/components/CloudinaryImage";
-import InputOTP from "@/components/CommonOTP";
+import OtpInput from "@/components/OtpInput";
 import { Button } from "@/components/ui/button";
 import { HTTP_RESPONSE_STATUS, MAX_OTP_SLOTS } from "@/defines";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
@@ -95,10 +95,11 @@ const RequestEmailValidationModal: React.FC<
         </DialogHeader>
 
         <div className="flexColCenter items-center space-x-2 mx-auto">
-          <InputOTP
+          <OtpInput
             slots={MAX_OTP_SLOTS}
             value={otp}
             onChange={handleOtpChange}
+            errorField={otpStore.error?.status}
           />
         </div>
 

@@ -27,7 +27,20 @@ app.use(helmet.noSniff());
 app.use(helmet.frameguard({ action: "deny"}));
 app.use(helmet.xssFilter());
 app.use(helmet.hidePoweredBy());
-app.use(helmet({ crossOriginEmbedderPolicy: false }));
+app.use(helmet({ 
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defauktSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://res.cloudinary.com"],
+      imgSrc: ["'self'", "https://res.cloudinary.com"],    // Allow images from Cloudinary
+      connectSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [], 
+    }
+  }
+}));
 
 // Cors Configuration
 app.use(cors({
@@ -43,7 +56,7 @@ app.use(cors({
   allowedHeaders: [
     'Content-Type', 'Authorization', 'Referrer-Policy', 
     'Strict-Transport-Security', 'X-Content-Type-Options',
-    'X-Frame-Options', 'X-XSS-Protection',
+    'X-Frame-Options', 'X-XSS-Protection', 'Content-Security-Policy',
   ],
   credentials: false,
 }));

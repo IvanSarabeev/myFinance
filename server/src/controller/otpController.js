@@ -14,8 +14,6 @@ export async function verifyEmail(req, res) {
         
         const result = await verifyEmailOtpCode(email, otpCode);
 
-        console.log("OTP Response", result);
-
         if (result.status && result.statusCode === HTTP_RESPONSE_STATUS.OK) {
             return res.status(result.statusCode).json({ 
                 status: true, 
@@ -31,6 +29,10 @@ export async function verifyEmail(req, res) {
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);
 
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Unexpected Error" };
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Unexpected Error",
+        };
     }
 }

@@ -154,3 +154,37 @@ export function logoutUser(req, res, next){
         next(error);
     }
 }
+
+export async function google(req, res, next) {
+    const { email, name, photo, fingerPrint } = req.body;
+
+    try {
+        const result = await googleService({ email, name, photo, fingerPrint });
+
+        const {status, statusCode, message, token } = result;
+
+        if (result) {
+            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
+                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+                    status: true,
+                    token: token,
+                    message: message,
+                });
+            }
+        } else {
+            return {
+                status: false,
+                statusCode: statusCode,
+                message: message,
+            }
+        }
+    } catch (error) {
+        console.error(`Unexpected Server Error: ${error}`);
+
+        next();
+        res.status(HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE).json({
+            status: false,
+            message: "Current service is unavailable, Please contanct our support center!"
+        });
+    }
+};

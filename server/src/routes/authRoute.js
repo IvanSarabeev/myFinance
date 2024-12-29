@@ -1,12 +1,14 @@
 import express from 'express';
 import { 
     securityValidation, 
+    validateProviders, 
     validateUserForgottenPassword, 
     validateUserLogin, 
     validateUserRegistration,
 } from '../middleware/authMiddleware.js';
 import { 
     forgottenPassword, 
+    google, 
     loginUser, 
     logoutUser, 
     registerUser
@@ -25,5 +27,9 @@ router.post("/register", validateUserRegistration(), securityValidation, registe
 router.post("/login", validateUserLogin(), securityValidation, loginUser);
 router.post("/forgotten-password", validateUserForgottenPassword(), securityValidation, forgottenPassword);
 router.post("/logout", logoutUser);
+
+// Thirt Party APIs
+router.post("/google-login", validateProviders(), securityValidation, google);
+
 
 export default router;

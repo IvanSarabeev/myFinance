@@ -3,6 +3,11 @@ import { body, validationResult } from 'express-validator';
 import { CHARACTERS_LENGTH_REGEX } from "../utils/regex.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 
+/**
+ * Middleware for the User Registration flow request Data
+ * 
+ * @returns {Array}
+ */
 export const validateUserRegistration = () => {
     return [
         body("name")
@@ -41,6 +46,11 @@ export const validateUserRegistration = () => {
     ];
 };
 
+/**
+ * Middleware for Authenticating User request Data
+ * 
+ * @returns {Array}
+ */
 export const validateUserLogin = () => {
     return [
         body('email')
@@ -56,6 +66,11 @@ export const validateUserLogin = () => {
     ];
 };
 
+/**
+ * Middleware for User forgotten password, request Data
+ * 
+ * @returns {Array}
+ */
 export const validateUserForgottenPassword = () => {
     return [
         body('email')
@@ -67,6 +82,41 @@ export const validateUserForgottenPassword = () => {
     ];
 };
 
+/**
+ * Middleware for Authentication via 3-th party API
+ * 
+ * @returns {Array}
+ */
+export const validateProviders = () => {
+    return [
+        body('email')
+            .trim()
+            .isLength({ min: 4, max: 60 }).withMessage("Invalid email address.")
+            .bail() 
+            .isEmail().withMessage("Invalid email address")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+        body("name")
+            .trim()
+            .isString()
+            .isLength({ min: 3, max: 40 }).withMessage("Name is invalid")
+            .bail()
+            .matches(CHARACTERS_LENGTH_REGEX).withMessage("Invalid Name Credentials")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+        body('photo')
+            .trim()
+            .isLength({ min: 5, max: 100 }).withMessage("Photo must be a valid link")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+    ]
+};
+
+/**
+ * Middleware Function
+ * 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ * @returns {Object}
+ */
 export const securityValidation = (req, res, next) => {
     const errors = validationResult(req);
 
