@@ -53,7 +53,18 @@ export const validateUserLogin = () => {
             .trim()
             .isStrongPassword({ minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
             .withMessage("Weak password provided"),
-    ]
+    ];
+};
+
+export const validateUserForgottenPassword = () => {
+    return [
+        body('email')
+            .trim()
+            .isLength({ min: 4, max: 60 }).withMessage("Incorrect email address")
+            .bail() // Ignore the rest conditions, if the first failed
+            .isEmail().withMessage("Invalid email address")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+    ];
 };
 
 export const securityValidation = (req, res, next) => {

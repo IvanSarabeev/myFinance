@@ -1,5 +1,9 @@
 import dotenv from 'dotenv';
-import { registerUserService, loginUserService, forgottenPasswordService } from '../service/securityService.js';
+import { 
+    registerUserService,
+    loginUserService, 
+    forgottenPasswordService
+} from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
 
@@ -61,16 +65,7 @@ export async function loginUser(req, res, next) {
         if (result) {
             const {status, message, token, statusCode} = result;
             
-            console.log("Controller STATUS:", status);
-            console.log("Controller Code:", statusCode === HTTP_RESPONSE_STATUS.OK);
-            console.log("Controller Token:", token);
             if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
-                // res.status(statusCode).json({
-                //     status: true,
-                //     token: token,
-                //     message: message,
-                // });
-                // TODO: Test with Both or Single response scenario
                 res.cookie(tokenId, token, cookieOption).status(statusCode).json({
                     status: true,
                     message: message,
