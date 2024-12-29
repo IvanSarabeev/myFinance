@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
-import { registerUserService, loginUserService } from '../service/securityService.js';
+import { registerUserService, loginUserService, forgottenPasswordService } from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
+import { cookieOption } from '../config/cookie.js';
 
 dotenv.config();
 
@@ -64,10 +65,16 @@ export async function loginUser(req, res, next) {
             console.log("Controller Code:", statusCode === HTTP_RESPONSE_STATUS.OK);
             console.log("Controller Token:", token);
             if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
-                res.status(statusCode).json({
+                // res.status(statusCode).json({
+                //     status: true,
+                //     token: token,
+                //     message: message,
+                // });
+                // TODO: Test with Both or Single response scenario
+                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
                     status: true,
-                    token: token,
                     message: message,
+                    token: token,
                 });
             } 
         } else {
@@ -77,6 +84,48 @@ export async function loginUser(req, res, next) {
                 status: false,
                 message: message,
                 errorFields: errorFields,
+            });
+        }
+    } catch (error) {
+        console.error(`Unexpected Server Error: ${error}`);
+
+        next();
+        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
+/**
+ * Sent the User a email with the new password
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next
+ * @returns {Object}
+ */
+export async function forgottenPassword(req, res, next) {
+    const { email } = req.body;
+
+    try {
+        const result = await forgottenPasswordService(email);
+        
+        if (result) {
+            const { status, statusCode, message } = result;
+            
+            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
+                return {
+                    status: true,
+                    message: message,
+                }
+            } 
+        } else {
+            const { statusCode, message } = result;
+
+            res.status(statusCode).json({
+                status: false,
+                message: message,
             });
         }
     } catch (error) {

@@ -17,3 +17,9 @@ export const HTTP_RESPONSE_STATUS = Object.freeze({
     INTERNAL_SERVER_ERROR: 500,
     SERVICE_UNAVAILABLE: 503, 
 });
+
+export const COOKIE_SITE = Object.freeze({
+    STRICT: "Strict",
+    LAX: "Lax",
+    SELF: "Self",
+});

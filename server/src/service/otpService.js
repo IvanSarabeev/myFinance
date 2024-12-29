@@ -134,3 +134,61 @@ export async function verifyEmailOtpCode(email, otpCode) {
         };
     }
 }
+
+/**
+ * Send new password to the provided email address
+ * 
+ * @param {String} email
+ * @returns {Object} - Returns status, statusCode, token and message 
+ */
+export async function sendUserPassword(email) {
+    const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
+    
+    if (!corpEmailAddress) {
+        console.error("Missing Corp. Email Address");
+        
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, 
+            message: "Internal Server Error" 
+        };
+    }
+    try {
+        const newPassword = Math.random().toString(36).slice(8) + Math.random().toString(36).slice(8);
+
+        const passwordTemplate = {
+            from: `"myFinance EOOD" ${corpEmailAddress}`,
+            to: email,
+            subject: "Forgotten Password",
+            text: `Your new Password: <strong>${newPassword}</strong>`,
+        };
+
+        const transportProvider = await emailTransportProvider.sendMail(passwordTemplate);
+
+        if (
+            transportProvider.accepted.length > 0 &&
+            transportProvider.rejected.length === 0 &&
+            transportProvider.response.startsWith("250")
+        ) {
+            return { 
+                status: true, 
+                statusCode: HTTP_RESPONSE_STATUS.CREATED, 
+                message: "Email sent! Use your new password, which is provided in the email to access account."
+            };
+        }
+
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+            message: "Failed to send email message."
+        };
+    } catch (error) {
+        console.error(`Fatal Error: ${error}`);
+    
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message:"Internal Server Error"
+        };
+    }
+}

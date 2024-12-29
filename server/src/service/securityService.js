@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import User from './../model/user.js';
-import { emailVerification } from "./otpService.js";
+import { emailVerification, sendUserPassword } from "./otpService.js";
 import { generateOtp } from '../utils/otpGenerator.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import Jwt from "jsonwebtoken";
@@ -124,7 +124,11 @@ async function findExistingUser(email, name) {
             return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK };
         }
     } catch (error) {
-        return { success: false, statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, message: "Internal Server Error" };
+        return { 
+            success: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Internal Server Error"
+        };
     }
 };
 
@@ -189,3 +193,51 @@ export async function loginUserService(userData) {
         };
     }
 };
+
+/**
+ * Send a email to the corresponding User
+ * 
+ * @param {String} email
+ * @returns {Object} - Returns status, statusCode, token and message
+ */
+export async function forgottenPasswordService(email) {
+    try {
+        const findUser = await User.findOne({ email: email });
+
+        if (!findUser) {
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND,
+                message: "User not found! Try again or contanct our support center!",
+            }
+        }
+
+        const response = await sendUserPassword(email);
+
+        if (response) {
+            const {status, statusCode, message} = response;
+
+            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
+                return {
+                    status: status,
+                    statusCode: statusCode,
+                    message: message,
+                }
+            }
+        } else {
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                message: "Unable to proceed further, Please contanct our customer support center!"
+            };
+        }
+    } catch (error) {
+        console.error(`Fatal Error: ${error}`);
+
+        return { 
+            status: false, 
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            message: "Invalid Credentials"
+        };
+    }
+}
