@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
-import User from '../model/user';
 import Jwt from 'jsonwebtoken';
-import { HTTP_RESPONSE_STATUS } from '../defines';
 import bcryptjs from 'bcryptjs';
-import { UserRoles } from '../enums/userEnum';
+import User from '../model/user.js';
+import { HTTP_RESPONSE_STATUS } from '../defines.js';
+import { UserRoles } from '../enums/userEnum.js';
 
 dotenv.config();
 
 /**
+ * Authenticate/Register User through 3-th party API 
  * 
  * @param {Object} parameters 
  * @returns 
@@ -38,59 +39,7 @@ export async function googleService(parameters) {
 
             return response;
         } else {
-            const newPassword = Math.random().toString().slice(8) + Math.random().toString().slice(8);
-            const hashPassword = bcryptjs.hashSync(newPassword, 12);
-
-            let uniqueUserName = name.trim();
-            let userExists = await User.findOne({ username: uniqueUserName });
-
-            // Check if the username already exists and generate a unique one if necessary
-            let incrementNum = 1;
-
-            while (userExists) {
-                uniqueUserName = name.trim() + Math.floor(incrementNum++);
-
-                userExists = await User.findOne({ username: uniqueUserName });
-            }
-
-            try {
-                const createUser = new User({
-                    name: uniqueUserName,
-                    email: email.trim(),
-                    password: hashPassword,
-                    terms: true,
-                    role: UserRoles.DEFAULT_ROLE,
-                    device: fingerPrint,
-                    userAvatar: photo,
-                    verified: true,
-                    otpCode: NaN,
-                    otpExpiration: undefined,
-                });
-
-                // Option, add step for email verification
-
-                await createUser.save();
-
-                const token = Jwt.sign({ id: createUser._id }, process.env.JWT_OPTION ?? "");
-
-                const { ...data } = createUser.toObject();
-
-                return {
-                    status: true,
-                    statusCode: HTTP_RESPONSE_STATUS.CREATED,
-                    message: "Succesful registration via Google",
-                    token: token,
-                    data: data
-                };
-            } catch (error) {
-                console.error("Cannot proceed further", error);
-
-                return {
-                    status: false,
-                    statusCode: HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE,
-                    message: "Can't proceed with third party data, Please contact our support center!"
-                }
-            }
+            return await createUser({ email, name, photo, fingerPrint });
         }
     } catch (error) {
         console.error(`Fatal Error: ${error}`);
@@ -137,4 +86,73 @@ async function createUserToken(userId) {
             message: "Can't proceed with third party data, Please contact our support center!"
         };
     }
-}
+};
+
+/**
+ * Register User through the system.
+ * 
+ * @param {Object} parameters 
+ * @returns {Object}
+ */
+async function createUser(parameters) {
+    const { email, name, photo, fingerPrint } = parameters;
+
+    const newPassword = Math.random().toString().slice(8) + Math.random().toString().slice(8);
+    const hashPassword = bcryptjs.hashSync(newPassword, 12);
+
+    try {
+        const userName = name.trim();
+        const findUser = await User.findOne({ username: userName });
+
+        if (findUser) {
+            return await createUserToken(findUser._id);
+        }
+
+        try {
+            const createUser = new User({
+                name: userName,
+                email: email,
+                password: hashPassword,
+                terms: true,
+                role: UserRoles.DEFAULT_ROLE,
+                device: fingerPrint,
+                userAvatar: photo,
+                verified: true,
+                otpCode: NaN,
+                otpExpiration: undefined,
+            });
+
+            // Option, add step for email verification
+            await createUser.save();
+
+            const token = Jwt.sign({ id: createUser._id }, process.env.JWT_OPTION ?? "");
+
+            const { ...data } = createUser.toObject();
+
+            return {
+                status: true,
+                statusCode: HTTP_RESPONSE_STATUS.CREATED,
+                message: "Succesful registration via Google",
+                token: token,
+                data: data
+            };
+        } catch (error) {
+            console.error("Cannot proceed further", error);
+
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE,
+                message: "Can't proceed with third party data, Please contact our support center!"
+            }
+        }
+
+    } catch (error) {
+        console.error("Unable to create user", error);
+
+        return {
+            status: false,
+            statusCode: HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE,
+            message: "Can't proceed with third party data, Please contact our support center!"
+        };
+    }
+};
