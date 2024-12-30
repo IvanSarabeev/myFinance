@@ -1,13 +1,15 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { LoginUser, RegisterUser } from "@/types/userTypes";
-import { RegisterUserResponse } from "@/types/authTypes";
-import { loginUser, registerUser } from "@/app/api/auth";
-import { HTTP_RESPONSE_STATUS } from "@/defines";
+import { ExternalProviderResponse, RegisterUserResponse } from "@/types/authTypes";
+import { google, loginUser, registerUser } from "@/app/api/auth";
+import { AUTH_OPERATION_TYPES, HTTP_RESPONSE_STATUS } from "@/defines";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
 import { FormikErrors } from "formik";
 import userStore from "./UserStore";
 import commonStore from './CommonStore';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { firebase } from "@/lib/firebase";
 
 class AuthStore {
     private readonly AUTH_TOKEN = "authToken";
@@ -15,6 +17,7 @@ class AuthStore {
     isLoading = false;
     errorFields: Set<string> = new Set();
     data: RegisterUserResponse | null = null;
+    oAuthData: ExternalProviderResponse | null = null;
     showRequestEmailValidationModal = false;
     error: ApiErrorResponse | null = null;
     isAuthenticated = false;
@@ -36,6 +39,7 @@ class AuthStore {
             clearToken: action,
             loginUser: action,
             closeRequestEmailValidationModal: action,
+            google: action,
         });
     }
 
@@ -181,6 +185,75 @@ class AuthStore {
             });
         }
     }
+
+    /**
+     * Authenticate/Register User through 3th party API
+     */
+    async google() {
+        this.isLoading = true;
+
+        try {
+            const auth = getAuth(firebase);
+            const provider = new GoogleAuthProvider();
+            const googleResponse = await signInWithPopup(auth, provider);
+
+            if (
+                googleResponse.user.emailVerified &&
+                googleResponse.operationType === AUTH_OPERATION_TYPES.SIGN_IN
+            ) {
+                console.log("Store googleResponse:", googleResponse);
+                const { displayName, email, photoURL } = googleResponse.user;
+                const data = {
+                    name: displayName,
+                    email,
+                    photo: photoURL,
+                    fingerPrint: userStore.getFingerPrint(),
+                };
+
+                const response = await google(data);
+                const {status, message, token} = response.data;
+
+                console.log("Store API Response:", response);
+
+                if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
+                    runInAction(() => {
+                        this.oAuthData = {...response.data.data, ...response.data};
+                        this.setToken(token);
+                        commonStore.openNotification(
+                            NOTIFICATION_TYPES.SUCCESS,
+                            NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
+                            message,
+                        );
+                        userStore.setExternalUser(response.data.data);
+                    })
+                } else {
+                    this.clearToken();
+                    runInAction(() => {
+                        commonStore.openNotification(
+                            NOTIFICATION_TYPES.DESTRUCTIVE,
+                            NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
+                            message,
+                        );
+                    });
+                }
+            } else {
+                commonStore.openNotification(
+                    NOTIFICATION_TYPES.SUCCESS,
+                    NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
+                    "Unable to process your request",
+                );
+            }
+        } catch (error) {
+            this.isLoading = false;
+            console.error("Store Error:", error);
+
+            throw error;
+        } finally {
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        }
+    };
 };
 
 const authStore = new AuthStore();

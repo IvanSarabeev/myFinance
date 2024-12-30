@@ -95,7 +95,7 @@ export const validateProviders = () => {
             .bail() 
             .isEmail().withMessage("Invalid email address")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
-        body("name")
+        body('name')
             .trim()
             .isString()
             .isLength({ min: 3, max: 40 }).withMessage("Name is invalid")
@@ -106,6 +106,15 @@ export const validateProviders = () => {
             .trim()
             .isLength({ min: 5, max: 100 }).withMessage("Photo must be a valid link")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
+            body("fingerPrint")
+            .isObject().withMessage("Invalid data")
+            .customSanitizer(value => {
+                if (typeof value === 'object') {
+                    return value;
+                }
+
+                return xssFilters.inHTMLData(value)
+            }),
     ]
 };
 

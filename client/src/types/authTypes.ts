@@ -7,3 +7,10 @@ export interface RegisterUserResponse {
 }
 
 export type LoginUserResponse = RegisterUserResponse & {}
+
+export interface ExternalProviderResponse {
+    status: boolean;
+    message: string;
+    token?: string;
+    data: object;
+}

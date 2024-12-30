@@ -9,6 +9,8 @@ import cors from "cors";
 import statusRouter from "./middleware/HealthCheck.js";
 import AuthRoutes from './routes/authRoute.js';
 import OtpRoutes from "./routes/otpRoute.js";
+
+// Helper Functions
 import { cleanUrl } from "./helpers/utils.js";
 
 dotenv.config();
@@ -18,9 +20,11 @@ const __dirname = path.resolve();
 const app = express();
 
 const allowedOrigins = [
-  cleanUrl(`${process.env.CLIENT_URL + process.env.CLIENT_PORT}`),
-  cleanUrl(`${process.env.SERVER_URL + process.env.PORT}`),
-  cleanUrl(process.env.SERVER_PROD_URL),
+  `${process.env.CLIENT_URL + process.env.CLIENT_PORT}`,
+  `${process.env.SERVER_URL + process.env.PORT}`,
+  process.env.SERVER_PROD_URL,
+  cleanUrl(process.env.FIREBASE_URL),
+  cleanUrl(process.env.GOOGLE_API),
 ];
 const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
 
@@ -34,14 +38,20 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defauktSrc: ["'self'"],
-      scriptSrc: ["'self'", "https://res.cloudinary.com"],
-      imgSrc: ["'self'", "https://res.cloudinary.com", "data"],    // Allow images from Cloudinary
-      connectSrc: ["'self'", ...mapOrigin],
+      scriptSrc: ["'self'", process.env.CLOUDINARY_URL, "'unsafe-inline'"],
+      imgSrc: ["'self'", process.env.CLOUDINARY_URL, "data"],    // Allow images from Cloudinary
+      connectSrc: ["'self'",
+        ...mapOrigin, 
+        process.env.FIREBASE_URL,
+        process.env.GOOGLE_API,
+      ],
       styleSrc: ["'self'", "'unsafe-inline'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [], 
+      referrerPolicy: ["strict-origin-when-cross-origin"],
     }
   }
+  // contentSecurityPolicy: false,
 }));
 
 // Cors Configuration
@@ -53,6 +63,8 @@ app.use(cors({
     } else {
       callback(new Error('Not allowed by CORS'));
     }
+
+    console.log('CORS received origin:', origin);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
@@ -60,7 +72,7 @@ app.use(cors({
     'Strict-Transport-Security', 'X-Content-Type-Options',
     'X-Frame-Options', 'X-XSS-Protection', 'Content-Security-Policy',
   ],
-  credentials: false,
+  credentials: true, // true
 }));
 
 // Handle Preflight Request

@@ -2,8 +2,8 @@
 import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
-import { LoginUser, User } from "@/types/userTypes";
-import { LoginUserResponse, RegisterUserResponse } from "@/types/authTypes";
+import { GoogleUser, LoginUser, User } from "@/types/userTypes";
+import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse } from "@/types/authTypes";
 
 /**
  * Add new User to the system
@@ -68,4 +68,22 @@ export async function forgottenUserPassword(user: Partial<User>): Promise<Partia
     }
 
     return user;
+}
+
+/**
+ * Authenticate/Register User
+ * 
+ * @param {Object} data 
+ * @returns {Promise<AxiosResponse<ExternalProviderResponse>>}
+ */
+export async function google(data: GoogleUser): Promise<AxiosResponse<ExternalProviderResponse>> {
+    try {
+        const response = await api.post("/auth/google-login", data);
+        
+        console.log("API response:", response);
+        return response;
+    } catch (error) {
+        console.error("API RESPONSE:", error);
+        throw error;
+    }
 }

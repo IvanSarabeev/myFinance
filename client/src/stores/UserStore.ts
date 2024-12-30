@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
 import { ClientJS } from 'clientjs';
-import { UserFingerPrint, User } from '@/types/userTypes';
+import { UserFingerPrint, User, ExternalUser } from '@/types/userTypes';
 import { format } from "date-fns";
 
 class UserStore {
@@ -21,17 +21,27 @@ class UserStore {
         deviceType: NaN,
         lastActive: "",
     };
+    externalUser: ExternalUser = {
+        name: "",
+        email: "",
+        terms: false,
+        photoUrl: "",
+        isVerified: false,
+    }
 
     constructor() {
         makeObservable(this, {
             user: observable, // User Type
             userFingerPrintData: observable, // UserFingerPrint Type
+            externalUser: observable,
 
             // Actions
             getUser: action,
             setUser: action,
             getFingerPrint: action,
             getUserDetails: action,
+            setExternalUser: action,
+            getExternalUser: action,
         });
     }
 
@@ -86,6 +96,19 @@ class UserStore {
             user: this.user,
             userFingerPrintData: this.userFingerPrintData,
         }
+    }
+
+    setExternalUser(data: Partial<ExternalUser>) {
+        runInAction(() => {
+            this.externalUser = {
+                ...this.externalUser,
+                ...data,
+            }
+        });
+    }
+
+    getExternalUser() {
+        return this.externalUser;
     }
 }
 

@@ -27,6 +27,7 @@
     "clientjs": "^0.2.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "firebase": "^11.1.0",
     "formik": "^2.4.6",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.453.0",

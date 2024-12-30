@@ -21,7 +21,7 @@ const api = axios.create({
         "Strict-Transport-Security": String(TSP_SECURITY),
         "Accept": String(import.meta.env.VITE_CONTENT_TYPE),
     },
-    withCredentials: false,
+    withCredentials: true,
 });
 
 api.interceptors.response.use((response) => {

@@ -24,3 +24,11 @@ export const HTTP_RESPONSE_STATUS = Object.freeze({
 });
 
 // End of HTTP Response Status Codes
+
+// O_Auth Type's
+export const AUTH_OPERATION_TYPES = Object.freeze({
+    SIGN_IN: "signIn",
+    SIGN_UP: "signUp",
+    LOGOUT: "logout",
+});
+// End of O_Auth Type's

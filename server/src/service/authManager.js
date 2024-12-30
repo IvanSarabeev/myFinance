@@ -19,8 +19,6 @@ export async function googleService(parameters) {
     try {
         const user = await User.findOne({ email: email });
 
-        console.log("User _id:", typeof user._id, user._id);
-
         if (user) {
             const response = await createUserToken(user._id);
             const {status, statusCode, token, message} = response;
@@ -31,7 +29,6 @@ export async function googleService(parameters) {
                 return {
                     status: status,
                     statusCode: HTTP_RESPONSE_STATUS.OK,
-                    data: data,
                     token: token,
                     message: message,
                 };
@@ -68,7 +65,6 @@ export async function githubService(parameters) {
                 return {
                     status: status,
                     statusCode: HTTP_RESPONSE_STATUS.OK,
-                    data: data,
                     token: token,
                     message: message,
                 };
@@ -155,7 +151,7 @@ async function createUser(parameters) {
                 device: fingerPrint,
                 userAvatar: photo,
                 verified: true,
-                otpCode: NaN,
+                otpCode: undefined,
                 otpExpiration: undefined,
             });
 
@@ -174,7 +170,7 @@ async function createUser(parameters) {
                 data: data
             };
         } catch (error) {
-            console.error("Cannot proceed further", error);
+            console.error("Cannot proceed further:", error);
 
             return {
                 status: false,

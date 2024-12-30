@@ -171,16 +171,17 @@ export async function google(req, res, next) {
     try {
         const result = await googleService({ email, name, photo, fingerPrint });
 
-        const {status, statusCode, message, token } = result;
+        console.log("Controller Result:", result);
 
-        if (result) {
-            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
-                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
-                    status: true,
-                    token: token,
-                    message: message,
-                });
-            }
+        const {status, statusCode, data, token, message } = result;
+
+        if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
+            res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+                status: true,
+                token: token,
+                data: data,
+                message: message,
+            });
         } else {
             return {
                 status: false,
