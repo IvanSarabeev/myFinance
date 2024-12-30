@@ -22,10 +22,7 @@ const allowedOrigins = [
   cleanUrl(`${process.env.SERVER_URL + process.env.PORT}`),
   cleanUrl(process.env.SERVER_PROD_URL),
 ];
-const mapOrigin = allowedOrigins.map(origin => origin.trim()).filter(Boolean);
-
-console.log("Passing the Visible Origins:", JSON.stringify(mapOrigin, null, 2));
-
+const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
 
 // Helmet Headers
 app.use(helmet.noSniff());
