@@ -33,7 +33,7 @@ app.use(helmet({
     directives: {
       defauktSrc: ["'self'"],
       scriptSrc: ["'self'", "https://res.cloudinary.com"],
-      imgSrc: ["'self'", "https://res.cloudinary.com"],    // Allow images from Cloudinary
+      imgSrc: ["'self'", "https://res.cloudinary.com", "data"],    // Allow images from Cloudinary
       connectSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       objectSrc: ["'none'"],
