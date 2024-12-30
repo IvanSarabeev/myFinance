@@ -13,6 +13,10 @@ import OtpRoutes from "./routes/otpRoute.js";
 // Helper Functions
 import { cleanUrl } from "./helpers/utils.js";
 
+// Configuration's
+import corsConfig from "./config/cors.js";
+import helmetConfiguration from "./config/helmet.js";
+
 dotenv.config();
 
 const PORT = parseInt(process.env.PORT ?? process.env.RESERVE_PORT);
@@ -28,52 +32,11 @@ const allowedOrigins = [
 ];
 const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
 
-// Helmet Headers
-app.use(helmet.noSniff());
-app.use(helmet.frameguard({ action: "deny"}));
-app.use(helmet.xssFilter());
-app.use(helmet.hidePoweredBy());
-app.use(helmet({ 
-  crossOriginEmbedderPolicy: false,
-  contentSecurityPolicy: {
-    directives: {
-      defauktSrc: ["'self'"],
-      scriptSrc: ["'self'", process.env.CLOUDINARY_URL, "'unsafe-inline'"],
-      imgSrc: ["'self'", process.env.CLOUDINARY_URL, "data"],    // Allow images from Cloudinary
-      connectSrc: ["'self'",
-        ...mapOrigin, 
-        process.env.FIREBASE_URL,
-        process.env.GOOGLE_API,
-      ],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      objectSrc: ["'none'"],
-      upgradeInsecureRequests: [], 
-      referrerPolicy: ["strict-origin-when-cross-origin"],
-    }
-  }
-  // contentSecurityPolicy: false,
-}));
+// Helmet Headers Configuration
+app.use(helmetConfiguration);
 
 // Cors Configuration
-app.use(cors({
-  origin: (origin, callback) => {
-    console.log('Server Expected Origin:', origin);
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-
-    console.log('CORS received origin:', origin);
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type', 'Authorization', 'Referrer-Policy', 
-    'Strict-Transport-Security', 'X-Content-Type-Options',
-    'X-Frame-Options', 'X-XSS-Protection', 'Content-Security-Policy',
-  ],
-  credentials: true, // true
-}));
+app.use(cors(corsConfig));
 
 // Handle Preflight Request
 app.options('*', cors());
