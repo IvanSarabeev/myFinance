@@ -9,6 +9,7 @@ import cors from "cors";
 import statusRouter from "./middleware/HealthCheck.js";
 import AuthRoutes from './routes/authRoute.js';
 import OtpRoutes from "./routes/otpRoute.js";
+import { cleanUrl } from "./helpers/utils.js";
 
 dotenv.config();
 
@@ -17,10 +18,14 @@ const __dirname = path.resolve();
 const app = express();
 
 const allowedOrigins = [
-  process.env.CLIENT_URL + process.env.CLIENT_PORT,
-  process.env.SERVER_URL + process.env.PORT,
-  process.env.SERVER_PROD_URL,
+  cleanUrl(`${process.env.CLIENT_URL + process.env.CLIENT_PORT}`),
+  cleanUrl(`${process.env.SERVER_URL + process.env.PORT}`),
+  cleanUrl(process.env.SERVER_PROD_URL),
 ];
+const mapOrigin = allowedOrigins.map(origin => origin.trim()).filter(Boolean);
+
+console.log("Passing the Visible Origins:", JSON.stringify(mapOrigin, null, 2));
+
 
 // Helmet Headers
 app.use(helmet.noSniff());
@@ -34,7 +39,7 @@ app.use(helmet({
       defauktSrc: ["'self'"],
       scriptSrc: ["'self'", "https://res.cloudinary.com"],
       imgSrc: ["'self'", "https://res.cloudinary.com", "data"],    // Allow images from Cloudinary
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", ...mapOrigin],
       styleSrc: ["'self'", "'unsafe-inline'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [], 

@@ -14,4 +14,17 @@ export function allowedIpLists(allowedIps, clientIp) {
     }
 
     return { statusCode: HTTP_RESPONSE_STATUS.OK, message: "Access Granted" };
+};
+
+/**
+ * Remove trailing slashes and spaces
+ * 
+ * @param {String} url 
+ */
+export function cleanUrl(url) {
+    if (!url) {
+        return null;
+    }
+
+    return url.replace(/\/+$/, "").trim();
 }
