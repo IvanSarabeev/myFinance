@@ -1,19 +1,22 @@
 import { useNavigate } from "react-router-dom";
 
+type RedirectHook = (urlPath: string | null) => void;
+
 /**
- * Redirect User to a different page
+ * A custom hook - to handle user page redirections
  * 
- * @param {String} urlPath - The path to redirect to 
- * @returns {Response | null} - The Redirect Response or null
+ * @returns {Function} - Function to navigate to a different page
  */
-const useRedirect = (urlPath: string) => {
+const useRedirect = (): RedirectHook => {
     const redirectRoute = useNavigate();
     
-    if (urlPath.length > 0) {
-        return () => redirectRoute(urlPath);
-    }
-
-    return null;
+    return (urlPath: string | null = null) => {
+        if (urlPath && urlPath.length > 0) {
+            redirectRoute(urlPath);
+        } else {
+            redirectRoute(-1);
+        }
+    };
 }
 
 export default useRedirect;

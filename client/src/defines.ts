@@ -32,3 +32,11 @@ export const AUTH_OPERATION_TYPES = Object.freeze({
     LOGOUT: "logout",
 });
 // End of O_Auth Type's
+
+// Redirect Routes
+export const REDIRECT_ROUTES = Object.freeze({
+    LOGIN: "/login",
+    REGISTER: "/",
+    // Account Routes
+    DASHBOARD: "/account/dashboard",
+});

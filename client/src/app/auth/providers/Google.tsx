@@ -1,6 +1,9 @@
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
+import { REDIRECT_ROUTES } from "@/defines";
+
+// Custom Hooks
 import useStore from "@/hooks/useStore";
 import useRedirect from "@/hooks/useRedirect";
 
@@ -10,7 +13,7 @@ type GoogleProps = {
 
 const Google: React.FC<GoogleProps> = memo(({ title }) => {
   const { authStore } = useStore();
-  const redirectRoute = useRedirect("/dashboard");
+  const redirectRoute = useRedirect();
 
   const onAuthentication = async (
     event: React.FormEvent<HTMLButtonElement>
@@ -21,9 +24,7 @@ const Google: React.FC<GoogleProps> = memo(({ title }) => {
       await authStore.google();
 
       if (authStore.isAuthenticated) {
-        if (redirectRoute) {
-          return () => redirectRoute();
-        }
+        redirectRoute(REDIRECT_ROUTES.DASHBOARD);
       }
     } catch (error) {
       console.error("Response Error", error);

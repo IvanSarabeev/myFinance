@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useStore from "@/hooks/useStore";
 import {
   Dialog,
   DialogClose,
@@ -12,8 +11,15 @@ import {
 import CloudinaryImage from "@/components/CloudinaryImage";
 import OtpInput from "@/components/OtpInput";
 import { Button } from "@/components/ui/button";
-import { HTTP_RESPONSE_STATUS, MAX_OTP_SLOTS } from "@/defines";
+import {
+  HTTP_RESPONSE_STATUS,
+  MAX_OTP_SLOTS,
+  REDIRECT_ROUTES,
+} from "@/defines";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
+
+// Custom Hooks
+import useStore from "@/hooks/useStore";
 import useRedirect from "@/hooks/useRedirect";
 
 type RequestEmailValidationModalProps = {
@@ -30,7 +36,7 @@ const RequestEmailValidationModal: React.FC<
   const [otp, setOtp] = useState("");
 
   const user = userStore.getUser();
-  const redirectToRoute = useRedirect("/login");
+  const redirectToRoute = useRedirect();
 
   function handleOtpChange(value: string) {
     setOtp(value);
@@ -62,9 +68,8 @@ const RequestEmailValidationModal: React.FC<
 
       if (result.data.status && result.status === HTTP_RESPONSE_STATUS.OK) {
         onClose();
-        if (redirectToRoute) {
-          return redirectToRoute();
-        }
+
+        redirectToRoute(REDIRECT_ROUTES.DASHBOARD);
       }
     } catch (error) {
       console.error("OTP Error: ", error);

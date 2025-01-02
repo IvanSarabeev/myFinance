@@ -5,6 +5,7 @@ import {
   Routes as RouteInstance,
 } from "react-router-dom";
 import AuthRoutes from "./AuthRoutes";
+import AccountRoutes from "./AccountRoutes";
 const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 
 const Routes: React.FC = () => {
@@ -21,6 +22,7 @@ const Routes: React.FC = () => {
       >
         <RouteInstance>
           <Route path="/*" element={<AuthRoutes />} />
+          <Route path="/account/*" element={<AccountRoutes />} />
         </RouteInstance>
       </Suspense>
     </BrowserRouter>

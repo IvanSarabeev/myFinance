@@ -1,10 +1,14 @@
 import { makeObservable, action, observable } from "mobx";
 import { verifyEmail } from "@/app/api/otp";
+import { HTTP_RESPONSE_STATUS, OTP_EMAIL_TYPE } from "@/defines";
+
+// Stores
+import commonStore from "./CommonStore";
+
+// Types
+import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { EmailVerification } from "@/types/otpTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
-import { HTTP_RESPONSE_STATUS, OTP_EMAIL_TYPE } from "@/defines";
-import commonStore from "./CommonStore";
-import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 
 class OtpStore {
     isVerified = false;
@@ -39,22 +43,19 @@ class OtpStore {
                         
                         commonStore.openNotification(
                             NOTIFICATION_TYPES.SUCCESS,
-                            "Success",
+                            NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                             message
                         );
                     }
                 } else {
-                    console.log("Im getting here on error", response);
                     this.isVerified = false;
                     
                     commonStore.openNotification(
                         NOTIFICATION_TYPES.DESTRUCTIVE,
-                        "Error",
+                        NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
                         message
                     );
                 }
-                
-                console.log("Store Response: ", response);
             }
 
             return response;
@@ -63,7 +64,11 @@ class OtpStore {
 
             const message = String(this.error.response?.message ?? this.error.message);
             
-            commonStore.openNotification(NOTIFICATION_TYPES.DESTRUCTIVE, "Error", message);
+            commonStore.openNotification(
+                NOTIFICATION_TYPES.DESTRUCTIVE,
+                NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
+                message
+            );
 
             throw error;
         } finally {

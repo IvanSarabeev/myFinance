@@ -11,10 +11,10 @@ const RegisterContainer: React.FC = observer(() => {
   const { authStore } = useStore();
 
   const initialValues: RegisterUser = {
-    name: "Jacob Smith",
-    email: "jacob@example.com",
-    password: "Deverge@312",
-    terms: true,
+    name: "",
+    email: "",
+    password: "",
+    terms: false,
   };
   const validationSchema = registerSchema;
 
