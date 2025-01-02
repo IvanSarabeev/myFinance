@@ -13,22 +13,23 @@ const helmetConfiguration = helmet({
     xssFilter: true,
     hidePoweredBy: true,
     crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", process.env.CLOUDINARY_URL, "'unsafe-inline'"],
-            imgSrc: ["'self'", process.env.CLOUDINARY_URL, "data"],    // Allow images from Cloudinary
-            connectSrc: ["'self'",
-              ...originsData, 
-              process.env.FIREBASE_URL,
-              process.env.GOOGLE_API,
-            ],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [], 
-            referrerPolicy: ["strict-origin-when-cross-origin"],
-        },
-    },
+    // contentSecurityPolicy: {
+    //     directives: {
+    //         defaultSrc: ["'self'"],
+    //         scriptSrc: ["'self'", process.env.CLOUDINARY_URL, "'unsafe-inline'"],
+    //         imgSrc: ["'self'", process.env.CLOUDINARY_URL, "data"],    // Allow images from Cloudinary
+    //         connectSrc: ["'self'",
+    //           ...originsData, 
+    //           process.env.FIREBASE_URL,
+    //           process.env.GOOGLE_API,
+    //         ],
+    //         styleSrc: ["'self'", "'unsafe-inline'"],
+    //         objectSrc: ["'none'"],
+    //         upgradeInsecureRequests: [], 
+    //         referrerPolicy: ["strict-origin-when-cross-origin"],
+    //     },
+    // },
+    contentSecurityPolicy: false,
 });
 
 export default helmetConfiguration;
