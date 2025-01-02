@@ -11,7 +11,7 @@ import { AxiosResponse } from "axios";
  */
 export async function verifyEmail(data: EmailVerification): Promise<AxiosResponse<ResponseEmailVerification>> {
     try {
-        return await api.post("/otp/validate-email", data);
+        return await api.post("/otp/validate-email", data, { withCredentials: false });
     } catch (error: unknown) {
         throw toErrorResponse(error);
     }

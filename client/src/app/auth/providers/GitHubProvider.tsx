@@ -1,14 +1,35 @@
 import React, { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { VscGithub } from "react-icons/vsc";
+import useStore from "@/hooks/useStore";
+import useRedirect from "@/hooks/useRedirect";
 
-type GitHubProviderProps = {
+type GithubProps = {
   title: string;
 };
 
-const GitHubProvider: React.FC<GitHubProviderProps> = memo(({ title }) => {
-  const handleGitHubAuthentication = () => {
-    console.log(title);
+const GitHub: React.FC<GithubProps> = memo(({ title }) => {
+  const { authStore } = useStore();
+  const redirectRoute = useRedirect("/dashboard");
+
+  const onAuthentication = async (
+    event: React.FormEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+
+    try {
+      await authStore.google();
+
+      if (authStore.oAuthData?.status) {
+        if (redirectRoute) {
+          return redirectRoute();
+        }
+      }
+    } catch (error) {
+      console.error("Auth Error: ", error);
+
+      throw error;
+    }
   };
 
   return (
@@ -18,7 +39,7 @@ const GitHubProvider: React.FC<GitHubProviderProps> = memo(({ title }) => {
       size="authBtn"
       title="GitHub Authentication"
       aria-label="GitHub Authentication"
-      onClick={handleGitHubAuthentication}
+      onClick={(event) => onAuthentication(event)}
     >
       <span>
         <VscGithub
@@ -33,4 +54,4 @@ const GitHubProvider: React.FC<GitHubProviderProps> = memo(({ title }) => {
   );
 });
 
-export default GitHubProvider;
+export default GitHub;

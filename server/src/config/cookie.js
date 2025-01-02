@@ -9,6 +9,6 @@ const sessionMaxAge = isProdEnv ? (6000 * 60) : (30 * 24 * 60 * 60 * 1000);
 export const cookieOption = {
     maxAge: sessionMaxAge,
     httpOnly: true,
-    sameSite: COOKIE_SITE.LAX,
+    sameSite: isProdEnv ? COOKIE_SITE.NONE :COOKIE_SITE.LAX,
     secure: isProdEnv,
 }

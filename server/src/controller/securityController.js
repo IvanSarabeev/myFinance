@@ -167,16 +167,23 @@ export function logoutUser(req, res, next){
  */
 export async function google(req, res, next) {
     const { email, name, photo, fingerPrint } = req.body;
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     try {
         const result = await googleService({ email, name, photo, fingerPrint });
 
-        console.log("Controller Result:", result);
-
         const {status, statusCode, data, token, message } = result;
 
-        if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
-            res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+        if (
+            status &&
+            statusCode === HTTP_RESPONSE_STATUS.OK ||
+            statusCode === HTTP_RESPONSE_STATUS.CREATED
+        ) {
+            res.cookie(tokenId, token, {
+                ...cookieOption,
+                path: "/", // Across all routes
+            }).status(statusCode).json({
                 status: true,
                 token: token,
                 data: data,
@@ -213,6 +220,8 @@ export async function github(req, res, next) {
 
     try {
         const result = await githubService({ email, name, photo, fingerPrint });
+
+        console.log("Controller Result:", result);
 
         const {status, statusCode, message, token } = result;
 

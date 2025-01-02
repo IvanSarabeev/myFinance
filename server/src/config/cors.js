@@ -27,11 +27,18 @@ const corsConfiguration = {
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
-    'Content-Type', 'Authorization', 'Referrer-Policy', 
-    'Strict-Transport-Security', 'X-Content-Type-Options',
-    'X-Frame-Options', 'X-XSS-Protection', 'Content-Security-Policy',
+    'Content-Type',
+    'Authorization', 
+    'Referrer-Policy', 
+    'Strict-Transport-Security', 
+    'X-Content-Type-Options',
+    'X-Frame-Options', 
+    'X-XSS-Protection', 
+    'Content-Security-Policy',
+    'Access-Control-Allow-Origin',
+    'Access-Control-Allow-Credentials',
   ],
-  credentials: true, // true
+  credentials: true,
 };
 
 export default corsConfiguration;

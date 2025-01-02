@@ -1,15 +1,22 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { LoginUser, RegisterUser } from "@/types/userTypes";
-import { ExternalProviderResponse, RegisterUserResponse } from "@/types/authTypes";
-import { google, loginUser, registerUser } from "@/app/api/auth";
+import { github, google, loginUser, registerUser } from "@/app/api/auth";
 import { AUTH_OPERATION_TYPES, HTTP_RESPONSE_STATUS } from "@/defines";
-import { NOTIFICATION_TYPES } from "@/types/commonTypes";
-import { ApiErrorResponse } from "@/types/utilTypes";
+
+// Libraries
 import { FormikErrors } from "formik";
-import userStore from "./UserStore";
-import commonStore from './CommonStore';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { firebase } from "@/lib/firebase";
+
+
+// Stores
+import userStore from "./UserStore";
+import commonStore from './CommonStore';
+
+// Types
+import { ExternalProviderResponse, RegisterUserResponse } from "@/types/authTypes";
+import { LoginUser, RegisterUser } from "@/types/userTypes";
+import { NOTIFICATION_TYPES } from "@/types/commonTypes";
+import { ApiErrorResponse } from "@/types/utilTypes";
 
 class AuthStore {
     private readonly AUTH_TOKEN = "authToken";
@@ -40,6 +47,7 @@ class AuthStore {
             loginUser: action,
             closeRequestEmailValidationModal: action,
             google: action,
+            github: action,
         });
     }
 
@@ -142,11 +150,9 @@ class AuthStore {
 
         try {
             const response = await loginUser(user);
-            console.log("Store response:", response);
             
             runInAction(() => {
                 const {status, message, token} = response.data;
-                console.log("Store Data:", response.data);
 
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     this.errorFields.clear();
@@ -201,7 +207,6 @@ class AuthStore {
                 googleResponse.user.emailVerified &&
                 googleResponse.operationType === AUTH_OPERATION_TYPES.SIGN_IN
             ) {
-                console.log("Store googleResponse:", googleResponse);
                 const { displayName, email, photoURL } = googleResponse.user;
                 const data = {
                     name: displayName,
@@ -212,8 +217,6 @@ class AuthStore {
 
                 const response = await google(data);
                 const {status, message, token} = response.data;
-
-                console.log("Store API Response:", response);
 
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     runInAction(() => {
@@ -245,7 +248,6 @@ class AuthStore {
             }
         } catch (error) {
             this.isLoading = false;
-            console.error("Store Error:", error);
 
             throw error;
         } finally {
@@ -254,6 +256,65 @@ class AuthStore {
             });
         }
     };
+
+    /**
+     * Authenticate/Register User through 3th party API
+     */
+    async github() {
+        this.isLoading = true;
+
+        try {
+            const auth = getAuth(firebase);
+            const provider = new GoogleAuthProvider();
+            const githubResponse = await signInWithPopup(auth, provider);
+
+            if (
+                githubResponse.user.emailVerified &&
+                githubResponse.operationType === AUTH_OPERATION_TYPES.SIGN_IN
+            ) {
+                const { displayName, email, photoURL } = githubResponse.user;
+                const data = {
+                    name: displayName,
+                    email,
+                    photo: photoURL,
+                    fingerPrint: userStore.getFingerPrint(),
+                };
+
+                const response = await github(data);
+                const { status, message, token } = response.data;
+
+                if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
+                    runInAction(() => {
+                        this.oAuthData = {...response.data.data, ...response.data};
+                        this.setToken(token);
+                        commonStore.openNotification(
+                            NOTIFICATION_TYPES.SUCCESS,
+                            NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
+                            message,
+                        );
+                        userStore.setExternalUser(response.data.data);
+                    })
+                } else {
+                    this.clearToken();
+                    runInAction(() => {
+                        commonStore.openNotification(
+                            NOTIFICATION_TYPES.DESTRUCTIVE,
+                            NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
+                            message,
+                        );
+                    });
+                }
+            }
+        } catch (error) {
+            this.isLoading = false;
+
+            throw error;
+        } finally {
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        }
+    }
 };
 
 const authStore = new AuthStore();

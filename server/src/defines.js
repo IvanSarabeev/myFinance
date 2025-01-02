@@ -22,5 +22,6 @@ export const HTTP_RESPONSE_STATUS = Object.freeze({
 export const COOKIE_SITE = Object.freeze({
     STRICT: "Strict",
     LAX: "Lax",
+    NONE: "None",
     SELF: "Self",
 });

@@ -14,7 +14,7 @@ import OtpRoutes from "./routes/otpRoute.js";
 import { cleanUrl } from "./helpers/utils.js";
 
 // Configuration's
-import corsConfig from "./config/cors.js";
+import corsConfiguration from "./config/cors.js";
 import helmetConfiguration from "./config/helmet.js";
 
 dotenv.config();
@@ -36,10 +36,8 @@ const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
 app.use(helmetConfiguration);
 
 // Cors Configuration
-app.use(cors(corsConfig));
-
-// Handle Preflight Request
-app.options('*', cors());
+app.options('*', cors(corsConfiguration));
+app.use(cors(corsConfiguration));
 
 connect().then(() => {
   console.log("Database connected and it's ready to handle requests.")
