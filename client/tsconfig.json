@@ -27,6 +27,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "types": ["jest"],
+    "esModuleInterop": true,
   }, 
     "include": ["src", "vite-env.d.ts", "declarations.d.ts", "jest.config.ts"],
     "references": [{ "path": "./tsconfig.node.json"}]
