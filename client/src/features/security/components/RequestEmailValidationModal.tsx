@@ -34,16 +34,17 @@ const RequestEmailValidationModal: React.FC<
   const { commonStore, userStore, otpStore } = useStore();
 
   const [otp, setOtp] = useState("");
+  const [status, setStatus] = useState(true);
 
   const user = userStore.getUser();
   const redirectToRoute = useRedirect();
 
   function handleOtpChange(value: string) {
     setOtp(value);
+    setStatus(true);
   }
 
   async function handleEmailSubmit(event: React.FormEvent<HTMLButtonElement>) {
-    // TODO: Add validation for OTP, Update the UI to show the error OTP
     event.preventDefault();
 
     if (!user) return;
@@ -72,6 +73,7 @@ const RequestEmailValidationModal: React.FC<
         redirectToRoute(REDIRECT_ROUTES.DASHBOARD);
       }
     } catch (error) {
+      setStatus(false);
       console.error("OTP Error: ", error);
 
       throw error;
@@ -104,7 +106,7 @@ const RequestEmailValidationModal: React.FC<
             slots={MAX_OTP_SLOTS}
             value={otp}
             onChange={handleOtpChange}
-            errorField={otpStore.error?.status}
+            errorField={status}
           />
         </div>
 

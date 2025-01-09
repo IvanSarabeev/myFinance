@@ -11,6 +11,7 @@ import { firebase } from "@/lib/firebase";
 // Stores
 import userStore from "./UserStore";
 import commonStore from './CommonStore';
+import sessionStore from "./SessionStore";
 
 // Types
 import { ExternalProviderResponse, RegisterUserResponse } from "@/types/authTypes";
@@ -19,16 +20,12 @@ import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
 
 class AuthStore {
-    private readonly AUTH_TOKEN = "authToken";
-
     isLoading = false;
     errorFields: Set<string> = new Set();
     data: RegisterUserResponse | null = null;
     oAuthData: ExternalProviderResponse | null = null;
     showRequestEmailValidationModal = false;
     error: ApiErrorResponse | null = null;
-    isAuthenticated = false;
-    token: string | undefined = undefined;
 
     constructor() {
         makeObservable(this, {
@@ -36,14 +33,9 @@ class AuthStore {
             errorFields: observable,
             data: observable,
             showRequestEmailValidationModal: observable,
-            isAuthenticated: observable,
-            token: observable,
 
             // Actions
             registerUser: action,
-            setToken: action,
-            getToken: action,
-            clearToken: action,
             loginUser: action,
             closeRequestEmailValidationModal: action,
             google: action,
@@ -71,6 +63,7 @@ class AuthStore {
                     response.status === HTTP_RESPONSE_STATUS.CREATED
                 ) {
                     this.errorFields.clear();
+                    sessionStore.setAuthenticated(true);
                     this.data = {...response.data};
                     this.showRequestEmailValidationModal = showModal;
                     userStore.setUser(user);
@@ -123,23 +116,6 @@ class AuthStore {
         this.showRequestEmailValidationModal = !this.showRequestEmailValidationModal;
     }
 
-    setToken(value: string | undefined) {
-        runInAction(() => {
-            this.token = value;
-            this.isAuthenticated = true;
-            localStorage.setItem(this.AUTH_TOKEN, value ?? "");
-        });
-    }
-
-    getToken() {
-        return this.token;
-    }
-
-    clearToken() {
-        this.token = undefined;
-        localStorage.removeItem(this.AUTH_TOKEN);
-    }
-
     async loginUser(user: LoginUser, setFormikErrors: (errors: FormikErrors<LoginUser>) => void) {
         this.isLoading = true;
         this.error = null;
@@ -157,12 +133,12 @@ class AuthStore {
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     this.errorFields.clear();
                     this.data = {...response.data};
+                    sessionStore.setToken(token);
                     commonStore.openNotification(
                         NOTIFICATION_TYPES.SUCCESS,
                         NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                         message,
                     );
-                    this.setToken(token);
                 }
             })
         } catch (error: unknown) {
@@ -221,17 +197,17 @@ class AuthStore {
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     runInAction(() => {
                         this.oAuthData = {...response.data.data, ...response.data};
-                        this.setToken(token);
+                        userStore.setExternalUser(response.data.data);
+                        sessionStore.setToken(token);
                         commonStore.openNotification(
                             NOTIFICATION_TYPES.SUCCESS,
                             NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                             message,
                         );
-                        userStore.setExternalUser(response.data.data);
                     })
                 } else {
-                    this.clearToken();
                     runInAction(() => {
+                        sessionStore.clearSession();
                         commonStore.openNotification(
                             NOTIFICATION_TYPES.DESTRUCTIVE,
                             NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
@@ -286,17 +262,17 @@ class AuthStore {
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     runInAction(() => {
                         this.oAuthData = {...response.data.data, ...response.data};
-                        this.setToken(token);
                         commonStore.openNotification(
                             NOTIFICATION_TYPES.SUCCESS,
                             NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                             message,
                         );
+                        sessionStore.setToken(token);
                         userStore.setExternalUser(response.data.data);
                     })
                 } else {
-                    this.clearToken();
                     runInAction(() => {
+                        sessionStore.clearSession();
                         commonStore.openNotification(
                             NOTIFICATION_TYPES.DESTRUCTIVE,
                             NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),

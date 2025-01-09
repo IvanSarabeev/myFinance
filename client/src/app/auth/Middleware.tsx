@@ -7,10 +7,10 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
  * Middleware Route for handling User Authentication Process
  */
 const AuthMiddleware: React.FC = observer(() => {
-  const { authStore } = useStore();
+  const { sessionStore } = useStore();
   const location = useLocation();
 
-  return authStore.isAuthenticated ? (
+  return sessionStore.isAuthenticated || sessionStore.token !== "" ? (
     <Outlet />
   ) : (
     <Navigate to={"/login"} state={{ from: location }} />
