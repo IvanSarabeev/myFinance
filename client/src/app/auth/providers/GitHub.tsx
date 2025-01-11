@@ -12,7 +12,7 @@ type GithubProps = {
 };
 
 const GitHub: React.FC<GithubProps> = memo(({ title }) => {
-  const { authStore } = useStore();
+  const { authStore, sessionStore } = useStore();
   const redirectRoute = useRedirect();
 
   const onAuthentication = async (
@@ -23,7 +23,7 @@ const GitHub: React.FC<GithubProps> = memo(({ title }) => {
     try {
       await authStore.google();
 
-      if (authStore.oAuthData?.status) {
+      if (sessionStore.isAuthenticated) {
         redirectRoute(REDIRECT_ROUTES.DASHBOARD);
       }
     } catch (error) {

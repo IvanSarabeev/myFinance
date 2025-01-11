@@ -12,7 +12,7 @@ type GoogleProps = {
 };
 
 const Google: React.FC<GoogleProps> = memo(({ title }) => {
-  const { authStore } = useStore();
+  const { authStore, sessionStore } = useStore();
   const redirectRoute = useRedirect();
 
   const onAuthentication = async (
@@ -23,7 +23,7 @@ const Google: React.FC<GoogleProps> = memo(({ title }) => {
     try {
       await authStore.google();
 
-      if (authStore.isAuthenticated) {
+      if (sessionStore.isAuthenticated) {
         redirectRoute(REDIRECT_ROUTES.DASHBOARD);
       }
     } catch (error) {
