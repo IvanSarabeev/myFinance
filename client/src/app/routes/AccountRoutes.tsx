@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 const Middleware = lazy(() => import("@/app/auth/Middleware"));
 const AccountLayout = lazy(() => import("@/components/layouts/AccountLayout"));
-const Dashboard = lazy(() => import("@/app/dashboard/Dashboard"));
+const Dashboard = lazy(() => import("@/features/dashboard/Dashboard"));
 
 const AccountRoutes: React.FC = () => {
   return (

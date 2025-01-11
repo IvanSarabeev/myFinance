@@ -115,7 +115,11 @@
 
   @layer components {
     /* Basic Layout Structure */
-    .padding-container{
+    .account-container {
+      @apply mt-2 lg:mt-4 px-4 md:px-6 lg:px-8 2xl:px-10;
+    }
+
+    .padding-container {
       @apply p-6 md:p-12 lg:px-16 xl:py-16 xl:px-20;
     }
 
