@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { github as githubApi, google as googleApi, loginUser, registerUser } from "@/app/api/auth";
+import { github as githubApi, google as googleApi, loginUser, logoutUser, registerUser } from "@/app/api/auth";
 import { AUTH_OPERATION_TYPES, HTTP_RESPONSE_STATUS } from "@/defines";
 import { FormikErrors } from "formik";
 import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -28,13 +28,14 @@ class AuthStore {
             authData: observable,
             error: observable,
             showRequestEmailValidationModal: observable,
+            closeRequestEmailValidationModal: action,
             setRequestEmailModal: action,
             setLoading: action,
             registerUser: action,
             loginUser: action,
             authenticatedWithProvider: action,
             handleAuthResponse: action,
-            closeRequestEmailValidationModal: action,
+            logoutUser: action,
         });
     }
 
@@ -140,8 +141,6 @@ class AuthStore {
             
             runInAction(() => {
                 const {status, message, token, userInfo} = response.data;
-
-                console.log("Store:", userInfo);
 
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     if (token !== undefined && typeof token === "string") {
@@ -255,6 +254,34 @@ class AuthStore {
         });
     }
 
+    /**
+     * Sign out User from the System and it's security measures
+     * 
+     * @returns {Promise<VoidFunction>}
+     */
+    async logoutUser(): Promise<void> {
+        this.setLoading(true);
+
+        return Promise.allSettled([
+            Promise.resolve(logoutUser()),
+            Promise.resolve(sessionStore.clearSession()),
+        ]).then(() => {
+            commonStore.openNotification(
+                NOTIFICATION_TYPES.INFO,
+                "Redirected",
+                "User signed out successfully!"
+            );
+        }).catch(() => {
+            commonStore.openNotification(
+                NOTIFICATION_TYPES.DESTRUCTIVE,
+                "Under maintain",
+                "Sorry we're under maintaince, feel free to contact our support team!"
+            );
+        })
+        .finally(() => {
+            this.setLoading(false);
+        });
+    }
 };
 
 const authStore = new AuthStore();

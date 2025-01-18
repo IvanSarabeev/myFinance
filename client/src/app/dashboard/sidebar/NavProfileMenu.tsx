@@ -6,8 +6,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { userProfileNavigation } from "@/features/dashboard/config/defaults";
+import { authStore } from "@/stores";
 
 const NavProfileMenu = () => {
+  function handleUserLogout() {
+    return authStore.logoutUser();
+  }
+
   return (
     <React.Fragment>
       {userProfileNavigation.map((item) => {
@@ -20,6 +25,11 @@ const NavProfileMenu = () => {
               <DropdownMenuItem>
                 <Link
                   to={item.url}
+                  onClick={() => {
+                    if (item.id === 5) {
+                      handleUserLogout();
+                    }
+                  }}
                   className="size-full inline-flex justify-start gap-x-2 outline-none border-none"
                 >
                   <NavIcon className="size-[18px] group-hover:font-bold " />

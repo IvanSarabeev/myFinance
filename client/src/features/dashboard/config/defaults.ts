@@ -139,7 +139,7 @@ export const userProfileNavigation = [
   { 
     id: 5, 
     title: "Log out", 
-    url: "/account/logout", 
+    url: "#", 
     icon: LogOut 
   },
 ] as const;
