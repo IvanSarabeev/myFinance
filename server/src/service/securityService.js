@@ -181,6 +181,14 @@ export async function loginUserService(userData) {
                 statusCode: HTTP_RESPONSE_STATUS.OK,
                 token: accessToken,
                 message: "Authentication successful",
+                data: {
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    userAvatar: user.userAvatar,
+                    userFingerprint: user.device,
+                    verified: user.verified,
+                }
             };
         }
     } catch (error) {
