@@ -24,23 +24,23 @@ const RegisterContainer: React.FC = observer(() => {
     onSubmit: async (values, actions) => {
       await authStore.registerUser(values, actions.setErrors);
 
-      if (authStore.data?.status) {
+      if (authStore.authData?.status) {
         actions.resetForm();
       }
     },
   });
 
   return (
-    <>
+    <React.Fragment>
       <RegisterForm formik={formik} errorFields={authStore.errorFields} />
       {authStore.showRequestEmailValidationModal && (
         <RequestEmailValidationModal
           isModalOpen={authStore.showRequestEmailValidationModal}
-          message={authStore.data?.message ?? ""}
+          message={authStore.authData?.message ?? ""}
           onClose={() => authStore.closeRequestEmailValidationModal()}
         />
       )}
-    </>
+    </React.Fragment>
   );
 });
 

@@ -14,4 +14,5 @@ export enum NOTIFICATION_TYPES {
     DESTRUCTIVE = "destructive",
     ERROR = "error",
     DEFAULT = "default",
+    AUTHENTICATION_SUCCESS = "Access Granted!"
 }

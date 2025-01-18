@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
 import { ClientJS } from 'clientjs';
-import { UserFingerPrint, User, ExternalUser } from '@/types/userTypes';
+import { UserFingerPrint, User, ExternalUser, UserDetails } from '@/types/userTypes';
 import { format } from "date-fns";
 
 class UserStore {
@@ -10,16 +10,14 @@ class UserStore {
         password: "",
         terms: false,
     };
-    userFingerPrintData: UserFingerPrint = {
-        userAgent: "",
-        browser: "",
-        os: "",
-        cpu: "",
-        mobile: NaN,
-        timezone: "",
-        language: "",
-        deviceType: NaN,
-        lastActive: "",
+    userDetails: UserDetails = {
+        id: "",
+        name: "",
+        email: "",
+        avatar: "",
+        role: [],
+        verified: false,
+        device: {} as UserFingerPrint,
     };
     externalUser: ExternalUser = {
         name: "",
@@ -32,7 +30,6 @@ class UserStore {
     constructor() {
         makeObservable(this, {
             user: observable, // User Type
-            userFingerPrintData: observable, // UserFingerPrint Type
             externalUser: observable,
 
             // Actions
@@ -73,7 +70,7 @@ class UserStore {
      * 
      * @returns {Object}
      */
-    getFingerPrint() {
+    getFingerPrint(): UserFingerPrint {
         const client = new ClientJS();
         const todayDate = new Date;
         const formattedDate = format(todayDate, `yyyy-MM-dd HH:mm:ss`);
@@ -94,7 +91,7 @@ class UserStore {
     getUserDetails() {
         return {
             user: this.user,
-            userFingerPrintData: this.userFingerPrintData,
+            userFingerprint: this.getExternalUser,
         }
     }
 

@@ -21,7 +21,7 @@ const GitHub: React.FC<GithubProps> = memo(({ title }) => {
     event.preventDefault();
 
     try {
-      await authStore.google();
+      await authStore.authenticatedWithProvider("github");
 
       if (sessionStore.isAuthenticated) {
         redirectRoute(REDIRECT_ROUTES.DASHBOARD);

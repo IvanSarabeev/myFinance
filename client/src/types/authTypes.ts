@@ -1,3 +1,7 @@
+import { UserFingerPrint } from "./userTypes";
+
+export type Role =  "user" | "moderator" | "admin"
+
 export interface RegisterUserResponse {
     status: boolean;
     showModal: boolean;
@@ -6,7 +10,16 @@ export interface RegisterUserResponse {
     errorFields?: string[];
 }
 
-export type LoginUserResponse = RegisterUserResponse & {}
+export type LoginUserResponse = RegisterUserResponse & {
+    userInfo: {
+        name: string;
+        email: string;
+        role: Role;
+        userAvatar: string;
+        userFingerprint: UserFingerPrint;
+        verified: boolean;
+    };
+}
 
 export interface ExternalProviderResponse {
     status: boolean;

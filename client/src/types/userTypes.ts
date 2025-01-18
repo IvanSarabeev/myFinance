@@ -1,8 +1,42 @@
+import { Role } from "./authTypes";
+
+export interface UserBase {
+    id: string;
+    name: string;
+    email: string;
+    role?: Role[];
+    avatar?: string;
+    terms?: boolean;
+    verified?: boolean;
+    blockedBy?: string[];
+};
+
+export interface InternalUser extends UserBase {
+    password: string;
+    terms: boolean;
+}
+
+// Change it to ExternalUser
+export interface ExternalUser2 extends UserBase {
+    avatar: string;
+    isVerified: boolean;
+    fingerPrint: UserFingerPrint;
+}
+
+export type UserOriginal = InternalUser | ExternalUser;
+
 export interface User {
     name: string;
     email: string;
     password: string;
     terms: boolean;
+}
+
+export interface UserDetails extends UserBase {
+    avatar: string;
+    role: Role[];
+    verified: boolean;
+    device: UserFingerPrint
 }
 
 export type LoginUser = Omit<User, "name" | "terms">;
@@ -15,7 +49,7 @@ export interface UserFingerPrint {
     os: string;
     cpu: string;
     mobile: number;
-    timezone?: string;
+    timeZone?: string;
     language: string;
     deviceType: number;
     lastActive: string;

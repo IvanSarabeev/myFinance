@@ -21,7 +21,7 @@ const Google: React.FC<GoogleProps> = memo(({ title }) => {
     event.preventDefault();
 
     try {
-      await authStore.google();
+      await authStore.authenticatedWithProvider("google");
 
       if (sessionStore.isAuthenticated) {
         redirectRoute(REDIRECT_ROUTES.DASHBOARD);

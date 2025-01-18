@@ -1,4 +1,4 @@
-import { makeObservable, action, observable } from "mobx";
+import { makeObservable, action, observable, runInAction } from "mobx";
 import { verifyEmail } from "@/app/api/otp";
 import { HTTP_RESPONSE_STATUS, OTP_EMAIL_TYPE } from "@/defines";
 
@@ -20,18 +20,22 @@ class OtpStore {
             isVerified: observable,
             isLoading: observable,
             error: observable,
-
             // Actions
+            setLoading: action,
             verifyEmail: action,
         });
     }
 
+    setLoading(state: boolean) {
+        runInAction(() => {
+            this.isLoading = state;
+        });
+    }
+
     async verifyEmail(data: EmailVerification) {
-        this.isLoading = true;
-        this.error = null;
+        this.setLoading(true);
         
         try {
-            this.isLoading = true;
             const response = await verifyEmail(data);
 
             if (response) {
@@ -72,7 +76,7 @@ class OtpStore {
 
             throw error;
         } finally {
-            this.isLoading = false;
+           this.setLoading(false);
         };
     }
 }

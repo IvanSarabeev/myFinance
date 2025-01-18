@@ -45,9 +45,9 @@ export async function loginUser(user: LoginUser): Promise<AxiosResponse<LoginUse
 /**
  * Logout User from the system
  * 
- * @returns {void}
+ * @returns {Promise<void>}
  */
-export async function logoutUser() {
+export async function logoutUser(): Promise<void> {
     try {
         return await api.post("/auth/logout", {}, { withCredentials: false });
     } catch (error) {
