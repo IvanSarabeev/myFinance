@@ -38,10 +38,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: [
             UserRoles.ADMIN_ROLE,
-            UserRoles.SUPER_ADMIN_ROLE,
+            UserRoles.MODERATOR_ROLE,
             UserRoles.STANDARD_ROLE
         ],
-        default: UserRoles.DEFAULT_ROLE
+        default: UserRoles.STANDARD_ROLE
     },
     device: deviceSchema,
     verified: {
@@ -55,6 +55,18 @@ const userSchema = new mongoose.Schema({
     otpExpiration: {
         type: Date,
     },
+    transactionId: {
+        type: String,
+        unique: true,
+    },
+    todoId: {
+        type: String,
+        unique: true,
+    },
+    commentId: {
+        type: String,
+        unique: true,
+    }
 }, {timestamps: true});
 
 const User = mongoose.model("User", userSchema);

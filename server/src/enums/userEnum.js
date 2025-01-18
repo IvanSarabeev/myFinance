@@ -1,6 +1,5 @@
 export const UserRoles = {
-    SUPER_ADMIN_ROLE: "SuperAdmin",
     ADMIN_ROLE: "Admin",
+    MODERATOR_ROLE: "Moderator",
     STANDARD_ROLE: "User",
-    DEFAULT_ROLE: "User",
 }
