@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import User from './../model/user.js';
-import { emailVerification, sendUserPassword } from "./otpService.js";
+import { requiredEmailVerification, sendEmailVerification } from "./otpService.js";
 import { generateOtp } from '../utils/otpGenerator.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import Jwt from "jsonwebtoken";
@@ -34,7 +34,7 @@ export async function registerUserService(userRegistrationData) {
         const parameters = await prepareUserRegistration(userRegistrationData);
 
         // Send OTP Verification email
-        const emailResponse = await emailVerification(parameters.email, parameters.otpCode);
+        const emailResponse = await requiredEmailVerification(parameters.email, parameters.otpCode);
 
         if (emailResponse.status && emailResponse.statusCode === HTTP_RESPONSE_STATUS.OK) {
             try {
@@ -220,7 +220,7 @@ export async function forgottenPasswordService(email) {
             }
         }
 
-        const response = await sendUserPassword(email);
+        const response = await sendEmailVerification(email);
 
         if (response) {
             const {status, statusCode, message} = response;
@@ -249,3 +249,113 @@ export async function forgottenPasswordService(email) {
         };
     }
 }
+
+/**
+ * Confirm the User's password
+ * 
+ * @param {Object} parameters 
+ * @returns {Object}
+ */
+export async function confirmPassowrdService(parameters) {
+    if (parameters.password !== parameters.confirmPassword) {
+        return {
+            status: false,
+            statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+            message: "Passwords do not match!",
+            errorsFields: ['password', 'confirmPassword']
+        };
+    }
+
+    try {
+        const passwordErrors = await validatePassword(parameters.password);
+
+        if (passwordErrors.length > 0) {
+            let errorsFields = [];
+            let message = "Password validation failed";
+
+            passwordErrors.forEach((error) => {
+                switch (error) {
+                    case 'Length': {
+                        message = "Password length must be at least 8 characters";
+                        errorsFields.push('password_length');
+                        break;
+                    }
+                    case 'UpperCase': {
+                        message = "Password must contain at least one uppercase character";
+                        errorsFields.push('password_uppercase');
+                        break;
+                    }
+                    case 'SpecialSymbol': {
+                        message = "Password must contain at least one special character";
+                        errorsFields.push('password_special');
+                        break;
+                    }
+                    case 'Numeric': {
+                        message = "Password must contain at least one numeric character";
+                        errorsFields.push('password_numeric');
+                        break;
+                    }
+                    default: {
+                        message = "Password validation failed";
+                        errorsFields.push('password');
+                    }
+                }
+            });
+
+            return {
+                status: false,
+                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                message: message,
+                errorsFields: errorsFields
+            };
+        } else {
+            const user = await User.findOne({ email: parameters.email });
+
+            if (!user) {
+                return {
+                    status: false,
+                    statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND,
+                    message: "User not found. Try again or contact our support center!"
+                };
+            }
+
+            const hashedPassword = await bcryptjs.hash(parameters.password, 12);
+
+            const result = await user.updateOne({ password: hashedPassword });
+
+            // TODO: Check if the password was updated successfully
+            console.log("Password Update Result:", result);
+
+            return {
+                status: true,
+                statusCode: HTTP_RESPONSE_STATUS.OK,
+                message: "Password confirmed successfully",
+            };
+        }
+    } catch (error) {
+        console.error(`Unexpected Error: ${error}`);
+        
+        return {
+            status: false,
+            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+            message: "Internal Server Error"
+        };
+    }
+};
+
+/**
+ * Validate the Password
+ *
+ * @param {String} password 
+ * @returns 
+ */
+async function validatePassword(password) {
+    const errors = [];
+
+    if (password.length < 8) errors.push('Length');
+    if (UPPER_CASE_CHARACTER.test(password) === false) errors.push('UpperCase');
+    if (NUMERIC_CHARACTER.test(password) === false) errors.push('Numeric');
+    if (SPECIAL_CHARACTER.test(password) === false) errors.push('SpecialSymbol');
+
+    return errors;
+};

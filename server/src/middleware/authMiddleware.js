@@ -82,6 +82,24 @@ export const validateUserForgottenPassword = () => {
     ];
 };
 
+export const validatePasswords = () => {
+    return [
+        body('password')
+            .trim()
+            .isStrongPassword({ minLength: 8, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
+            .withMessage("Weak password provided")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+        body('confirmPassword')
+            .custom((value, { req }) => {
+                if (value !== req.body.password) {
+                    throw new Error("Passwords don't match");
+                }
+
+                return true;
+            }),
+    ];
+}
+
 /**
  * Middleware for Authentication via 3-th party API
  * 

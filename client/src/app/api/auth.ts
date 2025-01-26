@@ -5,7 +5,7 @@ import { AxiosResponse } from "axios";
 
 // Types
 import { GithubUser, GoogleUser, LoginUser, User } from "@/types/userTypes";
-import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse } from "@/types/authTypes";
+import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/authTypes";
 
 /**
  * Add new User to the system
@@ -60,23 +60,47 @@ export async function logoutUser(): Promise<void> {
 /**
  * Reset User password
  * 
- * @param user 
- * @returns 
+ * @param {String} email
+ * @returns {Promise<AxiosResponse<AuthResponse>>}
+ * @throws {Error}
  */
-export async function forgottenUserPassword(user: Partial<User>): Promise<Partial<User>> {
-    if (!user) {
-        console.error(`Invalid ${user}!`);
-        throw new Error(`Invalid ${user}!`);
-    }
+export async function forgottenUserPassword(email: string): Promise<AxiosResponse<AuthResponse>> {
+    try {
+        return await api.post("auth/forgotten-password", {email}, { withCredentials: false });
+    } catch (error) {
+        console.error("API RESPONSE", error);
 
-    return user;
-}
+        throw error;
+    }
+};
+
+/**
+ * Confirm User password reset
+ *
+ * @param {Object} data 
+ * @returns {Promise<AxiosResponse<AuthResponse>>}
+ * @throws {Error}
+ */
+export async function confirmPasswordReset(data: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+}): Promise<AxiosResponse<AuthResponse>> {
+    try {
+        return await api.post("auth/confirm-password", {data}, { withCredentials: false });
+    } catch (error) {
+        console.error("API RESPONSE", error);
+
+        throw error;
+    }
+};
 
 /**
  * Authenticate/Register User
  * 
  * @param {Object} data 
  * @returns {Promise<AxiosResponse<ExternalProviderResponse>>}
+ * @throws {Error}
  */
 export async function google(data: GoogleUser): Promise<AxiosResponse<ExternalProviderResponse>> {
     try {
@@ -92,6 +116,7 @@ export async function google(data: GoogleUser): Promise<AxiosResponse<ExternalPr
  * 
  * @param {Object} data 
  * @returns {Promise<AxiosResponse<ExternalProviderResponse>>}
+ * @throws {Error}
  */
 export async function github(data: GithubUser): Promise<AxiosResponse<ExternalProviderResponse>> {
     try {

@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import User from './../model/user.js';
 import { emailTransportProvider } from '../utils/mailProvider.js';
 import { HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js';
+import { generateOtp } from '../utils/otpGenerator.js';
+import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
 
 dotenv.config();
 
@@ -14,7 +16,7 @@ dotenv.config();
  * 
  * @returns {Object} - Returns status, statusCode and message
  */
-export async function emailVerification(email, otpCode) {
+export async function requiredEmailVerification(email, otpCode) {
     const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
 
     if (!corpEmailAddress) {
@@ -141,7 +143,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
  * @param {String} email
  * @returns {Object} - Returns status, statusCode, token and message 
  */
-export async function sendUserPassword(email) {
+export async function sendEmailVerification(email) {
     const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
     
     if (!corpEmailAddress) {
@@ -153,17 +155,18 @@ export async function sendUserPassword(email) {
             message: "Internal Server Error" 
         };
     }
-    try {
-        const newPassword = Math.random().toString(36).slice(8) + Math.random().toString(36).slice(8);
 
-        const passwordTemplate = {
+    try {
+        const otpCode = generateOtp(6);
+
+        const emailOtpVerificationTemplate = {
             from: `"myFinance EOOD" ${corpEmailAddress}`,
             to: email,
-            subject: "Forgotten Password",
-            text: `Your new Password: <strong>${newPassword}</strong>`,
+            subject: "Email confirmation",
+            text: `Your OTP Verification Code: <strong>${otpCode}</strong>`,
         };
 
-        const transportProvider = await emailTransportProvider.sendMail(passwordTemplate);
+        const transportProvider = await emailTransportProvider.sendMail(emailOtpVerificationTemplate);
 
         if (
             transportProvider.accepted.length > 0 &&
@@ -173,7 +176,7 @@ export async function sendUserPassword(email) {
             return { 
                 status: true, 
                 statusCode: HTTP_RESPONSE_STATUS.CREATED, 
-                message: "Email sent! Use your new password, which is provided in the email to access account."
+                message: "Email sent! Verify your account.",
             };
         }
 
@@ -191,4 +194,4 @@ export async function sendUserPassword(email) {
             message:"Internal Server Error"
         };
     }
-}
+};

@@ -27,3 +27,9 @@ export interface ExternalProviderResponse {
     token?: string;
     data: object;
 }
+
+export type AuthResponse = {
+    status: boolean;
+    message: string;
+    errorFields?: string[];
+}

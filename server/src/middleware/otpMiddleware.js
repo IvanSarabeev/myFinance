@@ -22,7 +22,18 @@ export const validateOtpCode = () => {
     ];
 }
 
-export const codeValidation = (req, res, next) => {
+export const validateUserEmail = () => {
+    return [
+        body('email')
+            .trim()
+            .isLength({ min: 3, max: 60 }).withMessage("Incorrect email address")
+            .bail()
+            .isEmail().withMessage("Invalid email address")
+            .customSanitizer(value => xssFilters.inHTMLData(value)),
+    ];
+};
+
+export const errorValidation = (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
