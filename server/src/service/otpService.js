@@ -177,6 +177,7 @@ export async function sendEmailVerification(email) {
                 status: true, 
                 statusCode: HTTP_RESPONSE_STATUS.CREATED, 
                 message: "Email sent! Verify your account.",
+                showRequestedModal: true,
             };
         }
 

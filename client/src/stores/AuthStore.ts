@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { github as githubApi, google as googleApi, loginUser, logoutUser, registerUser } from "@/app/api/auth";
+import { forgottenUserPassword, github as githubApi, google as googleApi, loginUser, logoutUser, registerUser } from "@/app/api/auth";
 import { AUTH_OPERATION_TYPES, HTTP_RESPONSE_STATUS } from "@/defines";
 import { FormikErrors } from "formik";
 import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -8,7 +8,7 @@ import userStore from "./UserStore";
 import commonStore from './CommonStore';
 import sessionStore from "./SessionStore";
 import { RegisterUserResponse } from "@/types/authTypes";
-import { LoginUser, PartialUser, RegisterUser } from "@/types/userTypes";
+import { ForgottenPassword, LoginUser, PartialUser, RegisterUser } from "@/types/userTypes";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
 
@@ -36,6 +36,7 @@ class AuthStore {
             authenticatedWithProvider: action,
             handleAuthResponse: action,
             logoutUser: action,
+            forgottenPassword: action,
         });
     }
 
@@ -115,7 +116,11 @@ class AuthStore {
         }
     }
 
-    setRequestEmailModal(state: boolean) {
+    /**
+     * @param {boolean} state
+     * @returns {VoidFunction}
+     */
+    setRequestEmailModal(state: boolean): void {
         this.showRequestEmailValidationModal = state;
     }
 
@@ -281,6 +286,70 @@ class AuthStore {
         .finally(() => {
             this.setLoading(false);
         });
+    }
+
+    /**
+     * Check if User has an email registered
+     * 
+     * @param {String} email 
+     * @param setFormikErrors
+     * @returns {Promise<false | undefined>}
+     */
+    async forgottenPassword(email: string, setFormikErrors: (errors: FormikErrors<ForgottenPassword>) => void): Promise<false | undefined> {
+        this.setLoading(true);
+
+        try {
+            this.errorFields.clear();
+            const result = await forgottenUserPassword(email);
+
+            runInAction(() => {
+                const {status, message, showRequestedModal} = result.data;
+
+                if (status && result.status === HTTP_RESPONSE_STATUS.CREATED) {
+                    this.setRequestEmailModal(showRequestedModal);
+                    commonStore.openNotification(
+                        NOTIFICATION_TYPES.SUCCESS,
+                        "Email Sent",
+                        message,
+                    );
+
+                    return true;
+                }
+            });
+
+        } catch (error) {
+            this.isLoading = false;
+
+            this.error = error as ApiErrorResponse;
+            
+            if (this.error.response) {
+                const {errorFields, message} = this.error.response;
+                const newMessage = String(message ?? this.error.message);
+                
+                commonStore.openNotification(
+                    NOTIFICATION_TYPES.DESTRUCTIVE,
+                    NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
+                    newMessage,
+                );
+                
+                if (Array.isArray(errorFields) && errorFields.length > 0) {
+                    this.errorFields = new Set(errorFields);
+                    setFormikErrors(Object.fromEntries(
+                        errorFields.map((field) => [field, `${field} is invalid`]),
+                    ));
+                } else {
+                    commonStore.openNotification(
+                        NOTIFICATION_TYPES.DESTRUCTIVE,
+                        NOTIFICATION_TYPES.ERROR.toUpperCase(),
+                        newMessage ?? "An unexpected error occurred. Please try again."
+                    );
+                }
+            }
+
+            return false;
+        } finally {
+            this.setLoading(false);   
+        };
     }
 };
 

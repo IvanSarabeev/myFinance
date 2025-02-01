@@ -223,13 +223,14 @@ export async function forgottenPasswordService(email) {
         const response = await sendEmailVerification(email);
 
         if (response) {
-            const {status, statusCode, message} = response;
+            const {status, statusCode, message, showRequestedModal} = response;
 
             if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
                 return {
                     status: status,
                     statusCode: statusCode,
                     message: message,
+                    showRequestedModal: showRequestedModal,
                 }
             }
         } else {

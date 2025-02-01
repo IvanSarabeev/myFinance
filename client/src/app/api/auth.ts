@@ -66,7 +66,7 @@ export async function logoutUser(): Promise<void> {
  */
 export async function forgottenUserPassword(email: string): Promise<AxiosResponse<AuthResponse>> {
     try {
-        return await api.post("auth/forgotten-password", {email}, { withCredentials: false });
+        return await api.post("/auth/forgotten-password", {email}, { withCredentials: false });
     } catch (error) {
         console.error("API RESPONSE", error);
 
@@ -87,7 +87,7 @@ export async function confirmPasswordReset(data: {
     confirmPassword: string;
 }): Promise<AxiosResponse<AuthResponse>> {
     try {
-        return await api.post("auth/confirm-password", {data}, { withCredentials: false });
+        return await api.post("/auth/confirm-password", {data}, { withCredentials: false });
     } catch (error) {
         console.error("API RESPONSE", error);
 

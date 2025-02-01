@@ -106,6 +106,8 @@ export async function forgottenPassword(req, res, next) {
 
     try {
         const result = await forgottenPasswordService(email);
+
+        console.log("Controller Result: ", result);
         
         if (result) {
             const { status, statusCode, message } = result;

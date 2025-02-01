@@ -72,3 +72,9 @@ export interface ExternalUser {
     photoUrl: string;
     isVerified: boolean;
 }
+
+export type ForgottenPassword = {
+    email: string;
+    password?: string;
+    confirmPassword?: string;
+};

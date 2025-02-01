@@ -32,4 +32,5 @@ export type AuthResponse = {
     status: boolean;
     message: string;
     errorFields?: string[];
+    showRequestedModal: boolean;
 }
