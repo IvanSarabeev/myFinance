@@ -33,10 +33,8 @@ export interface User {
 }
 
 export interface UserDetails extends UserBase {
-    avatar: string;
-    role: Role[];
-    verified: boolean;
-    device: UserFingerPrint
+    userAvatar: string;
+    userFingerprint: UserFingerPrint;
 }
 
 export type LoginUser = Omit<User, "name" | "terms">;

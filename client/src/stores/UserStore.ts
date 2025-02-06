@@ -17,7 +17,18 @@ class UserStore {
         avatar: "",
         role: [],
         verified: false,
-        device: {} as UserFingerPrint,
+        userAvatar: "",
+        userFingerprint: {
+            userAgent: "",
+            browser: "",
+            os: "",
+            cpu: "",
+            mobile: 0,
+            timeZone: "",
+            deviceType: 0,
+            language: "",
+            lastActive: "",
+        },
     };
     externalUser: ExternalUser = {
         name: "",
@@ -29,26 +40,17 @@ class UserStore {
 
     constructor() {
         makeObservable(this, {
-            user: observable, // User Type
+            user: observable,
+            userDetails: observable,
             externalUser: observable,
 
             // Actions
-            getUser: action,
             setUser: action,
             getFingerPrint: action,
             getUserDetails: action,
             setExternalUser: action,
             getExternalUser: action,
         });
-    }
-
-    /**
-     * Get User
-     * 
-     * @returns {Object}
-     */
-    getUser() {
-        return this.user;
     }
 
     /**
@@ -88,10 +90,19 @@ class UserStore {
         }
     }
 
+    setUserDetails(data: UserDetails) {
+        runInAction(() => {
+            this.userDetails = {
+                ...this.userDetails,
+                ...data,
+            }
+        });
+    }
+
     getUserDetails() {
         return {
-            user: this.user,
-            userFingerprint: this.getExternalUser,
+            ...this.userDetails,
+            ...this.getFingerPrint(),
         }
     }
 

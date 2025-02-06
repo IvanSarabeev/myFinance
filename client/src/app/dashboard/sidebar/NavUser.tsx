@@ -1,6 +1,5 @@
 import React from "react";
 import { ChevronsUpDown } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,21 +13,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { PartialUser } from "@/types/userTypes";
+import { UserDetails } from "@/types/userTypes";
 import NavProfileMenu from "./NavProfileMenu";
 
-// TODO: Update the User
 interface NavUserProps {
-  user: PartialUser;
+  user: UserDetails;
 }
 
 type DropDownSideContentProps = {
-  user: PartialUser;
-  userCapital: string;
+  user: UserDetails;
+  userCapital: string | null;
 };
 
 const NavUser: React.FC<NavUserProps> = ({ user }) => {
-  const userCapital = `${user.email?.charAt(0)}${user.name?.charAt(1)}`;
+  const { name, email, userAvatar } = user;
+
+  const fallbackName = (name: string) => {
+    if (name.length > 0) {
+      return name
+        .split(" ")
+        .map((word) => word[0].toUpperCase())
+        .join("");
+    }
+
+    return null;
+  };
 
   return (
     <SidebarMenu className="text-black">
@@ -41,25 +50,23 @@ const NavUser: React.FC<NavUserProps> = ({ user }) => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="size-8 rounded-lg">
-                <AvatarImage
-                  src={
-                    "https://res.cloudinary.com/dplqrjsty/image/upload/v1711815567/hmkxg5swcu0ssfiwlasf.jpg"
-                  }
-                  alt={user.name}
-                />
-                <AvatarFallback color="bg-blue-600" className="rounded-lg">
-                  {userCapital.toUpperCase()}
-                </AvatarFallback>
+                {userAvatar.length > 0 ? (
+                  <AvatarImage src={userAvatar} alt={name} />
+                ) : (
+                  <AvatarFallback color="bg-blue-600" className="rounded-lg">
+                    {fallbackName(name)}
+                  </AvatarFallback>
+                )}
               </Avatar>
               <div className="grid flex-1 text-left regular-12 text-black leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate regular-12">{user.email}</span>
+                <span className="truncate font-semibold">{name}</span>
+                <span className="truncate regular-12">{email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           {/* End of Trigger DropDown */}
-          <DropDownSideContent user={user} userCapital={userCapital} />
+          <DropDownSideContent user={user} userCapital={fallbackName(name)} />
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
@@ -71,6 +78,7 @@ const DropDownSideContent = ({
   userCapital,
 }: DropDownSideContentProps) => {
   const { isMobile } = useSidebar();
+  const { name, email, userAvatar } = user;
 
   return (
     <DropdownMenuContent
@@ -82,19 +90,17 @@ const DropDownSideContent = ({
       <DropdownMenuLabel className="p-0 font-normal">
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="h-8 w-8 rounded-lg">
-            <AvatarImage
-              src={
-                "https://res.cloudinary.com/dplqrjsty/image/upload/v1711815567/hmkxg5swcu0ssfiwlasf.jpg"
-              }
-              alt={user.name}
-            />
-            <AvatarFallback className="rounded-lg">
-              {userCapital.toUpperCase()}
-            </AvatarFallback>
+            {userAvatar.length > 0 ? (
+              <AvatarImage src={userAvatar} alt={name} />
+            ) : (
+              <AvatarFallback className="rounded-lg">
+                {userCapital}
+              </AvatarFallback>
+            )}
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{user.name}</span>
-            <span className="truncate text-xs">{user.email}</span>
+            <span className="truncate font-semibold">{name}</span>
+            <span className="truncate text-xs">{email}</span>
           </div>
         </div>
       </DropdownMenuLabel>

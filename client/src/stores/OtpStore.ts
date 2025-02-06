@@ -1,28 +1,28 @@
 import { makeObservable, action, observable, runInAction } from "mobx";
 import { verifyEmail } from "@/app/api/otp";
 import { HTTP_RESPONSE_STATUS, OTP_EMAIL_TYPE } from "@/defines";
-
-// Stores
 import commonStore from "./CommonStore";
-
-// Types
+import modalStore from "./ModalStore";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { EmailVerification } from "@/types/otpTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
 
 class OtpStore {
-    isVerified = false;
-    isLoading = false;
+    otpCode: string = "";
+    isVerified: boolean = false;
+    isLoading: boolean = false;
     error: ApiErrorResponse | null = null;
 
     constructor() {
         makeObservable(this, {
+            otpCode: observable,
             isVerified: observable,
             isLoading: observable,
             error: observable,
-            // Actions
             setLoading: action,
             verifyEmail: action,
+            setOtpCode: action,
+            clearData: action,
         });
     }
 
@@ -50,6 +50,7 @@ class OtpStore {
                             NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
                             message
                         );
+                        modalStore.closeModal();
                     }
                 } else {
                     this.isVerified = false;
@@ -78,6 +79,16 @@ class OtpStore {
         } finally {
            this.setLoading(false);
         };
+    }
+
+    setOtpCode(otpValue: string) {
+        this.otpCode = otpValue;
+    }
+
+    clearData() {
+        this.otpCode = "";
+        this.isVerified = false;
+        this.error = null;
     }
 }
 

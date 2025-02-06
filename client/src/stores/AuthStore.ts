@@ -8,9 +8,10 @@ import userStore from "./UserStore";
 import commonStore from './CommonStore';
 import sessionStore from "./SessionStore";
 import { RegisterUserResponse } from "@/types/authTypes";
-import { ForgottenPassword, LoginUser, PartialUser, RegisterUser } from "@/types/userTypes";
+import { ForgottenPassword, LoginUser, RegisterUser, UserDetails } from "@/types/userTypes";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import { ApiErrorResponse } from "@/types/utilTypes";
+import modalStore from "./ModalStore";
 
 class AuthStore {
     private readonly GOOGLE_TYPE = "google";
@@ -18,7 +19,6 @@ class AuthStore {
     isLoading = false;
     errorFields: Set<string> = new Set();
     authData: RegisterUserResponse | null = null;
-    showRequestEmailValidationModal = false;
     error: ApiErrorResponse | null = null;
 
     constructor() {
@@ -27,9 +27,6 @@ class AuthStore {
             errorFields: observable,
             authData: observable,
             error: observable,
-            showRequestEmailValidationModal: observable,
-            closeRequestEmailValidationModal: action,
-            setRequestEmailModal: action,
             setLoading: action,
             registerUser: action,
             loginUser: action,
@@ -71,7 +68,7 @@ class AuthStore {
                     response.status === HTTP_RESPONSE_STATUS.CREATED
                 ) {
                     this.authData = {...response.data};
-                    this.setRequestEmailModal(showModal);
+                    modalStore.setRequestedEmailVerificationModal({ message, email: user.email });
                     userStore.setUser(user);
 
                     commonStore.openNotification(
@@ -117,21 +114,6 @@ class AuthStore {
     }
 
     /**
-     * @param {boolean} state
-     * @returns {VoidFunction}
-     */
-    setRequestEmailModal(state: boolean): void {
-        this.showRequestEmailValidationModal = state;
-    }
-
-    /**
-     * @returns {VoidFunction}
-     */
-    closeRequestEmailValidationModal(): void {
-        this.showRequestEmailValidationModal = !this.showRequestEmailValidationModal;
-    }
-
-    /**
      * Authenticate User to the system
      * 
      * @param user 
@@ -145,13 +127,13 @@ class AuthStore {
             const response = await loginUser(user);
             
             runInAction(() => {
-                const {status, message, token, userInfo} = response.data;
+                const {status, message, token, data} = response.data;
 
                 if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                     if (token !== undefined && typeof token === "string") {
                         runInAction(() => {
                             this.authData = {...response.data};
-                            this.handleAuthResponse(token, message, userInfo);
+                            this.handleAuthResponse(token, message, data);
                         });
                     }
                 }
@@ -242,14 +224,14 @@ class AuthStore {
      * 
      * @param {String} token 
      * @param {String} message 
-     * @param {Object} userData
+     * @param {Object} user
      * @returns {VoidFunction}
      */
-    handleAuthResponse(token: string, message: string, userData: PartialUser): void {
+    handleAuthResponse(token: string, message: string, user: UserDetails): void {
         runInAction(() => {
             sessionStore.setToken(token);
             sessionStore.setAuthenticated(true);
-            userStore.setUser(userData);
+            userStore.setUserDetails(user);
 
             commonStore.openNotification(
                 NOTIFICATION_TYPES.SUCCESS,
@@ -306,7 +288,10 @@ class AuthStore {
                 const {status, message, showRequestedModal} = result.data;
 
                 if (status && result.status === HTTP_RESPONSE_STATUS.CREATED) {
-                    this.setRequestEmailModal(showRequestedModal);
+                    if (showRequestedModal) {
+                        modalStore.setRequestedEmailVerificationModal({message});
+                    }
+
                     commonStore.openNotification(
                         NOTIFICATION_TYPES.SUCCESS,
                         "Email Sent",

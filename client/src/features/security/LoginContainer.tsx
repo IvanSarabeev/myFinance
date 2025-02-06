@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import LoginForm from "./components/forms/LoginForm";
 import { loginSchema } from "./schemas/formSchema";
@@ -8,8 +9,9 @@ import useStore from "@/hooks/useStore";
 import useRedirect from "@/hooks/useRedirect";
 import { LoginUser } from "@/types/userTypes";
 
-const LoginContainer: React.FC = observer(() => {
+const LoginContainer: React.FC = () => {
   const { authStore } = useStore();
+  const { errorFields } = authStore;
   const redirectToRoute = useRedirect();
 
   const initialValues: LoginUser = {
@@ -33,7 +35,7 @@ const LoginContainer: React.FC = observer(() => {
     },
   });
 
-  return <LoginForm formik={formik} errorFields={authStore.errorFields} />;
-});
+  return <LoginForm formik={formik} errorFields={errorFields} />;
+};
 
-export default LoginContainer;
+export default observer(LoginContainer);

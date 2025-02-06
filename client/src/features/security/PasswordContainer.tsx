@@ -5,12 +5,11 @@ import { forgottenPasswordStep1 } from "./schemas/formSchema";
 import { useFormik } from "formik";
 import PasswordForm from "./components/forms/PasswordForm";
 import { ForgottenPassword } from "@/types/userTypes";
-import RequestEmailValidationModal from "./components/RequestEmailValidationModal";
 import { observer } from "mobx-react-lite";
 
 const PasswordContainer: React.FC = () => {
   const { authStore } = useStore();
-  const { errorFields, showRequestEmailValidationModal } = authStore;
+  const { errorFields } = authStore;
 
   const initialValues: ForgottenPassword = {
     email: "",
@@ -35,18 +34,7 @@ const PasswordContainer: React.FC = () => {
     },
   });
 
-  return (
-    <React.Fragment>
-      <PasswordForm formik={formik} errorFields={errorFields} />
-      {showRequestEmailValidationModal && (
-        <RequestEmailValidationModal
-          isModalOpen={showRequestEmailValidationModal}
-          message="Email send"
-          onClose={() => authStore.closeRequestEmailValidationModal()}
-        />
-      )}
-    </React.Fragment>
-  );
+  return <PasswordForm formik={formik} errorFields={errorFields} />;
 };
 
 export default observer(PasswordContainer);

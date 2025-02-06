@@ -89,7 +89,6 @@ export async function verifyEmailOtpCode(email, otpCode) {
 
         // Validate otpExpiration
         if (!(user.otpExpiration instanceof Date)) {
-            console.error("Invalid otpExpiration:", user.otpExpiration);
             return {
                 status: false,
                 statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
@@ -113,7 +112,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
                 message: "User verified successfully"
             };
         } else if (otpExpiration <= timestamp) {
-            // Add Logs to track the expiration
+            // TODO: Add Logs to track the expiration
             return {
                 status: false,
                 statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,

@@ -2,8 +2,6 @@
 import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
-
-// Types
 import { GithubUser, GoogleUser, LoginUser, User } from "@/types/userTypes";
 import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/authTypes";
 

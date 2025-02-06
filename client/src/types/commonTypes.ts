@@ -1,3 +1,5 @@
+import { MODAL_TYPES } from "@/defines";
+
 export type ToastVariants = "info" | "warning" | "success" | "destructive" | "default" ;
 
 
@@ -16,3 +18,5 @@ export enum NOTIFICATION_TYPES {
     DEFAULT = "default",
     AUTHENTICATION_SUCCESS = "Access Granted!"
 }
+
+export type ModalType = typeof MODAL_TYPES[keyof typeof MODAL_TYPES];

@@ -173,8 +173,6 @@ export async function loginUserService(userData) {
 
         const accessToken = Jwt.sign({ id: user._id }, process.env.JWT_OPTION ?? "");
 
-        console.log("Token:", accessToken);
-
         if (accessToken.length > 0) {
             return {
                 status: true,

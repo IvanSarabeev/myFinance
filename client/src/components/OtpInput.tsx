@@ -8,10 +8,11 @@ type OtpInputProps = {
   value?: string;
   onChange?: (otpCode: string) => void;
   errorField?: boolean;
+  style?: string;
 };
 
 const OtpInput: React.FC<OtpInputProps> = memo(
-  ({ slots, value = "", onChange, errorField }) => {
+  ({ slots, value = "", onChange, errorField, style }) => {
     const handleInputChange = (index: number, newValue: string) => {
       const newArrayValue = value.split("");
       newArrayValue[index] = newValue;
@@ -31,17 +32,19 @@ const OtpInput: React.FC<OtpInputProps> = memo(
         pattern={REGEXP_ONLY_DIGITS}
       >
         <InputOTPGroup
-          className={`${!errorField && "border border-red-600 rounded-md"}`}
+          className={`${style} ${
+            errorField && "border border-red-600 rounded-md"
+          }`}
         >
           {Array.from({ length: slots }, (_, index) => {
             return (
               <InputOTPSlot
                 key={index}
                 index={index}
-                onChange={(e) =>
+                onChange={(e: React.FormEvent<HTMLDivElement>) =>
                   handleInputChange(index, (e.target as HTMLInputElement).value)
                 }
-                className={`font-bold ${!errorField && "text-red-600"}`}
+                className={`font-bold ${errorField && "text-red-600"}`}
               />
             );
           })}

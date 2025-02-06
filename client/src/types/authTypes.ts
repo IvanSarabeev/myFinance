@@ -11,10 +11,11 @@ export interface RegisterUserResponse {
 }
 
 export type LoginUserResponse = RegisterUserResponse & {
-    userInfo: {
+    data: {
+        id: string;
         name: string;
         email: string;
-        role: Role;
+        role: Role[];
         userAvatar: string;
         userFingerprint: UserFingerPrint;
         verified: boolean;
@@ -25,7 +26,7 @@ export interface ExternalProviderResponse {
     status: boolean;
     message: string;
     token?: string;
-    data: object;
+    data: LoginUserResponse["data"];
 }
 
 export type AuthResponse = {

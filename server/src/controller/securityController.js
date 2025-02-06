@@ -60,22 +60,21 @@ export async function loginUser(req, res, next) {
         const { email, password } = req.body;
 
         const result = await loginUserService({ email, password });
-
-        console.log("Controller Result:", result);
         
         if (result) {
-            const {status, message, token, statusCode} = result;
+            const { status, message, token, statusCode, data } = result;
             
             if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
                 res.cookie(tokenId, token, cookieOption).status(statusCode).json({
                     status: true,
                     message: message,
                     token: token,
+                    data: data,
                 });
             } 
         } else {
             const { statusCode, message, errorFields } = result;
-            console.log("Bad Response:", statusCode, message, errorFields);
+
             res.status(statusCode).json({
                 status: false,
                 message: message,
@@ -150,7 +149,7 @@ export function logoutUser(req, res, next){
         res.clearCookie(tokenId);
         res.status(HTTP_RESPONSE_STATUS.OK).json({
             status: true, 
-            message: "User Logout Succesfully"
+            message: "User Succesfully Loged Out"
         });
     } catch (error) {
         console.error(`Unexpected Logout Error: ${error}`);

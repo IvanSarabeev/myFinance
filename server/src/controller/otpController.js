@@ -14,17 +14,22 @@ export async function verifyEmail(req, res) {
         
         const result = await verifyEmailOtpCode(email, otpCode);
 
-        if (result.status && result.statusCode === HTTP_RESPONSE_STATUS.OK) {
-            return res.status(result.statusCode).json({ 
-                status: true, 
-                otpMethod: result.otpMethod, 
-                message: result.message
-            });
-        } else {   
-            return res.status(result.statusCode).json({ 
-                status: false, 
-                message: result.message
-            });
+        if (result) {   
+            const { status, statusCode, otpMethod, message } = result;
+            
+            if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
+                return res.status(statusCode).json({ 
+                    status: true,
+                    statusCode: statusCode,
+                    otpMethod: otpMethod, 
+                    message: message
+                });
+            } else {   
+                return res.status(statusCode).json({ 
+                    status: false, 
+                    message: message
+                });
+            }
         }
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);

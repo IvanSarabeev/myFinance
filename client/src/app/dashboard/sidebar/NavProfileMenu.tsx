@@ -6,9 +6,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { userProfileNavigation } from "@/features/dashboard/config/defaults";
-import { authStore } from "@/stores";
+import useStore from "@/hooks/useStore";
 
 const NavProfileMenu = () => {
+  const { authStore } = useStore();
+
   function handleUserLogout() {
     return authStore.logoutUser();
   }
