@@ -1,9 +1,10 @@
 import dotenv from 'dotenv';
 import User from './../model/user.js';
-import { emailTransportProvider } from '../utils/mailProvider.js';
+import { emailTransportProvider } from '../utils/emailTransportProvider.js';
 import { HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js';
 import { generateOtp } from '../utils/otpGenerator.js';
-import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
+import { createEmailTemplate } from '../utils/emailTemplateLoader.js';
+import { TEMPLATE_TYPES } from '../templates/defines.js';
 
 dotenv.config();
 
@@ -17,21 +18,20 @@ dotenv.config();
  * @returns {Object} - Returns status, statusCode and message
  */
 export async function requiredEmailVerification(email, otpCode) {
-    const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
+    const mailTemplate = await createEmailTemplate(
+        TEMPLATE_TYPES.REGISTRATION_OTP,
+        'Account Verification',
+        {  email: email, otpCode: otpCode}
+    );
+    const {status, statusCode, message} = mailTemplate;
 
-    if (!corpEmailAddress) {
-        console.error("Missing Corp. Email Address");
-        
-        return { status: false, statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, message: "Internal Server Error" };
+    if (
+        status === false &&
+        (statusCode === HTTP_RESPONSE_STATUS.BAD_REQUEST ||
+        statusCode === HTTP_RESPONSE_STATUS.UNAUTHORIZED)
+    ) {
+        return { status, statusCode, message };
     }
-
-    // TODO Create a Email Template
-    const mailTemplate = {
-        from: `"myFinance EOOD" ${corpEmailAddress}`,
-        to: email,
-        subject: "Account Verification",
-        text: `Your OTP Verification Code: ${otpCode}`,
-    };
 
     try {
         const result = await emailTransportProvider.sendMail(mailTemplate);
@@ -104,12 +104,32 @@ export async function verifyEmailOtpCode(email, otpCode) {
             user.otpExpiration = undefined;
             
             await user.save();
-            
+
+            const mailTemplate = await createEmailTemplate(
+                TEMPLATE_TYPES.REGISTRATION_WELCOME,
+                "Congratulations !",
+                { userEmail: email, email: email }
+            );
+
+            const result = await emailTransportProvider.sendMail(mailTemplate);
+
+            if (
+                result.accepted.length > 0 &&
+                result.rejected.length === 0 &&
+                result.response.startsWith("250")
+            ) {
+                return { 
+                    status: true,
+                    statusCode: HTTP_RESPONSE_STATUS.OK,
+                    otpMethod: OTP_PUSH_TYPE,
+                    message: "User verified successfully"
+                };
+            }
+
             return { 
-                status: true,
-                statusCode: HTTP_RESPONSE_STATUS.OK,
-                otpMethod: OTP_PUSH_TYPE,
-                message: "User verified successfully"
+                status: false, 
+                statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+                message: "Failed to send email message."
             };
         } else if (otpExpiration <= timestamp) {
             // TODO: Add Logs to track the expiration

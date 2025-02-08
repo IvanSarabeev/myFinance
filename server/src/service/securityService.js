@@ -35,8 +35,9 @@ export async function registerUserService(userRegistrationData) {
 
         // Send OTP Verification email
         const emailResponse = await requiredEmailVerification(parameters.email, parameters.otpCode);
+        const { status, statusCode, message } = emailResponse;
 
-        if (emailResponse.status && emailResponse.statusCode === HTTP_RESPONSE_STATUS.OK) {
+        if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
             try {
                 // Persist New User to DB
                 await parameters.save();
@@ -44,7 +45,7 @@ export async function registerUserService(userRegistrationData) {
                 return { 
                     status: true, 
                     statusCode: HTTP_RESPONSE_STATUS.CREATED, 
-                    message: emailResponse.message, 
+                    message: message, 
                     showOtpModal: true
                 };
             } catch (error) {
@@ -56,6 +57,10 @@ export async function registerUserService(userRegistrationData) {
                     message: "Failed to send verification email" 
                 };
             }
+        } else {
+            console.log("Fatal Error: Email Exception");
+
+            return { status, statusCode, message };
         }
     } catch (error) {
         console.error(`Fatal Error: ${error}`);

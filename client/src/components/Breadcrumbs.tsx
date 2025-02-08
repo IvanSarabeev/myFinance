@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,31 +17,32 @@ type BreadcrumbsProps = {
   }[];
 };
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = memo(({ items }) => {
   return (
     <Breadcrumb>
-      {items.map((item) => {
-        return (
-          <BreadcrumbList key={item.title}>
-            <BreadcrumbItem className={item.classStyle}>
-              {item.url !== undefined && (
-                <BreadcrumbLink
-                  href={item.urlTitle}
-                  className="hover:underline underline-offset-2 basic-transition"
-                >
-                  {item.title}
-                </BreadcrumbLink>
-              )}
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className={item.classStyle} />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{item.urlTitle ?? item.title}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        );
-      })}
+      {items.length > 0 &&
+        items.map((item) => {
+          return (
+            <BreadcrumbList key={item.title}>
+              <BreadcrumbItem className={item.classStyle}>
+                {item.url !== undefined && (
+                  <BreadcrumbLink
+                    href={item.urlTitle}
+                    className="hover:underline underline-offset-2 basic-transition"
+                  >
+                    {item.title}
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className={item.classStyle} />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{item.urlTitle ?? item.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          );
+        })}
     </Breadcrumb>
   );
-};
+});
 
 export default Breadcrumbs;
