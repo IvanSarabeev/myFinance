@@ -1,9 +1,48 @@
 import xssFilters from "xss-filters";
+import jwt from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
+
 import { COMMON_REGEXS } from "../utils/regex.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import { JWT_SECRET, TOKEN_PRE_FIX } from "../config/env.js";
+import User from './../model/user.js';
 
 const {CHARACTERS_LENGTH_REGEX} = COMMON_REGEXS;
+
+/**
+ * Protect Routes via token session
+ * TODO: Add the method to every single Route from now one...
+ */
+export const authorize = async (req, res, next) => {
+    try {
+        let token;
+
+        if (req.headers.authorization && req.headers.authorization.startsWith(TOKEN_PRE_FIX)) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+
+        if (!token) {
+            return res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
+        }
+
+        const decode = jwt.verify(token, JWT_SECRET);
+
+        const user = await User.findById(decode.userId);
+
+        if (!user) {
+            return res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
+        }
+
+        req.user = user;
+
+        next(); // Continue to the next middleware
+    } catch (error) {
+        res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({
+            message: "Unauthorized",
+            error: error.message ?? "Unauthorized: Access Forbidden",
+        });
+    }
+};
 
 /**
  * Middleware for the User Registration flow request Data

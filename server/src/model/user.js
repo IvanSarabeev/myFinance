@@ -4,12 +4,6 @@ import { UserRoles } from "../enums/userEnum.js";
 import { DEFAULT_USER_AVATAR } from "../config/env.js";
 import { COMMON_REGEXS } from './../utils/regex.js';
 
-const DEFAULT_AVATAR = DEFAULT_USER_AVATAR ?? "";
-
-if (!DEFAULT_AVATAR) {
-    console.error("Missing Default Avatar Photo");
-}
-
 const {EMAIL} = COMMON_REGEXS;
 
 const userSchema = new mongoose.Schema({
@@ -40,7 +34,7 @@ const userSchema = new mongoose.Schema({
     },
     userAvatar: {
         type: String,
-        default: DEFAULT_AVATAR,
+        default: DEFAULT_USER_AVATAR,
     },
     role: {
         type: String,

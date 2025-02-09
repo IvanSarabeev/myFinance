@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
 import Jwt from 'jsonwebtoken';
 import bcryptjs from 'bcryptjs';
+
 import User from '../model/user.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { UserRoles } from '../enums/userEnum.js';
+import { JWT_SECRET } from '../config/env.js';
 
-dotenv.config();
 
 /**
  * Authenticate/Register User through 3-th party API 
@@ -93,7 +93,7 @@ export async function githubService(parameters) {
  */
 async function createUserToken(userId) {
     try {
-        const token = Jwt.sign({ id: userId }, process.env.JWT_OPTION ?? "");
+        const token = Jwt.sign({ id: userId }, JWT_SECRET ?? "");
 
         if (!token) {   
             return {
@@ -158,7 +158,7 @@ async function createUser(parameters) {
             // Option, add step for email verification
             await createUser.save();
 
-            const token = Jwt.sign({ id: createUser._id }, process.env.JWT_OPTION ?? "");
+            const token = Jwt.sign({ id: createUser._id }, JWT_SECRET ?? "");
 
             const { ...data } = createUser.toObject();
 

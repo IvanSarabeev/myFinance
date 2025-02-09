@@ -1,4 +1,5 @@
-import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
 import { 
     registerUserService,
     loginUserService, 
@@ -7,10 +8,8 @@ import {
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
 import { googleService, githubService } from '../service/authManager.js';
+import { TOKEN_ID } from '../config/env.js';
 
-dotenv.config();
-
-const tokenId = process.env.TOKEN_ID ?? "";
 
 /**
  * Proceeding the User Registration workflow
@@ -20,24 +19,34 @@ const tokenId = process.env.TOKEN_ID ?? "";
  * @param next 
  */
 export async function registerUser(req, res, next){
+    const session = await mongoose.startSession(); // Begin Transaction
+    session.startTransaction();
+
     try {   
         const { name, email, password, terms, fingerPrint } = req.body;
 
-        const result = await registerUserService({ name, email, password, terms, fingerPrint });
-        
-        console.log("Controller Response:", result);
+        const result = await registerUserService({ name, email, password, terms, fingerPrint }, session);
 
-        if (result.statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
+        const { status, statusCode, showOtpModal, message, errorFields } = result;
+
+        if (statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
+            await session.abortTransaction(); // Abort Transaction
+
             res.status(HTTP_RESPONSE_STATUS.BAD_REQUEST).json(result);
         } else {
-            res.status(result.statusCode).json({
-                status: result.status,
-                showModal: result.showOtpModal,
-                message: result.message,
-                errorFields: result.errorFields
+            await session.commitTransaction(); // Persist Transaction
+
+            res.status(statusCode).json({
+                status: status,
+                showModal: showOtpModal,
+                message: message,
+                errorFields: errorFields
             });
         }
     } catch (error) {
+        await session.abortTransaction(); // Abort Transaction
+        session.endSession();
+
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
@@ -65,7 +74,7 @@ export async function loginUser(req, res, next) {
             const { status, message, token, statusCode, data } = result;
             
             if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
-                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+                res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
                     status: true,
                     message: message,
                     token: token,
@@ -146,7 +155,7 @@ export async function forgottenPassword(req, res, next) {
  */
 export function logoutUser(req, res, next){
     try {
-        res.clearCookie(tokenId);
+        res.clearCookie(TOKEN_ID);
         res.status(HTTP_RESPONSE_STATUS.OK).json({
             status: true, 
             message: "User Succesfully Loged Out"
@@ -181,7 +190,7 @@ export async function google(req, res, next) {
             statusCode === HTTP_RESPONSE_STATUS.OK ||
             statusCode === HTTP_RESPONSE_STATUS.CREATED
         ) {
-            res.cookie(tokenId, token, {
+            res.cookie(TOKEN_ID, token, {
                 ...cookieOption,
                 path: "/", // Across all routes
             }).status(statusCode).json({
@@ -228,7 +237,7 @@ export async function github(req, res, next) {
 
         if (result) {
             if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
-                res.cookie(tokenId, token, cookieOption).status(statusCode).json({
+                res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
                     status: true,
                     token: token,
                     message: message,

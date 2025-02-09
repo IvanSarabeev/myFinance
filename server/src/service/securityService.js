@@ -1,21 +1,22 @@
 import bcryptjs from 'bcryptjs';
 import User from './../model/user.js';
+import Jwt from "jsonwebtoken";
+
 import { requiredEmailVerification, sendEmailVerification } from "./otpService.js";
 import { generateOtp } from '../utils/otpGenerator.js';
-import { HTTP_RESPONSE_STATUS } from '../defines.js';
-import Jwt from "jsonwebtoken";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { EUROPE_ZONE, HTTP_RESPONSE_STATUS } from '../defines.js';
+import { JWT_SECRET } from '../config/env.js';
+import { toZonedTime } from 'date-fns-tz';
 
 /**
  * Create a new User instance, in which the User
  * receives an OTP Code via their email address
  * 
- * @param {Object} userRegistrationData 
+ * @param {Object} userRegistrationData - User Data
+ * @param {} session - Mongoose Transaction
  * @returns {Object}
  */
-export async function registerUserService(userRegistrationData) {
+export async function registerUserService(userRegistrationData, session) {
     try {
         const { name, email } = userRegistrationData;
 
@@ -40,7 +41,7 @@ export async function registerUserService(userRegistrationData) {
         if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
             try {
                 // Persist New User to DB
-                await parameters.save();
+                await parameters.save({ session });
 
                 return { 
                     status: true, 
@@ -81,21 +82,27 @@ export async function registerUserService(userRegistrationData) {
  * @returns {User} - Returns User Model instance
  */
 async function prepareUserRegistration(parameters) {
-    const hashPassword = await bcryptjs.hash(parameters.password, 12);
+    const { name, email, password, terms, fingerPrint } = parameters;
+
+    const hashPassword = await bcryptjs.hash(password, 12);
         
     const otpCode = generateOtp(6);
-    const otpExpiration = Date.now() + 5 * 60 * 100; // 5min
 
-    // otpExpiration should be via the Europe/Sofia Timezone...
+    // Get current User Time in UTC and add validity to 5 minutes
+    const nowUtcZone = new Date();
+    const otpExpirationLocaleUtc = new Date(nowUtcZone.getTime() + 5 * 60 * 1000) // 5 minutes
+
+    // Convert the Expiration Time to Europe/Sofia
+    const otpExpiration = toZonedTime(otpExpirationLocaleUtc, EUROPE_ZONE);
 
     return new User({
-        name: parameters.name,
-        email: parameters.email,
+        name: name,
+        email: email,
         password: hashPassword,
-        terms: parameters.terms,
+        terms: terms,
         otpCode, // provide the OTP pass to the User email
-        otpExpiration,
-        device: parameters.fingerPrint
+        otpExpiration, // Correct TimeZone Referrence
+        device: fingerPrint
     });
 };
 
@@ -176,7 +183,7 @@ export async function loginUserService(userData) {
             };
         }
 
-        const accessToken = Jwt.sign({ id: user._id }, process.env.JWT_OPTION ?? "");
+        const accessToken = Jwt.sign({ id: user._id }, JWT_SECRET ?? "");
 
         if (accessToken.length > 0) {
             return {
