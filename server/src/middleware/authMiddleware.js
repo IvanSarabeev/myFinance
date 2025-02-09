@@ -1,7 +1,9 @@
 import xssFilters from "xss-filters";
 import { body, validationResult } from 'express-validator';
-import { CHARACTERS_LENGTH_REGEX } from "../utils/regex.js";
+import { COMMON_REGEXS } from "../utils/regex.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+
+const {CHARACTERS_LENGTH_REGEX} = COMMON_REGEXS;
 
 /**
  * Middleware for the User Registration flow request Data
@@ -20,7 +22,6 @@ export const validateUserRegistration = () => {
         ,
         body("email")
             .trim()
-            // .matches(EMAIL_REGEX).withMessage("Invalid email address")
             .isLength({ min: 4, max: 60 }).withMessage("Incorrect email address")
             .bail() // Ignore the rest conditions, if the first failed
             .isEmail().withMessage("Invalid email address")

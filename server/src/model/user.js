@@ -1,30 +1,38 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
 import deviceSchema from "./device.js";
 import { UserRoles } from "../enums/userEnum.js";
+import { DEFAULT_USER_AVATAR } from "../config/env.js";
+import { COMMON_REGEXS } from './../utils/regex.js';
 
-dotenv.config();
-
-const DEFAULT_AVATAR = process.env.DEFAULT_USER_AVATAR ?? "";
+const DEFAULT_AVATAR = DEFAULT_USER_AVATAR ?? "";
 
 if (!DEFAULT_AVATAR) {
     console.error("Missing Default Avatar Photo");
 }
 
+const {EMAIL} = COMMON_REGEXS;
+
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        required: true,
+        required: [true, "User Name is required"],
+        trim: true,
+        minLength: 2,
+        maxLength: 50,
     },
     email: {
         type: String,
         unique: true,
-        required: true,
+        required: [true, "User Email is required"],
+        trim: true,
+        lowercase: true,
+        match: [EMAIL, "Please fill a valid email address"],
     },
     password: {
         type: String,
-        required: true,
+        required: [true, "User Password is required"],
+        minLength: 6,
     },
     terms: {
         type: Boolean,
@@ -56,15 +64,21 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
     transactionId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transaction",
+        index: true,
         unique: true,
     },
     todoId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Todo",
+        index: true,
         unique: true,
     },
     commentId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+        index: true,
         unique: true,
     }
 }, {timestamps: true});

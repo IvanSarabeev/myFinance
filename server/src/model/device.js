@@ -29,7 +29,7 @@ const deviceSchema = new Schema({
             DeviceModels.DEKSTOP_DEVICE,
             DeviceModels.TABLET_DEVICE
         ],
-        required: true,
+        required: [true, "Device type is required"],
     },
     timeZone: {
         type: String,
