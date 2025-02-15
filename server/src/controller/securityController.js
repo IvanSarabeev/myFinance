@@ -32,7 +32,7 @@ export async function registerUser(req, res, next){
         if (statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
             await session.abortTransaction(); // Abort Transaction
 
-            res.status(HTTP_RESPONSE_STATUS.BAD_REQUEST).json(result);
+            res.status(statusCode).json(result);
         } else {
             await session.commitTransaction(); // Persist Transaction
 
