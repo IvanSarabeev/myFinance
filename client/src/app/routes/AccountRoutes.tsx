@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 
 const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 const Middleware = lazy(() => import("@/app/auth/Middleware"));

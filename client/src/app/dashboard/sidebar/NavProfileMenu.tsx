@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { userProfileNavigation } from "@/features/dashboard/config/defaults";
 import useStore from "@/hooks/useStore";
 

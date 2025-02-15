@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ErrorMessage from "@/components/ErrorMessage";

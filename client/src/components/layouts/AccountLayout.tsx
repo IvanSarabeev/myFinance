@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import { Toaster } from "../ui/toaster";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "@/app/dashboard/AppSidebar";

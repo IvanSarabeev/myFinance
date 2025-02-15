@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import RegisterContainer from "@/features/security/RegisterContainer";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Layout from "@/components/layouts/Layout";
 import ThirdPartyProvider from "@/components/ThirdPartyProvider";
 import SideBackgroundSection from "@/components/SideBackgroundSection";

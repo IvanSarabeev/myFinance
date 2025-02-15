@@ -2,7 +2,7 @@ import React from "react";
 import CloudinaryImage from "@/components/CloudinaryImage";
 import SideBackgroundSection from "@/components/SideBackgroundSection";
 import ThirdPartyProvider from "@/components/ThirdPartyProvider";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import Layout from "@/components/layouts/Layout";
 import LoginContainer from "@/features/security/LoginContainer";
 import BrandSlider from "@/features/security/components/BrandSlider";

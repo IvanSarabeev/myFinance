@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Eye } from "lucide-react";
 import isFieldValid from "@/utils/isFieldValid";
 import { Button } from "@/components/ui/button";

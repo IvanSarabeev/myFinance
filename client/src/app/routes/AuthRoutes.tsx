@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 
 const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
 const Register = lazy(() => import("../auth/Register"));

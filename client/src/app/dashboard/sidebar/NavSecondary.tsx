@@ -7,7 +7,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { type LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const NavSecondary = ({
   items,
