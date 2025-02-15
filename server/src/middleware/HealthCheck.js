@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import dotenv from 'dotenv';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -5,6 +6,7 @@ import { format, toZonedTime } from "date-fns-tz";
 import { EUROPE_ZONE, HTTP_RESPONSE_STATUS } from './../defines.js';
 import { allowedIpLists } from './../helpers/utils.js';
 import { REMOVE_LEADING_TRAILING_QUOTES } from '../utils/regex.js';
+import { IP_ALLOWED_ADDRESSES, STATIC_OUTBOUND_IP_ADDRESSES } from '../config/env.js';
 
 dotenv.config();
 
@@ -20,10 +22,10 @@ router.get('/status', healthCheckLimit, (req, res) => {
     res.header('Access-Control-Allow-Methods', 'GET');
 
     const clientIp = req.ip;
-    const staticOutboundIp = process.env.STATIC_OUTBOUND_IP_ADDRESSES?.split(",").
+    const staticOutboundIp = STATIC_OUTBOUND_IP_ADDRESSES?.split(",").
         map((ip) => ip.trim().replace(REMOVE_LEADING_TRAILING_QUOTES, ""))
     ;
-    const allowedIpAddresses = process.env.IP_ALLOWED_ADDRESSES?.split(",").
+    const allowedIpAddresses = IP_ALLOWED_ADDRESSES?.split(",").
         map((ip) => ip.trim().replace(REMOVE_LEADING_TRAILING_QUOTES, ""))
     ;
 
@@ -56,6 +58,8 @@ router.get('/status', healthCheckLimit, (req, res) => {
         
         res.status(HTTP_RESPONSE_STATUS.OK).send(healthStatus);
     } catch(error) {
+        console.error(`Fatal Error: ${error}`);
+
         return res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).send("Internal Server Error");
     }
 });

@@ -1,5 +1,4 @@
 import User from "./../model/user.js";
-import deviceSchema from './../model/device.js';
 
 /**
  * Create new User Entity

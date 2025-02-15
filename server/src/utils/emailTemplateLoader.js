@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { TEMPLATE_PRE_FIX } from '../templates/defines.js';
+import { CORP_EMAIL_ADDRESS } from '../config/env.js';
 
 dotenv.config();
 
@@ -41,11 +42,11 @@ async function loadEmailTemplate(templateName, replacements = {}) {
  * 
  * @param {string} templateName - name of the template file
  * @param {string} templateSubject - subject of the template
- * @param {Object} parameters - contains specific parameters that will be passed through the mail template
+ * @param {object} parameters - contains specific parameters that will be passed through the mail template
  */
 export async function createEmailTemplate(templateName, templateSubject, parameters) {
     try {
-        const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
+        const corpEmailAddress = CORP_EMAIL_ADDRESS;
 
         if (!corpEmailAddress) {
             console.error("Missing Corp. Email Address");
@@ -53,6 +54,7 @@ export async function createEmailTemplate(templateName, templateSubject, paramet
             return { status: false, statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, message: "Internal Server Error" };
         }
 
+        // eslint-disable-next-line no-prototype-builtins
         if (parameters instanceof Object && parameters.hasOwnProperty("email") === false) {
             console.error("Exception: user trying to exploid email");
 

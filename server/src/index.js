@@ -1,7 +1,7 @@
+/* eslint-disable no-undef */
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
-import helmet from "helmet";
 import { connect } from "./database/connection.js";
 import cors from "cors";
 
@@ -11,7 +11,7 @@ import AuthRoutes from './routes/authRoute.js';
 import OtpRoutes from "./routes/otpRoute.js";
 
 // Helper Functions
-import { cleanUrl } from "./helpers/utils.js";
+// import { cleanUrl } from "./helpers/utils.js";
 
 // Configuration's
 import corsConfiguration from "./config/cors.js";
@@ -23,14 +23,16 @@ const PORT = parseInt(process.env.PORT ?? process.env.RESERVE_PORT);
 const __dirname = path.resolve();
 const app = express();
 
-const allowedOrigins = [
-  `${process.env.CLIENT_URL + process.env.CLIENT_PORT}`,
-  `${process.env.SERVER_URL + process.env.PORT}`,
-  process.env.SERVER_PROD_URL,
-  cleanUrl(process.env.FIREBASE_URL),
-  cleanUrl(process.env.GOOGLE_API),
-];
-const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
+// const allowedOrigins = [
+//   `${process.env.CLIENT_URL + process.env.CLIENT_PORT}`,
+//   `${process.env.SERVER_URL + process.env.PORT}`,
+//   process.env.SERVER_PROD_URL,
+//   cleanUrl(process.env.FIREBASE_URL),
+//   cleanUrl(process.env.GOOGLE_API),
+// ];
+// const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
+
+// console.log("Origin: ", mapOrigin);
 
 // Helmet Headers Configuration
 app.use(helmetConfiguration);

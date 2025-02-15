@@ -1,11 +1,11 @@
 import helmet from "helmet";
 import dotenv from "dotenv";
-import { allowedOrigins } from "./cors.js";
+// import { allowedOrigins } from "./cors.js";
 
 // Load env variables
 dotenv.config();
 
-const originsData = allowedOrigins.map((origin) => origin).filter(Boolean);
+// const originsData = allowedOrigins.map((origin) => origin).filter(Boolean);
 
 const helmetConfiguration = helmet({
     noSniff: true,

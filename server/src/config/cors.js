@@ -1,17 +1,12 @@
-import dotenv from "dotenv";
-
-// Helper Functions
 import { cleanUrl } from "../helpers/utils.js";
-
-// Load env variables
-dotenv.config();
+import { CLIENT_PORT, CLIENT_URL, FIREBASE_URL, GOOGLE_API, PORT, SERVER_PROD_URL } from "./env.js";
 
 export const allowedOrigins = [
-  `${process.env.CLIENT_URL + process.env.CLIENT_PORT}`,
-  `${process.env.SERVER_URL + process.env.PORT}`,
-  process.env.SERVER_PROD_URL,
-  cleanUrl(process.env.FIREBASE_URL),
-  cleanUrl(process.env.GOOGLE_API),
+  `${CLIENT_URL + CLIENT_PORT}`,
+  `${SERVER_PROD_URL + PORT}`,
+  SERVER_PROD_URL,
+  cleanUrl(FIREBASE_URL),
+  cleanUrl(GOOGLE_API),
 ];
 
 const corsConfiguration = {

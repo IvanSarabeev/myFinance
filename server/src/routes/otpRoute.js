@@ -10,8 +10,13 @@ const securityHeaders = (req, res, next) => {
     next();
 };
 
+// Prevent cache storing
 router.use(securityHeaders);
+
+// Validate User email after succesful registration
 router.post("/validate-email", validateOtpCode(), errorValidation, verifyEmail);
+
+// Validate User email in order to change their password
 router.post("/forgotten-password", validateUserEmail(), errorValidation);
 
 export default router;

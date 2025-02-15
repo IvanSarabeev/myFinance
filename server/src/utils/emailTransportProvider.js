@@ -1,12 +1,11 @@
 import nodemailer from "nodemailer";
-import dotenv from 'dotenv';
 
-dotenv.config();
+import { EMAIL_ADDRESS, EMAIL_PASSWORD, HOST_PORT, HOST_SERVICE } from "../config/env.js";
 
-const host = String(process.env.HOST_SERVICE);
-const hostPort = Number(process.env.HOST_PORT);
-const user = String(process.env.EMAIL_ADDRESS);
-const pwd = String(process.env.EMAIL_PASSWORD);
+const host = String(HOST_SERVICE);
+const hostPort = Number(HOST_PORT);
+const user = String(EMAIL_ADDRESS);
+const pwd = String(EMAIL_PASSWORD);
 
 /**
  * Nodemailer Email Provider Service

@@ -7,6 +7,7 @@ import { generateOtp } from '../utils/otpGenerator.js';
 import { EUROPE_ZONE, HTTP_RESPONSE_STATUS } from '../defines.js';
 import { JWT_SECRET } from '../config/env.js';
 import { toZonedTime } from 'date-fns-tz';
+import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
 
 /**
  * Create a new User instance, in which the User
@@ -136,6 +137,8 @@ async function findExistingUser(email, name) {
             return { status: true, statusCode: HTTP_RESPONSE_STATUS.OK };
         }
     } catch (error) {
+        console.error(`Fatal Error: ${error}`);
+
         return { 
             success: false, 
             statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 

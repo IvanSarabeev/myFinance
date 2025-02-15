@@ -1,10 +1,6 @@
 import mongoose from 'mongoose';
 
-import { 
-    registerUserService,
-    loginUserService, 
-    forgottenPasswordService
-} from '../service/securityService.js';
+import { registerUserService,loginUserService } from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
 import { googleService, githubService } from '../service/authManager.js';
@@ -88,50 +84,6 @@ export async function loginUser(req, res, next) {
                 status: false,
                 message: message,
                 errorFields: errorFields,
-            });
-        }
-    } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
-
-        next();
-        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
-            status: false,
-            message: "Internal Server Error"
-        });
-    }
-};
-
-/**
- * Sent the User a email with the new password
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next
- * @returns {Object}
- */
-export async function forgottenPassword(req, res, next) {
-    const { email } = req.body;
-
-    try {
-        const result = await forgottenPasswordService(email);
-
-        console.log("Controller Result: ", result);
-        
-        if (result) {
-            const { status, statusCode, message } = result;
-            
-            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
-                return {
-                    status: true,
-                    message: message,
-                }
-            } 
-        } else {
-            const { statusCode, message } = result;
-
-            res.status(statusCode).json({
-                status: false,
-                message: message,
             });
         }
     } catch (error) {
@@ -257,49 +209,6 @@ export async function github(req, res, next) {
         res.status(HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE).json({
             status: false,
             message: "Current service is unavailable, Please contanct our support center!"
-        });
-    }
-};
-
-export async function confirmPassword(req, res, next) {
-    const { email, password, confirmPassword } = req.body;
-
-    try {
-        const response = await confirmPassowrdService({ email, password, confirmPassword });
-
-        console.log("Confirm Password Response:", response);
-
-        const { status, statusCode, message, errorsFields } = response;
-
-        if (errorsFields.length > 0) {
-            return {
-                status: false,
-                statusCode: statusCode,
-                message: message,
-                errorFields: errorsFields
-            };
-        }
-
-        if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
-            return {
-                status: true,
-                statusCode: statusCode,
-                message: message
-            };
-        } else {
-            return {
-                status: false,
-                statusCode: statusCode,
-                message: message
-            };
-        }
-    } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
-
-        next();
-        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
-            status: false,
-            message: "Internal Server Error"
         });
     }
 };

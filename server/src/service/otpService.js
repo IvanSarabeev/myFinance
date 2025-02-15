@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
 import User from './../model/user.js';
 import { emailTransportProvider } from '../utils/emailTransportProvider.js';
 import { HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js';
 import { generateOtp } from '../utils/otpGenerator.js';
 import { createEmailTemplate } from '../utils/emailTemplateLoader.js';
 import { TEMPLATE_TYPES } from '../templates/defines.js';
-
-dotenv.config();
+import { CORP_EMAIL_ADDRESS } from '../config/env.js';
 
 /**
  * Create/Send email OTP Code after an
@@ -163,7 +161,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
  * @returns {Object} - Returns status, statusCode, token and message 
  */
 export async function sendEmailVerification(email) {
-    const corpEmailAddress = process.env.CORP_EMAIL_ADDRESS;
+    const corpEmailAddress = CORP_EMAIL_ADDRESS;
     
     if (!corpEmailAddress) {
         console.error("Missing Corp. Email Address");
