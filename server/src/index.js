@@ -79,4 +79,4 @@ app.get('*', (req, res) => {
 
 // Express Route's
 app.use("/api/auth", AuthRoutes);
-app.use("/api/otp", OtpRoutes);
+app.use("/api/v1/otp", OtpRoutes);

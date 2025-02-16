@@ -34,7 +34,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
         onSubmit={formik.handleSubmit}
         className="regular-12 lg:regular-14 font-sans"
       >
-        <div className="space-y-2 lg:space-y-3">
+        <div className="flexCol gap-y-2 lg:gap-y-3">
           <div className="space-y-2">
             <Label
               htmlFor="name"
@@ -187,7 +187,13 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
                 }
               )}
             >
-              I agree to the <span className="underline">Terms & Policy</span>
+              I agree to the{" "}
+              <span
+                className="underline cursor-pointer"
+                title="View Company Privay and Policy Terms"
+              >
+                Terms & Policy
+              </span>
             </Label>
           </div>
           <ErrorMessage<RegisterUser>

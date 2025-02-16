@@ -74,5 +74,5 @@ export interface ExternalUser {
 export type ForgottenPassword = {
     email: string;
     password?: string;
-    confirmPassword?: string;
+    confirm_password?: string;
 };

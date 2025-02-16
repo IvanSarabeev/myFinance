@@ -1,6 +1,6 @@
 import express from 'express';
 import { errorValidation, validateOtpCode, validateUserEmail } from './../middleware/otpMiddleware.js';
-import { verifyEmail } from '../controller/otpController.js';
+import { verifyEmail, emailConfirmation } from '../controller/otpController.js';
 
 const router = express.Router();
 
@@ -16,7 +16,7 @@ router.use(securityHeaders);
 // Validate User email after succesful registration
 router.post("/validate-email", validateOtpCode(), errorValidation, verifyEmail);
 
-// Validate User email in order to change their password
-router.post("/forgotten-password", validateUserEmail(), errorValidation);
+// Confirm the User's email in order to change their password
+router.post("/email-confirmation", validateUserEmail(), errorValidation, emailConfirmation);
 
 export default router;

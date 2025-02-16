@@ -1,10 +1,8 @@
-export interface EmailVerificationModalProps {
+/**
+ * Common Verification Props
+ */
+export interface StandardVerificationProps {
     email: string;
     message: string;
     onClose: () => void;
-}
-
-export interface ForgotPasswordModalProps {
-    message: string;
-    onClose: () => void;
-}
+};

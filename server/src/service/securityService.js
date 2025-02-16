@@ -1,12 +1,11 @@
 import bcryptjs from 'bcryptjs';
-import User from './../model/user.js';
 import Jwt from "jsonwebtoken";
 
-import { requiredEmailVerification, sendEmailVerification } from "./otpService.js";
+import User from './../model/user.js';
+import { requiredEmailVerification, sendEmailVerification, setOtpExpirationTime } from "./otpService.js";
 import { generateOtp } from '../utils/otpGenerator.js';
-import { EUROPE_ZONE, HTTP_RESPONSE_STATUS } from '../defines.js';
+import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { JWT_SECRET } from '../config/env.js';
-import { toZonedTime } from 'date-fns-tz';
 import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
 
 /**
@@ -89,12 +88,7 @@ async function prepareUserRegistration(parameters) {
         
     const otpCode = generateOtp(6);
 
-    // Get current User Time in UTC and add validity to 5 minutes
-    const nowUtcZone = new Date();
-    const otpExpirationLocaleUtc = new Date(nowUtcZone.getTime() + 5 * 60 * 1000) // 5 minutes
-
-    // Convert the Expiration Time to Europe/Sofia
-    const otpExpiration = toZonedTime(otpExpirationLocaleUtc, EUROPE_ZONE);
+    const otpExpiration = setOtpExpirationTime(); // 5 minutes
 
     return new User({
         name: name,
@@ -102,7 +96,7 @@ async function prepareUserRegistration(parameters) {
         password: hashPassword,
         terms: terms,
         otpCode, // provide the OTP pass to the User email
-        otpExpiration, // Correct TimeZone Referrence
+        otpExpiration,
         device: fingerPrint
     });
 };
@@ -233,23 +227,22 @@ export async function forgottenPasswordService(email) {
             }
         }
 
-        const response = await sendEmailVerification(email);
+        const otpCode = generateOtp(6);
 
-        if (response) {
-            const {status, statusCode, message, showRequestedModal} = response;
+        const response = await sendEmailVerification(email, otpCode);
 
-            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
-                return {
-                    status: status,
-                    statusCode: statusCode,
-                    message: message,
-                    showRequestedModal: showRequestedModal,
-                }
-            }
+        const {status, statusCode, message, showRequestedModal} = response;
+        
+        if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
+            findUser.verified = false;
+            findUser.otpCode = otpCode;
+            findUser.otpExpiration = setOtpExpirationTime(); // 5 minutes
+
+            return { status, statusCode, message, showRequestedModal }
         } else {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                statusCode: statusCode,
                 message: "Unable to proceed further, Please contanct our customer support center!"
             };
         }

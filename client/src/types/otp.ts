@@ -1,4 +1,4 @@
-export interface EmailVerification {
+export interface BaseEmailVerification {
     email: string;
     otpCode: number;
 }

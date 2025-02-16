@@ -32,7 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
       onSubmit={formik.handleSubmit}
       className="regular-12 lg:regular-14 font-sans"
     >
-      <div className="space-y-2 lg:space-y-3">
+      <div className="flexCol gap-y-2 lg:gap-y-3">
         <div className="space-y-2">
           <div className="size-full flexBetween">
             <Label

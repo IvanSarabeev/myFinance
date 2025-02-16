@@ -33,6 +33,7 @@ const ModalManager: React.FC = () => {
       return (
         <Suspense fallback={null}>
           <ForgotPasswordModal
+            email={modalProps.email as string}
             message={modalProps.message as string}
             onClose={() => modalStore.closeModal()}
           />

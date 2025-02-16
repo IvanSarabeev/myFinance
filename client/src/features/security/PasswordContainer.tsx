@@ -1,40 +1,68 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import useStore from "@/hooks/useStore";
-import { forgottenPasswordStep1 } from "./schemas/formSchema";
+import {
+  forgottenPasswordStep1,
+  forgottenPasswordStep2,
+} from "./schemas/formSchema";
 import { useFormik } from "formik";
 import PasswordForm from "./components/forms/PasswordForm";
 import { ForgottenPassword } from "@/types/userTypes";
 import { observer } from "mobx-react-lite";
+import { modalStore } from "@/stores";
+import { MODAL_TYPES } from "@/defines";
 
 const PasswordContainer: React.FC = () => {
-  const { authStore } = useStore();
+  const { authStore, otpStore } = useStore();
+  const { isVerified } = otpStore;
   const { errorFields } = authStore;
 
   const initialValues: ForgottenPassword = {
-    email: "",
+    email: "jacob@example.com",
     password: "",
-    confirmPassword: "",
+    confirm_password: "",
   };
 
-  const validationSchema = forgottenPasswordStep1;
+  const validationSchema = isVerified
+    ? forgottenPasswordStep2
+    : forgottenPasswordStep1;
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {
-      const response = await authStore.forgottenPassword(
-        values.email,
-        actions.setErrors
-      );
+      if (isVerified === false) {
+        const response = await authStore.forgottenPassword(
+          values.email,
+          actions.setErrors
+        );
 
-      if (response) {
-        console.log("Alright, we");
+        console.log("Response: ", response);
+      } else {
+        const response = await authStore.forgottenPassword(
+          values.email,
+          actions.setErrors
+        );
+
+        console.log("Confirmation: ", response);
       }
     },
   });
 
-  return <PasswordForm formik={formik} errorFields={errorFields} />;
+  return (
+    <>
+      <PasswordForm
+        formik={formik}
+        errorFields={errorFields}
+        isVerified={isVerified}
+      />
+      <button
+        onClick={() => modalStore.openModal(MODAL_TYPES.FORGOTTEN_PASSWORD)}
+      >
+        Open Modal
+      </button>
+    </>
+  );
 };
 
 export default observer(PasswordContainer);

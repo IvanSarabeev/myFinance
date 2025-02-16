@@ -11,7 +11,7 @@ const Register: React.FC = () => {
   return (
     <Layout>
       <section className="size-full flexCenter lg:justify-around md:items-start padding-container max-container">
-        <div className="size-full flexCol max-w-xl">
+        <div className="size-full flexCol max-w-xl my-auto">
           <CloudinaryImage
             imgName="logos/my-finance"
             imgFormamt="png"
@@ -33,7 +33,7 @@ const Register: React.FC = () => {
             Have an account ?
             <Link
               to={"/login"}
-              title="Login link"
+              title="Login into your account"
               aria-label="Login link"
               className="ml-1 text-blue-700 transition-colors duration-150 hover:underline"
             >
@@ -41,7 +41,7 @@ const Register: React.FC = () => {
             </Link>
           </p>
           <p className="size-full regular-12 lg:regular-14 text-center pt-8 md:pt-12 lg:pt-14 text-slate-900/60">
-            &copy; 2024 Acme, All right Reserved
+            &copy; 2025 Acme, All right Reserved
           </p>
         </div>
         <SideBackgroundSection>

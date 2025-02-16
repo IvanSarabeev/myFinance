@@ -2,33 +2,32 @@ import { confirmPassowrdService, forgottenPasswordService } from "../service/sec
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 
 /**
- * Sent the User a email with otpCode
+ * Sent the User a Confirmation (email template)
+ * If there's a User with the following email, update the User model
  * 
  * @param {*} req 
  * @param {*} res 
  * @param {*} next
- * @returns {Object} status, message
+ * @returns {Object} Return - status, message, showRequestedModal
  */
 export async function forgottenPassword(req, res, next) {
     const { email } = req.body;
+
+    console.log("Request Params: ", req.body);
 
     try {
         const result = await forgottenPasswordService(email);
 
         console.log("Controller Result: ", result);
+        const { status, statusCode, message, showRequestedModal } = result;
         
-        if (result) {
-            const { status, statusCode, message } = result;
-            
-            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
-                return {
-                    status: true,
-                    message: message,
-                }
-            } 
+        if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
+            return {
+                status: true,
+                message: message,
+                showRequestedModal,
+            }
         } else {
-            const { statusCode, message } = result;
-
             res.status(statusCode).json({
                 status: false,
                 message: message,

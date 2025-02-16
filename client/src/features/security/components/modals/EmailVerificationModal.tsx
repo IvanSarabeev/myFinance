@@ -13,9 +13,9 @@ import { observer } from "mobx-react-lite";
 import { NOTIFICATION_TYPES } from "@/types/commonTypes";
 import useRedirect from "@/hooks/useRedirect";
 import { ShieldCheck } from "lucide-react";
-import { EmailVerificationModalProps } from "@/types/modal";
+import { StandardVerificationProps } from "@/types/modal";
 
-const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
+const EmailVerificationModal: React.FC<StandardVerificationProps> = ({
   email,
   message,
   onClose,
