@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import { connect } from "./database/connection.js";
 
@@ -13,8 +14,10 @@ import OtpRouter from "./routes/otpRoute.js";
 import corsConfiguration from "./config/cors.js";
 import helmetConfiguration from "./config/helmet.js";
 import { NODE_ENV, PORT, RESERVE_PORT } from "./config/env.js";
+
+// Middlewares
 import errorMiddleware from "./middleware/errorMiddleware.js";
-import cookieParser from "cookie-parser";
+import arcjectMiddleware from './middleware/arcjetMiddleware.js';
 
 const __dirname = path.resolve();
 const app = express();
@@ -27,6 +30,7 @@ app.use(cookieParser());
 app.use(helmetConfiguration);
 app.options('*', cors(corsConfiguration));
 app.use(cors(corsConfiguration));
+app.use(arcjectMiddleware);
 
 connect().then(() => {
   console.log("Database connected and it's ready to handle requests.")
