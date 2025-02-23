@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 import { 
     securityValidation, 
     validatePasswords, 
@@ -19,17 +19,15 @@ import {
     confirmPassword
 } from '../controller/forgottenPasswordController.js';
 
-const router = express.Router();
+const router = Router();
 
-const disableCache = (req, res, next) => {
-    res.setHeader("Cache-Control", "no-store");
+router.use((req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, must-revalidate");
 
     next();
-};
+});
 
-// Disable Cache Header
-router.use(disableCache);
-
+// Authentication Routes
 router.post("/register", validateUserRegistration(), securityValidation, registerUser);
 
 router.post("/login", validateUserLogin(), securityValidation, loginUser);
@@ -42,11 +40,8 @@ router.post("/forgotten-password", validateUserForgottenPassword(), securityVali
 router.post("/confirm-password", validatePasswords(), securityValidation, confirmPassword);
 
 // Thirt Party APIs
-
-// Authenticate or Register via Google Provider
 router.post("/google-login", validateProviders(), securityValidation, google);
 
-// Authenticate or Register via GitHub Provider
 router.post("/github-login", validateProviders(), securityValidation, github);
 
 export default router;

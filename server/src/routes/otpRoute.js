@@ -1,17 +1,13 @@
-import express from 'express';
+import { Router } from 'express';
 import { errorValidation, validateOtpCode, validateUserEmail } from './../middleware/otpMiddleware.js';
 import { verifyEmail, emailConfirmation } from '../controller/otpController.js';
 
-const router = express.Router();
+const router = Router();
 
-const securityHeaders = (req, res, next) => {
-    res.setHeader("Cache-Control", "no-store");
-
+router.use((req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, must-revalidate");
     next();
-};
-
-// Prevent cache storing
-router.use(securityHeaders);
+});
 
 // Validate User email after succesful registration
 router.post("/validate-email", validateOtpCode(), errorValidation, verifyEmail);

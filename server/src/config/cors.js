@@ -1,8 +1,9 @@
 import { cleanUrl } from "../helpers/utils.js";
-import { CLIENT_PORT, CLIENT_URL, FIREBASE_URL, GOOGLE_API, PORT, SERVER_PROD_URL } from "./env.js";
+import { CLIENT_PORT, CLIENT_URL, FIREBASE_URL, GOOGLE_API, PORT, SERVER_PROD_URL, SERVER_URL } from "./env.js";
 
 export const allowedOrigins = [
   `${CLIENT_URL + CLIENT_PORT}`,
+  `${SERVER_URL + PORT}`,
   `${SERVER_PROD_URL + PORT}`,
   SERVER_PROD_URL,
   cleanUrl(FIREBASE_URL),
@@ -11,7 +12,6 @@ export const allowedOrigins = [
 
 const corsConfiguration = {
   origin: (origin, callback) => {
-    console.log('Server Expected Origin:', origin);
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {

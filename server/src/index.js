@@ -1,43 +1,30 @@
-/* eslint-disable no-undef */
 import express from "express";
-import dotenv from "dotenv";
 import path from "path";
-import { connect } from "./database/connection.js";
 import cors from "cors";
+
+import { connect } from "./database/connection.js";
 
 // Express Routes
 import statusRouter from "./middleware/HealthCheck.js";
-import AuthRoutes from './routes/authRoute.js';
-import OtpRoutes from "./routes/otpRoute.js";
-
-// Helper Functions
-// import { cleanUrl } from "./helpers/utils.js";
+import AuthenticationRouter from './routes/authRoute.js';
+import OtpRouter from "./routes/otpRoute.js";
 
 // Configuration's
 import corsConfiguration from "./config/cors.js";
 import helmetConfiguration from "./config/helmet.js";
+import { NODE_ENV, PORT, RESERVE_PORT } from "./config/env.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
+import cookieParser from "cookie-parser";
 
-dotenv.config();
-
-const PORT = parseInt(process.env.PORT ?? process.env.RESERVE_PORT);
 const __dirname = path.resolve();
 const app = express();
 
-// const allowedOrigins = [
-//   `${process.env.CLIENT_URL + process.env.CLIENT_PORT}`,
-//   `${process.env.SERVER_URL + process.env.PORT}`,
-//   process.env.SERVER_PROD_URL,
-//   cleanUrl(process.env.FIREBASE_URL),
-//   cleanUrl(process.env.GOOGLE_API),
-// ];
-// const mapOrigin = allowedOrigins.map(origin => origin).filter(Boolean);
-
-// console.log("Origin: ", mapOrigin);
-
-// Helmet Headers Configuration
-app.use(helmetConfiguration);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Cors Configuration
+app.use(helmetConfiguration);
 app.options('*', cors(corsConfiguration));
 app.use(cors(corsConfiguration));
 
@@ -47,20 +34,18 @@ connect().then(() => {
   console.error("Failed to connect to the database: ", error);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT ?? RESERVE_PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
 });
 
-if (process.env.NODE_ENV === 'dev') { 
+if (NODE_ENV === 'dev') { 
   app.use((req, res, next) => {
     console.log(`Incoming request: [${req.method}], ${req.path}`);
     next();
   })
 };
   
-app.use(express.json());
 
-app.use('/health', statusRouter);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 
@@ -78,5 +63,9 @@ app.get('*', (req, res) => {
 });
 
 // Express Route's
-app.use("/api/auth", AuthRoutes);
-app.use("/api/v1/otp", OtpRoutes);
+// Add prefix of /v1
+app.use("/api/auth", AuthenticationRouter);
+app.use("/api/v1/otp", OtpRouter);
+app.use('/health', statusRouter);
+
+app.use(errorMiddleware);
