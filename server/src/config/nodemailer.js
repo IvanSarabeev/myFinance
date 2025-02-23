@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-import { EMAIL_ADDRESS, EMAIL_PASSWORD, HOST_PORT, HOST_SERVICE } from "../config/env.js";
+import { EMAIL_ADDRESS, EMAIL_PASSWORD, HOST_PORT, HOST_SERVICE } from "./env.js";
 
 const host = String(HOST_SERVICE);
 const hostPort = Number(HOST_PORT);

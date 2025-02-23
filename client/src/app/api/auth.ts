@@ -33,7 +33,7 @@ export async function registerUser(user: User): Promise<AxiosResponse<RegisterUs
  */
 export async function loginUser(user: LoginUser): Promise<AxiosResponse<LoginUserResponse>> {
     try {
-        return await api.post("/auth/login", user, { withCredentials: false });
+        return await api.post("/auth/login", user, { withCredentials: true });
     } catch (error) {
         console.error("API RESPONSE:", error);
         throw error;

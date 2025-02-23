@@ -1,7 +1,7 @@
 import { toZonedTime } from 'date-fns-tz';
 
 import User from './../model/user.js';
-import { emailTransportProvider } from '../utils/emailTransportProvider.js';
+import { emailTransportProvider } from '../config/nodemailer.js';
 import { EUROPE_ZONE, HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js';
 import { createEmailTemplate } from '../utils/emailTemplateLoader.js';
 import { TEMPLATE_TYPES } from '../templates/defines.js';
