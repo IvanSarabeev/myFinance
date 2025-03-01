@@ -5,7 +5,6 @@ import { body, validationResult } from 'express-validator';
 import { COMMON_REGEXS } from "../utils/regex.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import { JWT_SECRET, TOKEN_PRE_FIX } from "../config/env.js";
-import User from './../model/user.js';
 
 const {CHARACTERS_LENGTH_REGEX} = COMMON_REGEXS;
 
@@ -17,8 +16,8 @@ export const authorize = async (req, res, next) => {
     try {
         let token;
 
-        if (req.headers.authorization && req.headers.authorization.startsWith(TOKEN_PRE_FIX)) {
-            token = req.headers.authorization.split(" ")[1];
+        if (req.headers.cookie && req.headers.cookie.startsWith(TOKEN_PRE_FIX)) {
+            token = req.headers.cookie.split("=")[1];
         }
 
         if (!token) {
@@ -27,16 +26,12 @@ export const authorize = async (req, res, next) => {
 
         const decode = jwt.verify(token, JWT_SECRET);
 
-        const user = await User.findById(decode.userId);
-
-        if (!user) {
-            return res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
-        }
-
-        req.user = user;
+        req.user = decode;
 
         next(); // Continue to the next middleware
     } catch (error) {
+        console.error(`Fatal Authorization: ${error.message ?? ""}`);
+
         res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({
             message: "Unauthorized",
             error: error.message ?? "Unauthorized: Access Forbidden",

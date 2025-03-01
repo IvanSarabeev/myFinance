@@ -9,6 +9,7 @@ import { connect } from "./database/connection.js";
 import statusRouter from "./middleware/HealthCheck.js";
 import AuthenticationRouter from './routes/authRoute.js';
 import OtpRouter from "./routes/otpRoute.js";
+import WalletRouter from "./routes/walletRoute.js";
 
 // Configuration's
 import corsConfiguration from "./config/cors.js";
@@ -70,6 +71,7 @@ app.get('*', (req, res) => {
 // Add prefix of /v1
 app.use("/api/auth", AuthenticationRouter);
 app.use("/api/v1/otp", OtpRouter);
+app.use("/api/v1/wallet", WalletRouter);
 app.use('/health', statusRouter);
 
 app.use(errorMiddleware);

@@ -29,7 +29,7 @@ class UserRepository {
             await session.abortTransaction();
             session.endSession();
 
-            throw new Error(`Transaction failed: ${error.message ?? "Failed to create user"}`);
+            throw new Error(`Failed to create user: ${error.message ?? "Internal Server Error"}`);
         }
     };
 
@@ -100,7 +100,7 @@ class UserRepository {
             (await session).abortTransaction();
             (await session).endSession();
 
-            throw new Error(`Transaction failed: ${error.message ?? "Failed to update user"}`);
+            throw new Error(`Failed to update User: ${error.message ?? "Internal Server Error"}`);
         }
     }
 
