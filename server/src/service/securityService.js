@@ -1,22 +1,21 @@
 import bcryptjs from 'bcryptjs';
 import Jwt from "jsonwebtoken";
 
-import User from './../model/user.js';
 import { requiredEmailVerification, sendEmailVerification, setOtpExpirationTime } from "./otpService.js";
 import { generateOtp } from '../utils/otpGenerator.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { JWT_SECRET } from '../config/env.js';
 import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
+import UserRepository from '../repositories/UserRepository.js';
 
 /**
  * Create a new User instance, in which the User
  * receives an OTP Code via their email address
  * 
  * @param {Object} userRegistrationData - User Data
- * @param {} session - Mongoose Transaction
  * @returns {Object}
  */
-export async function registerUserService(userRegistrationData, session) {
+export async function registerUserService(userRegistrationData) {
     try {
         const { name, email } = userRegistrationData;
 
@@ -40,9 +39,6 @@ export async function registerUserService(userRegistrationData, session) {
 
         if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
             try {
-                // Persist New User to DB
-                await parameters.save({ session });
-
                 return { 
                     status: true, 
                     statusCode: HTTP_RESPONSE_STATUS.CREATED, 
@@ -87,10 +83,9 @@ async function prepareUserRegistration(parameters) {
     const hashPassword = await bcryptjs.hash(password, 12);
         
     const otpCode = generateOtp(6);
+    const otpExpiration = setOtpExpirationTime();
 
-    const otpExpiration = setOtpExpirationTime(); // 5 minutes
-
-    return new User({
+    return UserRepository.create({
         name: name,
         email: email,
         password: hashPassword,
@@ -111,12 +106,7 @@ async function prepareUserRegistration(parameters) {
  */
 async function findExistingUser(email, name) {
     try {
-        const user = await User.findOne({
-            $or: [
-                { email },
-                { name }
-            ]
-        });
+        const user = await UserRepository.findByCriteria({ $or: [{ email }, { name }] });
 
         if (user !== null) {
             const errorField = user.email === email ? "email" : "name";
@@ -151,7 +141,7 @@ export async function loginUserService(userData) {
     const {email, password} = userData;
 
     try {
-        const user = await User.findOne({ email: email });
+        const user = await UserRepository.findByEmail(email);
 
         if (!user) {
             return {
@@ -217,7 +207,7 @@ export async function loginUserService(userData) {
  */
 export async function forgottenPasswordService(email) {
     try {
-        const findUser = await User.findOne({ email: email });
+        const findUser = await UserRepository.findByEmail(email);
 
         if (!findUser) {
             return {
@@ -236,7 +226,7 @@ export async function forgottenPasswordService(email) {
         if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
             findUser.verified = false;
             findUser.otpCode = otpCode;
-            findUser.otpExpiration = setOtpExpirationTime(); // 5 minutes
+            findUser.otpExpiration = setOtpExpirationTime();
 
             return { status, statusCode, message, showRequestedModal }
         } else {
@@ -316,7 +306,7 @@ export async function confirmPassowrdService(parameters) {
                 errorsFields: errorsFields
             };
         } else {
-            const user = await User.findOne({ email: parameters.email });
+            const user = await UserRepository.findByEmail(parameters.email);
 
             if (!user) {
                 return {
@@ -328,7 +318,7 @@ export async function confirmPassowrdService(parameters) {
 
             const hashedPassword = await bcryptjs.hash(parameters.password, 12);
 
-            const result = await user.updateOne({ password: hashedPassword });
+            const result = await UserRepository.update(user._id, { password: hashedPassword });
 
             // TODO: Check if the password was updated successfully
             console.log("Password Update Result:", result);

@@ -293,7 +293,8 @@ export const setOtpExpirationTime = (
     timezone = EUROPE_ZONE,
     currentDate = new Date(),
 ) => {
-    const expirationUtc = new Date(currentDate.getTime() * minutes * 60 * 1000);
+    const validationMinutes = Math.min(minutes, 10);
+    const expirationUtc = new Date(currentDate.getTime() + validationMinutes * 60 * 1000);
 
     return toZonedTime(expirationUtc, timezone);
 }

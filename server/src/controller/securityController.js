@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-
 import { registerUserService,loginUserService } from '../service/securityService.js';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
@@ -15,23 +13,16 @@ import { TOKEN_ID } from '../config/env.js';
  * @param next 
  */
 export async function registerUser(req, res, next){
-    const session = await mongoose.startSession(); // Begin Transaction
-    session.startTransaction();
-
     try {   
         const { name, email, password, terms, fingerPrint } = req.body;
 
-        const result = await registerUserService({ name, email, password, terms, fingerPrint }, session);
+        const result = await registerUserService({ name, email, password, terms, fingerPrint});
 
         const { status, statusCode, showOtpModal, message, errorFields } = result;
 
         if (statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
-            await session.abortTransaction(); // Abort Transaction
-
             res.status(statusCode).json(result);
         } else {
-            await session.commitTransaction(); // Persist Transaction
-
             res.status(statusCode).json({
                 status: status,
                 showModal: showOtpModal,
@@ -40,9 +31,6 @@ export async function registerUser(req, res, next){
             });
         }
     } catch (error) {
-        await session.abortTransaction(); // Abort Transaction
-        session.endSession();
-
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
