@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import {Schema, model} from "mongoose";
 import deviceSchema from "./device.js";
 import { UserRoles } from "../enums/userEnum.js";
 import { DEFAULT_USER_AVATAR } from "../config/env.js";
@@ -6,7 +6,7 @@ import { COMMON_REGEXS } from './../utils/regex.js';
 
 const {EMAIL} = COMMON_REGEXS;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     name: {
         type: String,
         unique: true,
@@ -38,11 +38,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: [
-            UserRoles.ADMIN_ROLE,
-            UserRoles.MODERATOR_ROLE,
-            UserRoles.STANDARD_ROLE
-        ],
+        enum: Object.values(UserRoles),
         default: UserRoles.STANDARD_ROLE
     },
     device: deviceSchema,
@@ -58,25 +54,31 @@ const userSchema = new mongoose.Schema({
         type: Date,
     },
     transactionId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Transaction",
         index: true,
         unique: true,
     },
     todoId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Todo",
         index: true,
         unique: true,
     },
     commentId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Comment",
+        index: true,
+        unique: true,
+    },
+    wallets: {
+        type: [Schema.Types.ObjectId],
+        ref: "Wallet",
         index: true,
         unique: true,
     }
 }, {timestamps: true});
 
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
 export default User;

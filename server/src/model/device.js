@@ -24,11 +24,7 @@ const deviceSchema = new Schema({
     },
     deviceType: {
         type: Number,
-        enum: [
-            DeviceModels.MOBILE_DEVICE,
-            DeviceModels.DEKSTOP_DEVICE,
-            DeviceModels.TABLET_DEVICE
-        ],
+        enum: Object.values(DeviceModels),
         required: [true, "Device type is required"],
     },
     timeZone: {
