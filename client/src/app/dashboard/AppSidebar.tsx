@@ -47,7 +47,8 @@ const AppSidebar: React.FC = ({
   ...props
 }: React.ComponentProps<typeof Sidebar>) => {
   const { userStore } = useStore();
-  const { userDetails } = userStore;
+
+  const user = userStore.getUserDetails();
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -56,9 +57,7 @@ const AppSidebar: React.FC = ({
         <NavMain items={navData.navMain} />
         <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={userDetails} />
-      </SidebarFooter>
+      <SidebarFooter>{user !== null && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 };

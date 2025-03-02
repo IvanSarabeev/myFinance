@@ -183,7 +183,6 @@ export async function loginUserService(userData) {
                     email: user.email,
                     role: user.role,
                     userAvatar: user.userAvatar,
-                    userFingerprint: user.device,
                     verified: user.verified,
                 }
             };

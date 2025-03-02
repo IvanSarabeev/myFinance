@@ -1,3 +1,4 @@
+import { UserDetails } from '@/types/userTypes';
 import { makeObservable, observable, action } from 'mobx';
 
 /**
@@ -6,6 +7,7 @@ import { makeObservable, observable, action } from 'mobx';
 class SessionStore {
     private readonly IS_AUTHENTICATED = "isAuthenticated";
     private readonly AUTH_TOKEN = "authToken";
+    public readonly USER_DETAILS = "userDetails";
 
     isAuthenticated = false;
     token = "";
@@ -18,6 +20,7 @@ class SessionStore {
             // Actions
             setAuthenticated: action,
             setToken: action,
+            setUserDetails: action,
             clearSession: action,
         });
 
@@ -51,6 +54,20 @@ class SessionStore {
     }
 
     /**
+     * Set data or receive it through the sessionStorage
+     * 
+     * @param {Object} data - The User Data
+     * @returns {void} Persist data or receive data
+     */
+    setUserDetails(data: UserDetails): void {
+        if (sessionStorage.getItem(this.USER_DETAILS) === null) {
+            sessionStorage.setItem(this.USER_DETAILS, JSON.stringify(data));
+        }
+
+        sessionStorage.getItem(this.USER_DETAILS);
+    }
+
+    /**
      * Initialize session using sessionStorage
      * 
      * @returns {void}
@@ -79,6 +96,7 @@ class SessionStore {
         this.token = "";
         sessionStorage.removeItem(this.IS_AUTHENTICATED);
         sessionStorage.removeItem(this.AUTH_TOKEN);
+        sessionStorage.removeItem(this.USER_DETAILS);
     }
 }
 

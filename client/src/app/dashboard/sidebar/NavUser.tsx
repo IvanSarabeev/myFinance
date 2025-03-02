@@ -21,7 +21,7 @@ interface NavUserProps {
 }
 
 type DropDownSideContentProps = {
-  user: UserDetails;
+  user: UserDetails | null;
   userCapital: string | null;
 };
 
@@ -78,7 +78,6 @@ const DropDownSideContent = ({
   userCapital,
 }: DropDownSideContentProps) => {
   const { isMobile } = useSidebar();
-  const { name, email, userAvatar } = user;
 
   return (
     <DropdownMenuContent
@@ -90,8 +89,8 @@ const DropDownSideContent = ({
       <DropdownMenuLabel className="p-0 font-normal">
         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="h-8 w-8 rounded-lg">
-            {userAvatar.length > 0 ? (
-              <AvatarImage src={userAvatar} alt={name} />
+            {user?.avatar !== null ? (
+              <AvatarImage src={user?.avatar} alt={user?.name} />
             ) : (
               <AvatarFallback className="rounded-lg">
                 {userCapital}
@@ -99,8 +98,8 @@ const DropDownSideContent = ({
             )}
           </Avatar>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-semibold">{name}</span>
-            <span className="truncate text-xs">{email}</span>
+            <span className="truncate font-semibold">{user?.name}</span>
+            <span className="truncate text-xs">{user?.email}</span>
           </div>
         </div>
       </DropdownMenuLabel>

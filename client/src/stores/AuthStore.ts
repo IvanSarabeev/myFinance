@@ -231,6 +231,8 @@ class AuthStore {
         runInAction(() => {
             sessionStore.setToken(token);
             sessionStore.setAuthenticated(true);
+            sessionStore.setUserDetails(user);
+
             userStore.setUserDetails(user);
 
             commonStore.openNotification(

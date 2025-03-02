@@ -2,6 +2,7 @@ import { makeObservable, observable, action, runInAction } from "mobx";
 import { ClientJS } from 'clientjs';
 import { UserFingerPrint, User, ExternalUser, UserDetails } from '@/types/userTypes';
 import { format } from "date-fns";
+import sessionStore from "./SessionStore";
 
 class UserStore {
     user: User = {
@@ -99,10 +100,22 @@ class UserStore {
         });
     }
 
-    getUserDetails() {
+    getUserDetails(): UserDetails | null {
+        const userData = sessionStorage.getItem(sessionStore.USER_DETAILS);
+        let parsedData: Partial<UserDetails> = {};
+
+        if (userData) {
+            try {
+                parsedData = JSON.parse(userData);
+            } catch (error) {
+                console.error(`Failed to parse user data: ${error}`);
+            }
+        }
+
         return {
             ...this.userDetails,
             ...this.getFingerPrint(),
+            ...parsedData,
         }
     }
 
