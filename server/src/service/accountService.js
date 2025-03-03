@@ -9,10 +9,11 @@ const {CREATED, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
  * @param {string} walletId - User's Wallet ID
  * @returns {Promise<Account>} return {status, statusCode and message}
  */
-export async function createAccount(walletId) {
+export async function createAccount(walletId, parameters = {}) {
     const payload = {
         wallet: walletId,
         balance: 0,
+        ...parameters,
     };
     
     try {    

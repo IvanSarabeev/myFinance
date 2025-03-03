@@ -60,4 +60,5 @@ export const TransactionCategoryEnum = Object.freeze({
     DONATION: "DONATION",
     INTEREST: "INTEREST",
     DIVIDEND: "DIVIDEND",
+    DEPOSIT: "DEPOSIT",
 });

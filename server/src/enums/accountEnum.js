@@ -25,4 +25,5 @@ export const AccountTypeEnum = Object.freeze({
     CREDIT: "Credit",
     CHECKING: "Checking",
     INVESTING: "Investment",
+    DEPOSIT: "Deposit",
 });

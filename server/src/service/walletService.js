@@ -2,6 +2,7 @@ import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import UserRepository from "../repositories/UserRepository.js";
 import WalletRepository from "../repositories/WalletRepository.js";
 import { createAccount } from "./accountService.js";
+import { createDepositTransaction } from "./transactionService.js";
 
 const {UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST, NO_CONTENT, NOT_FOUND} = HTTP_RESPONSE_STATUS;
 
@@ -10,9 +11,10 @@ const {UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST, NO_CONTENT, NOT_FOUND} 
  * 
  * @param {string} userId - The Id of the user (token based)
  * @param {string} walletName - The name of the walled
+ * @param {Object | null} parameters - Additional Account parameters (currency, icon, type and etc...) 
  * @returns {Promise<Object>} - status, statusCode and message
  */
-export async function createUserWallet(userId, walletName) {
+export async function createUserWallet(userId, walletName, parameters = null) {
     if (!userId || !walletName) {
         throw new Error("Provided empty fields");
     }
@@ -42,8 +44,21 @@ export async function createUserWallet(userId, walletName) {
             }; 
         }
 
-        const account = await createAccount(wallet.id);
+        const account = await createAccount(wallet.id, parameters);
         const { status, statusCode, message } = account;
+
+        const initialDeposit = Number(parameters?.initialDeposit) || 0;
+
+        if (initialDeposit > 0) {
+            const depositTransaction = createDepositTransaction({
+                account: account,
+                initialDeposit,
+            });
+            
+            const {status, statusCode, message} = depositTransaction;
+
+            return {status, statusCode, message};
+        }
         
         return { status, statusCode, message };
     } catch (error) {

@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import { TransactionCategoryEnum, TransactionTypeEnum } from "../enums/transactionEnum.js";
 
 const transactionSchema = new Schema({

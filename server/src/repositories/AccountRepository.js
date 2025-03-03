@@ -28,7 +28,7 @@ class AccountRepository {
         } catch (error) {
             session.abortTransaction();
             
-            throw new Error(`Failed to create account: ${error.message ?? "Transaction failure"}`)
+            throw new Error(`Failed to create account: ${error.message ?? "Transaction failure"}`);
         } finally {
             session.endSession();
         }
