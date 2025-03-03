@@ -12,14 +12,12 @@ const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
  * @returns 
  */
 export async function addWallet(req, res, next) {
-    const { name } = req.body;
+    const { name, customEnabled, currency, initialDeposit, accountName, type } = req.body;
     const { id } = req.user;
 
     try {
-        const response = await createUserWallet(id, name);
+        const response = await createUserWallet(id, name, { customEnabled, currency, initialDeposit, accountName, type });
 
-        console.log("Response: ", response);
-        
         const {status, statusCode, message} = response;
                 
         return res.status(statusCode).json({ status, message });        

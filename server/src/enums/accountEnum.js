@@ -26,4 +26,5 @@ export const AccountTypeEnum = Object.freeze({
     CHECKING: "Checking",
     INVESTING: "Investment",
     DEPOSIT: "Deposit",
+    STANDARD: "Standard", // Universall Type
 });

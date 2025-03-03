@@ -1,8 +1,6 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
-import { AccountTypeEnum } from "../enums/accountEnum.js";
-import { TransactionCategoryEnum } from "../enums/transactionEnum.js";
+import { TransactionCategoryEnum, TransactionTypeEnum } from "../enums/transactionEnum.js";
 import TransactionRepository from "../repositories/TransactionRepository.js";
-
 
 const {CREATED, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
@@ -11,13 +9,13 @@ const {CREATED, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
  * 
  * @param {Object} account - Account Model -> ObjectId
  * @param {Number} initialDeposit - The initial deposit a User sets 
- * @returns {Object}  
+ * @returns {Object} 
  */
-export async function createDepositTransaction(account, initialDeposit) {
+export async function createDepositTransaction(account, initialDeposit) {    
     const depositPayload = {
-        account: account._id,
+        account: account,
         amount: initialDeposit,
-        type: AccountTypeEnum.DEPOSIT,
+        type: TransactionTypeEnum.DEPOSIT,
         category: TransactionCategoryEnum.DEPOSIT,
         date: new Date(),
         description: "Initial deposit, during account setup",
@@ -36,6 +34,6 @@ export async function createDepositTransaction(account, initialDeposit) {
     return {
         status: true,
         statusCode: CREATED,
-        message: "Deposit transaction created successfully",
+        message: "Congratulations, you created new wallet with successfull deposit transaction.",
     };
 };

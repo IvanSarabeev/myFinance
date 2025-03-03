@@ -9,6 +9,49 @@ export const validateWalletCreate = [
         .trim()
         .isString().withMessage("Wallet name must be a string.")
         .notEmpty().withMessage("Wallet name is required."),
+
+    body('type') // Account -> Required
+        .notEmpty().withMessage("Type is required")
+        .isString().withMessage("Type must be string"),
+
+    // The below properties are required by flag -> customEnabled if Truthy
+
+    body('customEnabled')
+        .optional()
+        .isBoolean().withMessage("Unsupported type"),
+
+    body('accountName')
+        .if((value, { req }) => req.body.customEnabled === true)
+        .notEmpty().withMessage("Name is required in custom mode")
+        .isString().withMessage("Name must be string"),
+
+    body('currency')
+        .if((value, { req }) => req.body.customEnabled === true)
+        .notEmpty().withMessage("Currency requireed in custom mode")
+        .isString().withMessage("Currency not available"),
+
+    body('initialDeposit')
+        .if((value, { req }) => req.body.customEnabled === true)
+        .isNumeric().withMessage("Deposit must be number"),
+    
+    body('description')
+        .optional()
+        .isString().withMessage("Description must be string")
+        .trim(),
+    
+    body('icon')
+        .optional()
+        .isString().withMessage("Description must be string")
+        .trim(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // Return validation errors to client
+            return res.status(422).json({ errors: errors.array() });
+        }
+        next();
+    }
 ];
 
 export const validateWalletDelete = [

@@ -13,6 +13,7 @@ export async function createAccount(walletId, parameters = {}) {
     const payload = {
         wallet: walletId,
         balance: 0,
+        name: parameters?.accountName,
         ...parameters,
     };
     
@@ -24,13 +25,14 @@ export async function createAccount(walletId, parameters = {}) {
                 status: false,
                 statusCode: INTERNAL_SERVER_ERROR,
                 message: "Unable to create account",
-            }
+            };
         }
-        
+
         return {
             status: true,
             statusCode: CREATED,
-            message: "Congratulations, you created a new wallet with a default account."
+            message: "Congratulations, you created a new wallet with a default account.",
+            dataId: account._id,
         };
     } catch (error) {
         console.error(`Error creating account ${walletId}: ${error.message}`)

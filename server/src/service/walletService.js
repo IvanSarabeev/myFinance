@@ -45,22 +45,18 @@ export async function createUserWallet(userId, walletName, parameters = null) {
         }
 
         const account = await createAccount(wallet.id, parameters);
-        const { status, statusCode, message } = account;
+        const { status, statusCode, message, dataId } = account;
 
         const initialDeposit = Number(parameters?.initialDeposit) || 0;
 
         if (initialDeposit > 0) {
-            const depositTransaction = createDepositTransaction({
-                account: account,
-                initialDeposit,
-            });
-            
+            const depositTransaction = await createDepositTransaction(dataId, initialDeposit);            
             const {status, statusCode, message} = depositTransaction;
 
             return {status, statusCode, message};
         }
         
-        return { status, statusCode, message };
+        return { status, statusCode, message }; // Default Return if there's no transaction
     } catch (error) {
         console.error(`Error creating wallet for user ${userId}: ${error.message}`)
 
