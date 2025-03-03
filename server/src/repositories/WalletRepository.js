@@ -15,21 +15,22 @@ class WalletRepository {
      * @throws {Error} - If the transaction fails. 
      */
     async create(data) {
-        const session = mongoose.startSession();
-        (await session).startTransaction();
-
+        const session = await mongoose.startSession();
+        
         try {
+            session.startTransaction();
+            
             const wallet = await Wallet.create(data);
             
-            (await session).commitTransaction();
-            (await session).endSession();
+            session.commitTransaction();
 
             return wallet;
         } catch (error) {
-            (await session).abortTransaction();
-            (await session).endSession();
+            session.abortTransaction();
             
             throw new Error(`Failed to create wallet: ${error.message ?? "Unable to proceed creating wallet"}`);
+        } finally {
+            session.endSession();
         }
     }
 
@@ -52,25 +53,26 @@ class WalletRepository {
      * @throws {Error} - If the transaction fails. 
      */
     async update(id, data) {
-        const session = mongoose.startSession();
-        (await session).startTransaction();
-
+        const session = await mongoose.startSession();
+        
         try {
+            session.startTransaction();
+            
             const wallet = await Wallet.findByIdAndUpdate(id, data, { 
                 new: true,
                 runValidators: true,
                 session
             });
             
-            (await session).commitTransaction();
-            (await session).endSession();
+            session.commitTransaction();
 
             return wallet;
         } catch (error) {
-            (await session).abortTransaction();
-            (await session).endSession();
+            session.abortTransaction();
             
             throw new Error(`Failed to update wallet: ${error.message ?? "Unable to proceed"}`);
+        } finally {
+            session.endSession();
         }
     }
 
@@ -82,21 +84,22 @@ class WalletRepository {
      * @throws {Error} - If the transaction fails. 
     */
     async delete(id) {
-        const session = mongoose.startSession();
-        await session.startTransaction();
+        const session = await mongoose.startSession();
         
         try {
+            session.startTransaction();
+
             const wallet = await Wallet.findByIdAndDelete(id, { session });
             
-            (await session).commitTransaction();
-            (await session).endSession();
+            session.commitTransaction();
 
             return wallet;
         } catch (error) {
-            (await session).abortTransaction();
-            (await session).endSession
-
+            session.abortTransaction();
+            
             throw new Error(`Failed to delete wallet: ${error.message ?? "An error occurred"}`);
+        } finally {
+            session.endSession();
         }
     }
 };
