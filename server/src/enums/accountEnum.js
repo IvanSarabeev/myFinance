@@ -16,3 +16,13 @@ export const CurrencyEnum = Object.freeze({
     CZK: "CZK",
     TUR: "TUR",
 });
+
+/**
+ * Enum for available account types
+ */
+export const AccountTypeEnum = Object.freeze({
+    SAVINGS: "Savings",
+    CREDIT: "Credit",
+    CHECKING: "Checking",
+    INVESTING: "Investment",
+});

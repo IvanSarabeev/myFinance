@@ -21,11 +21,7 @@ export async function addWallet(req, res, next) {
         console.log("Response: ", response);
         
         const {status, statusCode, message} = response;
-        
-        if (response) {
-            return res.status(statusCode).json({ status, message });
-        }
-        
+                
         return res.status(statusCode).json({ status, message });        
     } catch (error) {
         console.error(`Fatal error: ${error.message ?? "Unable to create Wallet"}`);

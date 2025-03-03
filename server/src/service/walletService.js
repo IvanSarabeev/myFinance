@@ -1,8 +1,9 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import UserRepository from "../repositories/UserRepository.js";
 import WalletRepository from "../repositories/WalletRepository.js";
+import { createAccount } from "./accountService.js";
 
-const {UNAUTHORIZED, INTERNAL_SERVER_ERROR, CREATED, BAD_REQUEST, NO_CONTENT, NOT_FOUND} = HTTP_RESPONSE_STATUS;
+const {UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST, NO_CONTENT, NOT_FOUND} = HTTP_RESPONSE_STATUS;
 
 /**
  * Make validation's and then create new Wallet Instance
@@ -33,19 +34,18 @@ export async function createUserWallet(userId, walletName) {
 
         const wallet = await WalletRepository.create({ userId: userId, name: walletName });
 
-        if (wallet) {
+        if (!wallet) {
             return {
-                status: true,
-                statusCode: CREATED,
-                message: "Congratulations, you created new Wallet."
-            };
+                status: false,
+                statusCode: BAD_REQUEST,
+                message: "Unable to create new wallet, please contact our support team!",
+            }; 
         }
 
-        return {
-            status: false,
-            statusCode: BAD_REQUEST,
-            message: "Unable to create new wallet, please contact our support team!",
-        }; 
+        const account = await createAccount(wallet.id);
+        const { status, statusCode, message } = account;
+        
+        return { status, statusCode, message };
     } catch (error) {
         console.error(`Error creating wallet for user ${userId}: ${error.message}`)
 
@@ -77,8 +77,6 @@ export async function deleteUserWallet(userId, walletId) {
         }
 
         const wallet = await WalletRepository.delete(userId);
-
-        console.log("Wallet Response: ", wallet);
 
         if (!wallet) {
             return {
