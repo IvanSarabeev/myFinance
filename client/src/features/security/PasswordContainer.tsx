@@ -2,30 +2,30 @@
 import React from "react";
 import useStore from "@/hooks/useStore";
 import {
-  forgottenPasswordStep1,
-  forgottenPasswordStep2,
+  initialForgottenPasswordStep1,
+  confirmForgottenPasswordStep2,
 } from "./schemas/formSchema";
 import { useFormik } from "formik";
 import PasswordForm from "./components/forms/PasswordForm";
-import { ForgottenPassword } from "@/types/userTypes";
 import { observer } from "mobx-react-lite";
 import { modalStore } from "@/stores";
 import { MODAL_TYPES } from "@/defines";
+import { ForgottenPasswordFlow } from "@/types/auth";
 
 const PasswordContainer: React.FC = () => {
   const { authStore, otpStore } = useStore();
   const { isVerified } = otpStore;
   const { errorFields } = authStore;
 
-  const initialValues: ForgottenPassword = {
+  const initialValues: ForgottenPasswordFlow = {
     email: "jacob@example.com",
     password: "",
     confirm_password: "",
   };
 
   const validationSchema = isVerified
-    ? forgottenPasswordStep2
-    : forgottenPasswordStep1;
+    ? confirmForgottenPasswordStep2
+    : initialForgottenPasswordStep1;
 
   const formik = useFormik({
     initialValues,
@@ -33,14 +33,14 @@ const PasswordContainer: React.FC = () => {
     onSubmit: async (values, actions) => {
       if (isVerified === false) {
         const response = await authStore.forgottenPassword(
-          values.email,
+          values,
           actions.setErrors
         );
 
         console.log("Response: ", response);
       } else {
-        const response = await authStore.forgottenPassword(
-          values.email,
+        const response = await authStore.confirmForgottenPassword(
+          values,
           actions.setErrors
         );
 

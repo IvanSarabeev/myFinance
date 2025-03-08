@@ -1,19 +1,19 @@
-
-import { Role } from "@/types/authTypes";
-import { Comment, Todo, Transaction } from "@/types/features";
-import { UserBase } from '@/types/userTypes';
+import { CommentModel } from "@/types/features/comment";
+import { TodoModel } from "@/types/features/todo";
+import { TransactionModel } from "@/types/features/transaction";
+import { Role, UserBase } from "@/types/user";
 
 type Permissions = {
     transactions: {
-        dataType: Transaction
+        dataType: TransactionModel
         action: "view" | "create" | "update" | "delete"
     },
     todos: {
-        dataType: Todo
+        dataType: TodoModel
         action: "view" | "create" | "update" | "delete"
     },
     comments: {
-        dataType: Comment
+        dataType: CommentModel
         action: "view" | "create" | "update" | "delete"
     }
 }

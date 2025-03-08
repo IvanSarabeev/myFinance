@@ -1,5 +1,5 @@
 import api from "@/utils/axiosInstance";
-import { CreateWalletData } from "@/types/wallet/createWallet";
+import { CreateWalletData } from "@/types/features/wallet";
 
 /**
  * 

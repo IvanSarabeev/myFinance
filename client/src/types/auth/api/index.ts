@@ -1,6 +1,4 @@
-import { UserFingerPrint } from "./userTypes";
-
-export type Role =  "user" | "moderator" | "admin"
+import { Role, UserFingerPrint } from "@/types/user";
 
 export interface RegisterUserResponse {
     status: boolean;

@@ -2,8 +2,9 @@
 import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
-import { GithubUser, GoogleUser, LoginUser, User } from "@/types/userTypes";
-import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/authTypes";
+import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/auth/api/index";
+import { ConfirmForgottenPasswordData, InitialForgottenPasswordData, LoginUserData, RegisterUserData } from "@/types/auth";
+import { GitHubAuthentication, GoogleAuthentication } from "@/types/user/api/index";
 
 /**
  * Add new User to the system
@@ -12,7 +13,7 @@ import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, Auth
  * @returns {Promise<AxiosResponse<RegisterUserResponse>>}
  * @throws {Error}
  */
-export async function registerUser(user: User): Promise<AxiosResponse<RegisterUserResponse>> {
+export async function registerUser(user: RegisterUserData): Promise<AxiosResponse<RegisterUserResponse>> {
     const fingerPrint = userStore.getFingerPrint();
     const data = { ...user, fingerPrint };
 
@@ -31,7 +32,7 @@ export async function registerUser(user: User): Promise<AxiosResponse<RegisterUs
  * @returns {Promise<AxiosResponse<LoginUserResponse>>}
  * @throws {Error}
  */
-export async function loginUser(user: LoginUser): Promise<AxiosResponse<LoginUserResponse>> {
+export async function loginUser(user: LoginUserData): Promise<AxiosResponse<LoginUserResponse>> {
     try {
         return await api.post("/auth/login", user, { withCredentials: true });
     } catch (error) {
@@ -62,7 +63,7 @@ export async function logoutUser(): Promise<void> {
  * @returns {Promise<AxiosResponse<AuthResponse>>}
  * @throws {Error}
  */
-export async function forgottenUserPassword(email: string): Promise<AxiosResponse<AuthResponse>> {
+export async function forgottenUserPassword(email: InitialForgottenPasswordData): Promise<AxiosResponse<AuthResponse>> {
     try {
         return await api.post("/auth/forgotten-password", {email}, { withCredentials: false });
     } catch (error) {
@@ -79,11 +80,7 @@ export async function forgottenUserPassword(email: string): Promise<AxiosRespons
  * @returns {Promise<AxiosResponse<AuthResponse>>}
  * @throws {Error}
  */
-export async function confirmPasswordReset(data: {
-    email: string;
-    password: string;
-    confirmPassword: string;
-}): Promise<AxiosResponse<AuthResponse>> {
+export async function confirmPasswordReset(data: ConfirmForgottenPasswordData): Promise<AxiosResponse<AuthResponse>> {
     try {
         return await api.post("/auth/confirm-password", {data}, { withCredentials: false });
     } catch (error) {
@@ -100,7 +97,7 @@ export async function confirmPasswordReset(data: {
  * @returns {Promise<AxiosResponse<ExternalProviderResponse>>}
  * @throws {Error}
  */
-export async function google(data: GoogleUser): Promise<AxiosResponse<ExternalProviderResponse>> {
+export async function google(data: GoogleAuthentication): Promise<AxiosResponse<ExternalProviderResponse>> {
     try {
         return await api.post("/auth/google-login", data);
     } catch (error) {
@@ -116,7 +113,7 @@ export async function google(data: GoogleUser): Promise<AxiosResponse<ExternalPr
  * @returns {Promise<AxiosResponse<ExternalProviderResponse>>}
  * @throws {Error}
  */
-export async function github(data: GithubUser): Promise<AxiosResponse<ExternalProviderResponse>> {
+export async function github(data: GitHubAuthentication): Promise<AxiosResponse<ExternalProviderResponse>> {
     try {
         return await api.post("/auth/github-login", data);
     } catch (error) {

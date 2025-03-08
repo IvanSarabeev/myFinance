@@ -1,5 +1,4 @@
-import { INITIAL_WALLET_TYPES } from ".";
-
+import { INITIAL_WALLET_TYPES } from "@/configs/wallet";
 
 /**
  * Base wallet creation

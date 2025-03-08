@@ -41,7 +41,7 @@ export const loginSchema = object().shape({
 });
 
 // Region forgottenPasswordSchema
-export const forgottenPasswordStep1 = object().shape({
+export const initialForgottenPasswordStep1 = object().shape({
     email: string()
         .min(4, "Email is invalid")
         .max(60, "Email cannot exceed 60 characters")
@@ -49,7 +49,7 @@ export const forgottenPasswordStep1 = object().shape({
         .required("Email is Required"),
 });
 
-export const forgottenPasswordStep2 = object().shape({
+export const confirmForgottenPasswordStep2 = object().shape({
     password: string()
         .min(8, "Password is invalid")
         .max(20, "Password cannot exceed 20 characters")

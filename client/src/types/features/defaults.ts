@@ -1,0 +1,1 @@
+export type FeatureStatusTypes = "completed" | "active" | "expired" | "declined";

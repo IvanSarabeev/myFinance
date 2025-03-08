@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import useToggle from "@/hooks/useToggle";
 import { FormikProps } from "formik";
-import { RegisterUser } from "@/types/userTypes";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,9 +10,10 @@ import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ErrorMessage from "@/components/ErrorMessage";
 import isFieldValid from "@/utils/isFieldValid";
+import { RegisterUserData } from "@/types/auth";
 
 type RegisterFormProps = {
-  formik: FormikProps<RegisterUser>;
+  formik: FormikProps<RegisterUserData>;
   errorFields: Set<string>;
 };
 
@@ -60,7 +60,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               })}
               {...formik.getFieldProps("name")}
             />
-            <ErrorMessage<RegisterUser>
+            <ErrorMessage<RegisterUserData>
               formik={formik}
               field="name"
               errorFields={errorFields}
@@ -93,7 +93,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               })}
               {...formik.getFieldProps("email")}
             />
-            <ErrorMessage<RegisterUser>
+            <ErrorMessage<RegisterUserData>
               formik={formik}
               field="email"
               errorFields={errorFields}
@@ -159,7 +159,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               />
             </span>
           </div>
-          <ErrorMessage<RegisterUser>
+          <ErrorMessage<RegisterUserData>
             formik={formik}
             field="password"
             errorFields={errorFields}
@@ -196,7 +196,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               </span>
             </Label>
           </div>
-          <ErrorMessage<RegisterUser>
+          <ErrorMessage<RegisterUserData>
             formik={formik}
             field="terms"
             errorFields={errorFields}

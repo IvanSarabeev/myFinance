@@ -40,4 +40,5 @@ export const REDIRECT_ROUTES = {
 export const MODAL_TYPES = {
    EMAIL_VERIFICATION: "email-verification",
    FORGOTTEN_PASSWORD: "forgotten-password",
+   // TODO: Add new MODAL -> openWallet
 } as const;

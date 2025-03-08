@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { FormikProps } from "formik";
-import { LoginUser } from "@/types/userTypes";
 import useToggle from "@/hooks/useToggle";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
@@ -10,9 +9,10 @@ import { Link } from "react-router";
 import { Eye } from "lucide-react";
 import isFieldValid from "@/utils/isFieldValid";
 import { Button } from "@/components/ui/button";
+import { LoginUserData } from "@/types/auth";
 
 type LoginFormProps = {
-  formik: FormikProps<LoginUser>;
+  formik: FormikProps<LoginUserData>;
   errorFields: Set<string>;
 };
 
@@ -45,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
                 }
               )}
             >
-              Email address
+              Email addresss
             </Label>
           </div>
           <Input
@@ -60,7 +60,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
             })}
             {...formik.getFieldProps("email")}
           />
-          <ErrorMessage<LoginUser>
+          <ErrorMessage<LoginUserData>
             formik={formik}
             field="email"
             errorFields={errorFields}

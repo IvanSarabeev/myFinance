@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 import { HTTP_RESPONSE_STATUS } from '@/defines';
-import { ApiErrorResponse } from '@/types/utilTypes';
+import { ApiErrorResponse } from '@/types/defaultApi';
 
 export function toErrorResponse(error: unknown): ApiErrorResponse {
     if (error && typeof error === "object" && "isAxiosError" in error) {

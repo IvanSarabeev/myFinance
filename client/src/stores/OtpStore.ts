@@ -3,9 +3,9 @@ import { verifyEmail, emailConfirmation } from "@/app/api/otp";
 import { HTTP_RESPONSE_STATUS, OTP_EMAIL_TYPE } from "@/defines";
 import commonStore from "./CommonStore";
 import modalStore from "./ModalStore";
-import { NOTIFICATION_TYPES } from "@/types/commonTypes";
+import { NOTIFICATION_TYPES } from "@/types/defaults";
 import { BaseEmailVerification } from "@/types/otp";
-import { ApiErrorResponse } from "@/types/utilTypes";
+import { ApiErrorResponse } from "@/types/defaultApi";
 
 class OtpStore {
     otpCode: string = "";

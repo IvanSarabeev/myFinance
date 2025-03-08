@@ -1,5 +1,5 @@
-import { UserDetails } from '@/types/userTypes';
 import { makeObservable, observable, action } from 'mobx';
+import { UserDetails } from '@/types/user';
 
 /**
  * @class SessionStore - containing security and session managing tools

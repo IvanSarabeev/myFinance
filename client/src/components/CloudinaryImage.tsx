@@ -8,7 +8,8 @@ import {
   responsive,
   accessibility,
 } from "@cloudinary/react";
-import { AccessibilityMode, CloudinaryImageProps } from "@/types/utilTypes";
+import { AccessibilityMode } from "@/configs/defaults";
+import { CloudinaryImageProps } from "@/types/libs/defaults";
 
 const CloudinaryImage: React.FC<CloudinaryImageProps> = memo(
   ({
@@ -35,7 +36,7 @@ const CloudinaryImage: React.FC<CloudinaryImageProps> = memo(
     if (imgAccessibility) {
       imagePlugins.push(
         accessibility({
-          mode: accessibilityMode ?? AccessibilityMode.DARK_MODE,
+          mode: accessibilityMode.toString() ?? AccessibilityMode.DARK_MODE,
         })
       );
     }

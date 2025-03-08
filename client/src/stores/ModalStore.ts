@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { MODAL_TYPES } from "@/defines";
-import { ModalType } from "@/types/commonTypes";
+import { ModalType } from "@/types/defaults";
 
 class ModalStore {
     isOpen: boolean = false;

@@ -3,15 +3,15 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import useStore from "@/hooks/useStore";
 import { useFormik } from "formik";
-import { RegisterUser } from "@/types/userTypes";
 import { registerSchema } from "./schemas/formSchema";
 import RegisterForm from "./components/forms/RegisterForm";
+import { RegisterUserData } from "@/types/auth";
 
 const RegisterContainer: React.FC = () => {
   const { authStore } = useStore();
   const { errorFields } = authStore;
 
-  const initialValues: RegisterUser = {
+  const initialValues: RegisterUserData = {
     name: "",
     email: "",
     password: "",
@@ -19,7 +19,7 @@ const RegisterContainer: React.FC = () => {
   };
   const validationSchema = registerSchema;
 
-  const formik = useFormik<RegisterUser>({
+  const formik = useFormik<RegisterUserData>({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {

@@ -13,8 +13,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { UserDetails } from "@/types/userTypes";
 import NavProfileMenu from "./NavProfileMenu";
+import { UserDetails } from "@/types/user";
 
 interface NavUserProps {
   user: UserDetails;

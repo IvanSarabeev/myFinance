@@ -10,7 +10,7 @@ import {
 } from "@/defines";
 import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
-import { NOTIFICATION_TYPES } from "@/types/commonTypes";
+import { NOTIFICATION_TYPES } from "@/types/defaults";
 import useRedirect from "@/hooks/useRedirect";
 import { ShieldCheck } from "lucide-react";
 import { StandardVerificationProps } from "@/types/modal";

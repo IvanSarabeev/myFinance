@@ -7,21 +7,21 @@ import { observer } from "mobx-react-lite";
 import { useFormik } from "formik";
 import useStore from "@/hooks/useStore";
 import useRedirect from "@/hooks/useRedirect";
-import { LoginUser } from "@/types/userTypes";
+import { LoginUserData } from "@/types/auth";
 
 const LoginContainer: React.FC = () => {
   const { authStore } = useStore();
   const { errorFields } = authStore;
   const redirectToRoute = useRedirect();
 
-  const initialValues: LoginUser = {
+  const initialValues: LoginUserData = {
     email: "jacob@example.com",
     password: "Deverge@312",
   };
 
   const validationSchema = loginSchema;
 
-  const formik = useFormik<LoginUser>({
+  const formik = useFormik<LoginUserData>({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {

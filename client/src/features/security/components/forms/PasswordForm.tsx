@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import isFieldValid from "@/utils/isFieldValid";
 import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ErrorMessage";
-import { ForgottenPassword } from "@/types/userTypes";
 import { Button } from "@/components/ui/button";
+import { ConfirmForgottenPasswordData } from "@/types/auth";
 
 type ForggotenPasswordFormProps = {
-  formik: FormikProps<ForgottenPassword>;
+  formik: FormikProps<ConfirmForgottenPasswordData>;
   errorFields: Set<string>;
   isVerified: boolean;
 };
@@ -58,7 +58,7 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
             })}
             {...formik.getFieldProps("email")}
           />
-          <ErrorMessage<ForgottenPassword>
+          <ErrorMessage<ConfirmForgottenPasswordData>
             formik={formik}
             field="email"
             errorFields={errorFields}
@@ -101,7 +101,7 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
                   })}
                   {...formik.getFieldProps("password")}
                 />
-                <ErrorMessage<ForgottenPassword>
+                <ErrorMessage<ConfirmForgottenPasswordData>
                   formik={formik}
                   field="password"
                   errorFields={errorFields}

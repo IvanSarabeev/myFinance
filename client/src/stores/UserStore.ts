@@ -1,11 +1,11 @@
 import { makeObservable, observable, action, runInAction } from "mobx";
 import { ClientJS } from 'clientjs';
-import { UserFingerPrint, User, ExternalUser, UserDetails } from '@/types/userTypes';
+import { UserFingerPrint, ExternalUser, UserDetails, InternalUser } from '@/types/user';
 import { format } from "date-fns";
 import sessionStore from "./SessionStore";
 
 class UserStore {
-    user: User = {
+    user: InternalUser = {
         name: "",
         email: "",
         password: "",
@@ -37,6 +37,7 @@ class UserStore {
         terms: false,
         photoUrl: "",
         isVerified: false,
+        userFingerPrint: this.userDetails.userFingerprint
     }
 
     constructor() {
@@ -59,7 +60,7 @@ class UserStore {
      * 
      * @param data 
      */
-    setUser(data: Partial<User>) {
+    setUser(data: Partial<InternalUser>) {
         runInAction(() => {
             this.user = {
                 ...this.user, // Preserve existing data

@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { forgottenUserPassword, github as githubApi, google as googleApi, loginUser, logoutUser, registerUser } from "@/app/api/auth";
+import { confirmPasswordReset, forgottenUserPassword, github as githubApi, google as googleApi, loginUser, logoutUser, registerUser } from "@/app/api/auth";
 import { AUTH_OPERATION_TYPES, HTTP_RESPONSE_STATUS } from "@/defines";
 import { FormikErrors } from "formik";
 import { getAuth, GithubAuthProvider, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
@@ -7,11 +7,12 @@ import { firebase } from "@/lib/firebase";
 import userStore from "./UserStore";
 import commonStore from './CommonStore';
 import sessionStore from "./SessionStore";
-import { RegisterUserResponse } from "@/types/authTypes";
-import { ForgottenPassword, LoginUser, RegisterUser, UserDetails } from "@/types/userTypes";
-import { NOTIFICATION_TYPES } from "@/types/commonTypes";
-import { ApiErrorResponse } from "@/types/utilTypes";
 import modalStore from "./ModalStore";
+import { RegisterUserResponse } from "@/types/auth/api/index";
+import { NOTIFICATION_TYPES } from "@/types/defaults";
+import { ApiErrorResponse } from "@/types/defaultApi";
+import { ConfirmForgottenPasswordData, InitialForgottenPasswordData, LoginUserData, RegisterUserData } from "@/types/auth";
+import { UserDetails } from "@/types/user";
 
 class AuthStore {
     private readonly GOOGLE_TYPE = "google";
@@ -53,7 +54,10 @@ class AuthStore {
      * @param user 
      * @param setFormikErrors 
      */
-    async registerUser(user: RegisterUser, setFormikErrors: (errors: FormikErrors<RegisterUser>) => void) {
+    async registerUser(
+        user: RegisterUserData,
+        setFormikErrors: (errors: FormikErrors<RegisterUserData>) => void
+    ) {
         this.setLoading(true);
 
         try {
@@ -119,7 +123,10 @@ class AuthStore {
      * @param user 
      * @param setFormikErrors 
      */
-    async loginUser(user: LoginUser, setFormikErrors: (errors: FormikErrors<LoginUser>) => void) {
+    async loginUser(
+        user: LoginUserData, 
+        setFormikErrors: (errors: FormikErrors<LoginUserData>) => void
+    ) {
         this.setLoading(true);
 
         try {
@@ -277,9 +284,11 @@ class AuthStore {
      * 
      * @param {String} email 
      * @param setFormikErrors
-     * @returns {Promise<false | undefined>}
      */
-    async forgottenPassword(email: string, setFormikErrors: (errors: FormikErrors<ForgottenPassword>) => void): Promise<false | undefined> {
+    async forgottenPassword(
+        email: InitialForgottenPasswordData, 
+        setFormikErrors: (errors: FormikErrors<InitialForgottenPasswordData>) => void,
+    ) {
         this.setLoading(true);
 
         try {
@@ -337,6 +346,70 @@ class AuthStore {
         } finally {
             this.setLoading(false);   
         };
+    }
+    
+    async confirmForgottenPassword(
+        data: ConfirmForgottenPasswordData,
+        setFormikErrors: (errors: FormikErrors<InitialForgottenPasswordData>) => void,
+    ) {
+        this.setLoading(true);
+
+        try {
+            this.errorFields.clear();
+
+            const response = await confirmPasswordReset(data);
+            const {status, message, errorFields} = response.data;
+
+            if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
+                commonStore.openNotification(
+                    NOTIFICATION_TYPES.SUCCESS,
+                    "Email Sent",
+                    message,
+                );
+            } else if (Array.isArray(errorFields) && errorFields.length > 0) {
+                this.errorFields = new Set(errorFields);
+
+                setFormikErrors(Object.fromEntries(
+                    errorFields.map((field) => [field, `${field} is invalid`]),
+                ));
+
+                commonStore.openNotification(
+                    NOTIFICATION_TYPES.DESTRUCTIVE,
+                    "Wrong credentials! Try again.",
+                    message,
+                );
+            }
+        } catch (error: unknown) {
+            this.isLoading = false;
+
+            this.error = error as ApiErrorResponse;
+
+            if (this.error.response) {
+                const {errorFields, message} = this.error.response;
+                const newMessage = String(message ?? this.error.message);
+                
+                commonStore.openNotification(
+                    NOTIFICATION_TYPES.DESTRUCTIVE,
+                    NOTIFICATION_TYPES.ERROR.toLocaleUpperCase(),
+                    newMessage,
+                );
+                
+                if (Array.isArray(errorFields) && errorFields.length > 0) {
+                    this.errorFields = new Set(errorFields);
+                    setFormikErrors(Object.fromEntries(
+                        errorFields.map((field) => [field, `${field} is invalid`]),
+                    ));
+                } else {
+                    commonStore.openNotification(
+                        NOTIFICATION_TYPES.DESTRUCTIVE,
+                        NOTIFICATION_TYPES.ERROR.toUpperCase(),
+                        newMessage ?? "An unexpected error occurred. Please try again."
+                    );
+                }
+            }
+        } finally {
+            this.setLoading(false);
+        }
     }
 };
 
