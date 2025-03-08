@@ -1,6 +1,8 @@
 import { verifiyEmailConfirmation, verifyEmailOtpCode } from "../service/otpService.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 
+const {OK, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
+
 /**
  * Verify User's OTP password Code
  * 
@@ -9,14 +11,13 @@ import { HTTP_RESPONSE_STATUS } from "../defines.js";
  * @returns {Object} - Response Object with status and message
  */
 export async function verifyEmail(req, res, next) {
-    try {
-        const { email, otpCode } = req.body;
-        
-        const result = await verifyEmailOtpCode(email, otpCode);
+    const { email, otpCode } = req.body;
 
+    try {    
+        const result = await verifyEmailOtpCode(email, otpCode);
         const { status, statusCode, otpMethod, message } = result;
         
-        if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
+        if (status && statusCode === OK) {
             return res.status(statusCode).json({ 
                 status: true,
                 statusCode: statusCode,
@@ -35,7 +36,7 @@ export async function verifyEmail(req, res, next) {
         next();
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message: "Unexpected Error",
         };
     }
@@ -50,33 +51,21 @@ export async function verifyEmail(req, res, next) {
  * @returns {Object} - Response Object with status, statusCode and message
  */
 export async function emailConfirmation(req, res, next) {
+    const { email, otpCode } = req.body;
+
     try {
-        const { email, otpCode } = req.body;
-
         const response = await verifiyEmailConfirmation(email, otpCode);
-
+        console.log("OTP Controller: ", response);
         const { status, statusCode, message } = response;
 
-        if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
-            return res.status(statusCode).json({
-                status,
-                statusCode,
-                message,
-            });
-        } else {
-            return res.status(statusCode).json({
-                status,
-                statusCode,
-                message,
-            });
-        }
+        return res.status(statusCode).json({ status, statusCode, message });
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);
 
         next();
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message: "Unexpected Error",
         };
     }

@@ -3,7 +3,6 @@ import {
     securityValidation, 
     validatePasswords, 
     validateProviders,
-    validateUserForgottenPassword,
     validateUserLogin,
     validateUserRegistration,
 } from '../middleware/authMiddleware.js';
@@ -35,7 +34,8 @@ router.post("/login", validateUserLogin(), securityValidation, loginUser);
 router.post("/logout", logoutUser);
 
 // Forgotten Password
-router.post("/forgotten-password", validateUserForgottenPassword(), securityValidation, forgottenPassword);
+//  validateUserForgottenPassword(), securityValidation,
+router.post("/forgotten-password", forgottenPassword);
 
 router.post("/confirm-password", validatePasswords(), securityValidation, confirmPassword);
 

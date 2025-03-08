@@ -3,13 +3,15 @@ import { randomInt } from "crypto";
 /**
  * Generate random number based on provided length 
  * 
- * @param {Number} length 
- * @returns {Number}
+ * @param {number} length - desired otp length 
+ * @returns {string}
  */
 export function generateOtp(length) {
-    let otpCode = "";
+    if (length <= 0) throw new Error("Length must be a positive number!");
 
-    for (let i = 0; i < length; i++) {
+    let otpCode = randomInt(1, 10).toString();
+
+    for (let i = 1; i < length; i++) {
         otpCode += randomInt(0, 10).toString();
     }
 

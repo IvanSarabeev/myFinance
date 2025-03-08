@@ -82,25 +82,26 @@ class UserRepository {
      * @throws {Error} - If the transaction fails. 
      */
     async update(id, data) {
-        const session = mongoose.startSession();
-        await session.startTransaction();
-
+        const session = await mongoose.startSession();
+        
         try {
+            session.startTransaction();
+
             const user = await User.findByIdAndUpdate(id, data, {
                 new: true,
                 runValidators: true,
                 session,
             });
             
-            (await session).commitTransaction();
-            (await session).endSession();
+            await session.commitTransaction();
             
             return user;
         } catch (error) {
-            (await session).abortTransaction();
-            (await session).endSession();
-
+            await session.abortTransaction();
+            
             throw new Error(`Failed to update User: ${error.message ?? "Internal Server Error"}`);
+        } finally {
+            session.endSession();
         }
     }
 

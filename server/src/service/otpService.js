@@ -6,6 +6,7 @@ import { EUROPE_ZONE, HTTP_RESPONSE_STATUS, OTP_PUSH_TYPE } from '../defines.js'
 import { createEmailTemplate } from '../utils/emailTemplateLoader.js';
 import { TEMPLATE_TYPES } from '../templates/defines.js';
 import { CORP_EMAIL_ADDRESS } from '../config/env.js';
+import UserRepository from '../repositories/UserRepository.js';
 
 /**
  * Create/Send email OTP Code after an
@@ -99,8 +100,8 @@ export async function verifyEmailOtpCode(email, otpCode) {
         
         if (user.otpCode === otpCode && otpExpiration > timestamp) {
             user.verified = true;
-            user.otpCode = undefined;
-            user.otpExpiration = undefined;
+            user.otpCode = null;
+            user.otpExpiration = null;
             
             await user.save();
 
@@ -176,7 +177,7 @@ export async function sendEmailVerification(email, otpCode) {
     try {
         const emailConfirmationTemplate = await createEmailTemplate(
             TEMPLATE_TYPES.EMAIL_CONFIRMATION,
-            "Forgotten Password Confirmation",
+            "myFinance / Forgotten Password",
             { email, otpCode }  
         );
 
@@ -220,7 +221,7 @@ export async function sendEmailVerification(email, otpCode) {
  */
 export async function verifiyEmailConfirmation(email, otpCode) {
     try {
-        const findUser = await User.findOne({ email: email });
+        const findUser = await UserRepository.findByEmail(email);
 
         if (!findUser) {
             return {
@@ -244,9 +245,11 @@ export async function verifiyEmailConfirmation(email, otpCode) {
 
         if (findUser.otpCode === otpCode && otpExpiration > date) {
             findUser.verified = true;
+            // TODO: Update to null instead of undefined
             findUser.otpCode = undefined;
             findUser.otpExpiration = undefined;
 
+            // TODO: Update the flow, use the UserRepository.update()...
             await findUser.save();
 
             // Maybe send Email Template

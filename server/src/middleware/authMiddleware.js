@@ -112,8 +112,12 @@ export const validateUserForgottenPassword = () => {
             .trim()
             .isLength({ min: 4, max: 60 }).withMessage("Incorrect email address")
             .bail() // Ignore the rest conditions, if the first failed
-            .isEmail().withMessage("Invalid email address")
+            .isEmail().withMessage("Invalid email2 address")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
+        body('password')
+            .isEmpty(),
+        body('confirm_password')
+            .isEmpty(),
     ];
 };
 

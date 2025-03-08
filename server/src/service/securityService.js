@@ -8,6 +8,8 @@ import { JWT_SECRET } from '../config/env.js';
 import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
 import UserRepository from '../repositories/UserRepository.js';
 
+const {CREATED, NOT_FOUND, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
+
 /**
  * Create a new User instance, in which the User
  * receives an OTP Code via their email address
@@ -202,7 +204,7 @@ export async function loginUserService(userData) {
  * Send a email to the corresponding User
  * 
  * @param {String} email
- * @returns {Object} - Returns status, statusCode, token and message
+ * @returns {Object} - Returns status, statusCode message and flag -> showRequestedModal
  */
 export async function forgottenPasswordService(email) {
     try {
@@ -211,23 +213,24 @@ export async function forgottenPasswordService(email) {
         if (!findUser) {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND,
+                statusCode: NOT_FOUND,
                 message: "User not found! Try again or contanct our support center!",
-            }
+            };
         }
-
+        
         const otpCode = generateOtp(6);
 
         const response = await sendEmailVerification(email, otpCode);
-
         const {status, statusCode, message, showRequestedModal} = response;
         
-        if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {
-            findUser.verified = false;
-            findUser.otpCode = otpCode;
-            findUser.otpExpiration = setOtpExpirationTime();
+        if (status && statusCode === CREATED) {
+            await UserRepository.update(findUser._id, {
+                verified: false,
+                otpCode: otpCode,
+                otpExpiration: setOtpExpirationTime(),
+            });
 
-            return { status, statusCode, message, showRequestedModal }
+            return { status, statusCode, message, showRequestedModal };
         } else {
             return {
                 status: false,
@@ -240,7 +243,7 @@ export async function forgottenPasswordService(email) {
 
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message: "Invalid Credentials"
         };
     }

@@ -46,12 +46,17 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    blockedBy: {
+        type: String,
+    },
     otpCode: {
         type: Number,
         length: 6,
+        default: null,
     },
     otpExpiration: {
         type: Date,
+        default: null,
     },
     transactionId: {
         type: Schema.Types.ObjectId,
