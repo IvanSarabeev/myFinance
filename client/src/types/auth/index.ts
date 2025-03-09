@@ -13,7 +13,10 @@ export type RegisterUserData = Pick<UserBase, "name" | "email" | "terms"> & {
     password: string;
 };
 
-export type InitialForgottenPasswordData = Pick<UserBase, "email">;
+// export type InitialForgottenPasswordData = Pick<UserBase, "email">;
+export type InitialForgottenPasswordData = {
+    email: string;
+};
 
 export type ConfirmForgottenPasswordData = Pick<UserBase, "email"> & {
     // TODO: Add flag -> enableFields

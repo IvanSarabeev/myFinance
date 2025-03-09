@@ -6,6 +6,7 @@ import modalStore from "./ModalStore";
 import { NOTIFICATION_TYPES } from "@/types/defaults";
 import { BaseEmailVerification } from "@/types/otp";
 import { ApiErrorResponse } from "@/types/defaultApi";
+import sessionStore from "./SessionStore";
 
 class OtpStore {
     otpCode: string = "";
@@ -104,20 +105,19 @@ class OtpStore {
         try {
             const response = await emailConfirmation(data);
 
-            if (response) {
-                const { status, otpMethod, message } = response.data;
+            runInAction(() => {
+                const { status, message } = response.data;
+                
+                if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
+                    sessionStore.setForgottenPasswordFlow(String(status));                    
+                    
+                    commonStore.openNotification(
+                        NOTIFICATION_TYPES.SUCCESS,
+                        NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
+                        message
+                    );
 
-                if (response.status === HTTP_RESPONSE_STATUS.OK) {
-                    if (status && otpMethod === OTP_EMAIL_TYPE) {
-                        this.isVerified = true;
-                        
-                        commonStore.openNotification(
-                            NOTIFICATION_TYPES.SUCCESS,
-                            NOTIFICATION_TYPES.SUCCESS.toLocaleUpperCase(),
-                            message
-                        );
-                        modalStore.closeModal();
-                    }
+                    modalStore.closeModal();
                 } else {
                     this.isVerified = false;
                     
@@ -127,9 +127,9 @@ class OtpStore {
                         message
                     );
                 }
-            }
-
-            return response;
+            });
+                
+                return response;
         } catch (error) {
             console.error(`Fatal Error: ${error}`);
 

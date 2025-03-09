@@ -8,60 +8,44 @@ import {
 import { useFormik } from "formik";
 import PasswordForm from "./components/forms/PasswordForm";
 import { observer } from "mobx-react-lite";
-import { modalStore } from "@/stores";
-import { MODAL_TYPES } from "@/defines";
 import { ForgottenPasswordFlow } from "@/types/auth";
+import { sessionStore } from "@/stores";
 
 const PasswordContainer: React.FC = () => {
-  const { authStore, otpStore } = useStore();
-  const { isVerified } = otpStore;
+  const { authStore } = useStore();
   const { errorFields } = authStore;
 
   const initialValues: ForgottenPasswordFlow = {
-    email: "jacob@example.com",
+    email: "",
     password: "",
     confirm_password: "",
   };
 
-  const validationSchema = isVerified
-    ? confirmForgottenPasswordStep2
-    : initialForgottenPasswordStep1;
+  const isActive = sessionStore.isForgottenPasswordActive;
+
+  const validationSchema =
+    isActive === false
+      ? initialForgottenPasswordStep1
+      : confirmForgottenPasswordStep2;
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values, actions) => {
-      if (isVerified === false) {
-        const response = await authStore.forgottenPassword(
-          values,
-          actions.setErrors
-        );
-
-        console.log("Response: ", response);
+      if (isActive === false) {
+        await authStore.forgottenPassword(values.email, actions.setErrors);
       } else {
-        const response = await authStore.confirmForgottenPassword(
-          values,
-          actions.setErrors
-        );
-
-        console.log("Confirmation: ", response);
+        await authStore.confirmForgottenPassword(values, actions.setErrors);
       }
     },
   });
 
   return (
-    <>
-      <PasswordForm
-        formik={formik}
-        errorFields={errorFields}
-        isVerified={isVerified}
-      />
-      <button
-        onClick={() => modalStore.openModal(MODAL_TYPES.FORGOTTEN_PASSWORD)}
-      >
-        Open Modal
-      </button>
-    </>
+    <PasswordForm
+      formik={formik}
+      errorFields={errorFields}
+      isActive={isActive}
+    />
   );
 };
 

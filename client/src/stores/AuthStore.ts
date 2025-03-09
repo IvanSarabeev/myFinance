@@ -282,11 +282,10 @@ class AuthStore {
     /**
      * Check if User has an email registered
      * 
-     * @param {String} email 
      * @param setFormikErrors
      */
     async forgottenPassword(
-        email: InitialForgottenPasswordData, 
+        email: string, 
         setFormikErrors: (errors: FormikErrors<InitialForgottenPasswordData>) => void,
     ) {
         this.setLoading(true);
@@ -300,7 +299,7 @@ class AuthStore {
 
                 if (status && result.status === HTTP_RESPONSE_STATUS.CREATED) {
                     if (showRequestedModal) {
-                        modalStore.setRequestedEmailVerificationModal({message});
+                        modalStore.setRequestedForgotPasswordModal({ email, message });
                     }
 
                     commonStore.openNotification(
@@ -308,8 +307,6 @@ class AuthStore {
                         "Email Sent",
                         message,
                     );
-
-                    return true;
                 }
             });
 
@@ -342,7 +339,6 @@ class AuthStore {
                 }
             }
 
-            return false;
         } finally {
             this.setLoading(false);   
         };
@@ -363,7 +359,7 @@ class AuthStore {
             if (status && response.status === HTTP_RESPONSE_STATUS.OK) {
                 commonStore.openNotification(
                     NOTIFICATION_TYPES.SUCCESS,
-                    "Email Sent",
+                    "Congratulations",
                     message,
                 );
             } else if (Array.isArray(errorFields) && errorFields.length > 0) {

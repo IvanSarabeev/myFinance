@@ -1,4 +1,4 @@
-import { makeObservable, observable, action } from 'mobx';
+import { makeObservable, observable, action, computed } from 'mobx';
 import { UserDetails } from '@/types/user';
 
 /**
@@ -8,21 +8,35 @@ class SessionStore {
     private readonly IS_AUTHENTICATED = "isAuthenticated";
     private readonly AUTH_TOKEN = "authToken";
     public readonly USER_DETAILS = "userDetails";
+    public readonly FORGOTTEN_PASSWORD = "isForgottenPasswordFlowActive";
 
     isAuthenticated = false;
     token = "";
+    isForgottenPasswordActive = false;
+    forgottenPasswordValue = "";
 
     constructor(){
         makeObservable(this, {
             isAuthenticated: observable,
             token: observable,
+            isForgottenPasswordActive: observable,
+            forgottenPasswordValue: observable,
 
             // Actions
             setAuthenticated: action,
             setToken: action,
             setUserDetails: action,
             clearSession: action,
+            setForgottenPasswordFlow: action,
+            forgottenPasswordLength: computed,
         });
+
+        const storedValue = sessionStorage.getItem(this.FORGOTTEN_PASSWORD);
+
+        if (storedValue) {
+            this.forgottenPasswordValue = storedValue;
+            this.isForgottenPasswordActive = true;
+        }
 
         this.initializeSession();
     };
@@ -65,6 +79,17 @@ class SessionStore {
         }
 
         sessionStorage.getItem(this.USER_DETAILS);
+    }
+
+    
+    setForgottenPasswordFlow(value: string): void {
+        sessionStorage.setItem(this.FORGOTTEN_PASSWORD, value);
+        this.forgottenPasswordValue = value;
+        this.isForgottenPasswordActive = value !== "";
+    }
+    
+    get forgottenPasswordLength() {
+        return this.forgottenPasswordValue ? this.forgottenPasswordValue.length : undefined;
     }
 
     /**

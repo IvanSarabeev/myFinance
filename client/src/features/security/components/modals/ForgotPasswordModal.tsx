@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import BaseModal from "@/components/BaseModal";
 import { StandardVerificationProps } from "@/types/modal";
@@ -6,6 +7,8 @@ import { ShieldHalf } from "lucide-react";
 import OtpInput from "@/components/OtpInput";
 import { HTTP_RESPONSE_STATUS, MAX_OTP_SLOTS } from "@/defines";
 import { Button } from "@/components/ui/button";
+import { NOTIFICATION_TYPES } from "@/types/defaults";
+import { observer } from "mobx-react-lite";
 
 const ForgotPasswordModal: React.FC<StandardVerificationProps> = ({
   email,
@@ -13,7 +16,7 @@ const ForgotPasswordModal: React.FC<StandardVerificationProps> = ({
   onClose,
 }) => {
   const { commonStore, otpStore, modalStore } = useStore();
-  const { showLoader, hideLoader } = commonStore;
+  const { openNotification } = commonStore;
   const { isLoading, otpCode } = otpStore;
 
   const handleChange = (value: string) => {
@@ -23,8 +26,17 @@ const ForgotPasswordModal: React.FC<StandardVerificationProps> = ({
   const handleSubmit = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    if (otpCode.length !== MAX_OTP_SLOTS) {
+      openNotification(
+        NOTIFICATION_TYPES.WARNING,
+        "You've entered less data",
+        "Invalid code, the code length must be minimum of 6 characters."
+      );
+      return;
+    }
+
     try {
-      showLoader();
+      commonStore.showLoader();
 
       const data = { email, otpCode: Number(otpCode) };
       const response = await otpStore.emailConfirmation(data);
@@ -38,11 +50,11 @@ const ForgotPasswordModal: React.FC<StandardVerificationProps> = ({
 
         throw error;
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Promise Error: ", error);
       throw error;
     } finally {
-      hideLoader();
+      commonStore.hideLoader();
     }
   };
 
@@ -103,4 +115,4 @@ const ForgotPasswordModal: React.FC<StandardVerificationProps> = ({
   );
 };
 
-export default ForgotPasswordModal;
+export default observer(ForgotPasswordModal);

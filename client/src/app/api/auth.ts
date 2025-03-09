@@ -3,7 +3,7 @@ import api from "@/utils/axiosInstance";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
 import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/auth/api/index";
-import { ConfirmForgottenPasswordData, InitialForgottenPasswordData, LoginUserData, RegisterUserData } from "@/types/auth";
+import { ConfirmForgottenPasswordData, LoginUserData, RegisterUserData } from "@/types/auth";
 import { GitHubAuthentication, GoogleAuthentication } from "@/types/user/api/index";
 
 /**
@@ -63,7 +63,7 @@ export async function logoutUser(): Promise<void> {
  * @returns {Promise<AxiosResponse<AuthResponse>>}
  * @throws {Error}
  */
-export async function forgottenUserPassword(email: InitialForgottenPasswordData): Promise<AxiosResponse<AuthResponse>> {
+export async function forgottenUserPassword(email: string): Promise<AxiosResponse<AuthResponse>> {
     try {
         return await api.post("/auth/forgotten-password", {email}, { withCredentials: false });
     } catch (error) {
@@ -82,7 +82,7 @@ export async function forgottenUserPassword(email: InitialForgottenPasswordData)
  */
 export async function confirmPasswordReset(data: ConfirmForgottenPasswordData): Promise<AxiosResponse<AuthResponse>> {
     try {
-        return await api.post("/auth/confirm-password", {data}, { withCredentials: false });
+        return await api.post("/auth/confirm-password", data, { withCredentials: false });
     } catch (error) {
         console.error("API RESPONSE", error);
 
