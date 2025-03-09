@@ -8,6 +8,8 @@ import { TEMPLATE_TYPES } from '../templates/defines.js';
 import { CORP_EMAIL_ADDRESS } from '../config/env.js';
 import UserRepository from '../repositories/UserRepository.js';
 
+const {OK, CREATED, BAD_REQUEST, UNAUTHORIZED, NOT_FOUND, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
+
 /**
  * Create/Send email OTP Code after an
  * User Registration workflow with an Email Template
@@ -27,8 +29,8 @@ export async function requiredEmailVerification(email, otpCode) {
 
     if (
         status === false &&
-        (statusCode === HTTP_RESPONSE_STATUS.BAD_REQUEST ||
-        statusCode === HTTP_RESPONSE_STATUS.UNAUTHORIZED)
+        (statusCode === BAD_REQUEST ||
+        statusCode === UNAUTHORIZED)
     ) {
         return { status, statusCode, message };
     }
@@ -43,14 +45,14 @@ export async function requiredEmailVerification(email, otpCode) {
         ) {
             return { 
                 status: true, 
-                statusCode: HTTP_RESPONSE_STATUS.OK, 
+                statusCode: OK, 
                 message: "Email sent! Use the OTP provided in the email to verify your account."
             };
         }
 
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+            statusCode: NOT_ACCEPTABLE, 
             message: "Failed to send email message."
         };
     } catch (error) {
@@ -58,7 +60,7 @@ export async function requiredEmailVerification(email, otpCode) {
     
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message:"Internal Server Error"
         };
     }
@@ -80,7 +82,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
         if (!user) {
             return { 
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND, 
+                statusCode: NOT_FOUND, 
                 message: "User not Found" 
             };
         }
@@ -91,7 +93,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
         if (!(user.otpExpiration instanceof Date)) {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+                statusCode: INTERNAL_SERVER_ERROR,
                 message: "OTP Expirated. Please contact support.",
             };
         }
@@ -120,7 +122,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
             ) {
                 return { 
                     status: true,
-                    statusCode: HTTP_RESPONSE_STATUS.OK,
+                    statusCode: OK,
                     otpMethod: OTP_PUSH_TYPE,
                     message: "User verified successfully"
                 };
@@ -128,20 +130,20 @@ export async function verifyEmailOtpCode(email, otpCode) {
 
             return { 
                 status: false, 
-                statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+                statusCode: NOT_ACCEPTABLE, 
                 message: "Failed to send email message."
             };
         } else if (otpExpiration <= timestamp) {
             // TODO: Add Logs to track the expiration
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                statusCode: BAD_REQUEST,
                 message: "Otp code has expired. Please request a new one.",
             }
         } else {
             return { 
                 status: false, 
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, 
+                statusCode: BAD_REQUEST, 
                 message: "Invalid or expirated code"
             };
         }
@@ -150,7 +152,7 @@ export async function verifyEmailOtpCode(email, otpCode) {
 
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message: "Internal Server Error"
         };
     }
@@ -169,7 +171,7 @@ export async function sendEmailVerification(email, otpCode) {
         
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, 
+            statusCode: UNAUTHORIZED, 
             message: "Internal Server Error" 
         };
     }
@@ -190,7 +192,7 @@ export async function sendEmailVerification(email, otpCode) {
         ) {
             return { 
                 status: true, 
-                statusCode: HTTP_RESPONSE_STATUS.CREATED, 
+                statusCode: CREATED, 
                 message: "Email sent! Verify your account.",
                 showRequestedModal: true,
             };
@@ -198,7 +200,7 @@ export async function sendEmailVerification(email, otpCode) {
 
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.NOT_ACCEPTABLE, 
+            statusCode: NOT_ACCEPTABLE, 
             message: "Failed to send email message."
         };
     } catch (error) {
@@ -206,7 +208,7 @@ export async function sendEmailVerification(email, otpCode) {
     
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message:"Internal Server Error"
         };
     }
@@ -226,7 +228,7 @@ export async function verifiyEmailConfirmation(email, otpCode) {
         if (!findUser) {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND,
+                statusCode: NOT_FOUND,
                 message: "User not Found",
             };
         }
@@ -236,7 +238,7 @@ export async function verifiyEmailConfirmation(email, otpCode) {
         if (!(findUser.otpExpiration instanceof Date)) {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+                statusCode: INTERNAL_SERVER_ERROR,
                 message: "OTP Expirated. Please contact support.",
             };
         }
@@ -244,30 +246,27 @@ export async function verifiyEmailConfirmation(email, otpCode) {
         const otpExpiration = findUser.otpExpiration.getTime();
 
         if (findUser.otpCode === otpCode && otpExpiration > date) {
-            findUser.verified = true;
-            // TODO: Update to null instead of undefined
-            findUser.otpCode = undefined;
-            findUser.otpExpiration = undefined;
+            await UserRepository.update(findUser._id, {
+                verified: true,
+                otpCode: null,
+                otpExpiration: null,
+            });
 
-            // TODO: Update the flow, use the UserRepository.update()...
-            await findUser.save();
-
-            // Maybe send Email Template
             return {
                 status: true,
-                statusCode: HTTP_RESPONSE_STATUS.OK,
+                statusCode: OK,
                 message: "Email and OTP successfully confirmed.",
             };
         } else if (otpExpiration <= date) {
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                statusCode: BAD_REQUEST,
                 message: "Otp code has expired. Please request a new one.",
             }
         } else {
             return { 
                 status: false, 
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST, 
+                statusCode: BAD_REQUEST, 
                 message: "Invalid or expirated code"
             };
         }
@@ -277,7 +276,7 @@ export async function verifiyEmailConfirmation(email, otpCode) {
     
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR, 
             message:"Internal Server Error"
         };
     }

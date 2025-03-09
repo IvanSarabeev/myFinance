@@ -7,14 +7,14 @@ export const validateOtpCode = () => {
     return [
         body('email')
             .trim()
-            .isLength({ min: 3, max: 60 }).withMessage("Incorrect email address")
+            .isLength({ min: 3, max: 60 }).withMessage("The provided email address is invalid.")
             .bail()
             .isEmail().withMessage("Invalid email address")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
         body('otpCode')
             .trim()
-            .isNumeric().withMessage("Invalid Code")
-            .isLength({ min: 5, max: 6}).withMessage("Invalid Code")
+            .isNumeric().withMessage("Provided code is invalid.")
+            .isLength({ min: 5, max: 6}).withMessage("Invalid code length.")
             .customSanitizer(value => {
                 const sanitizedValue = xssFilters.inHTMLData(value);
 

@@ -17,8 +17,6 @@ export async function forgottenPassword(req, res, next) {
 
     try {
         const result = await forgottenPasswordService(email);
-
-        console.log("Controller Result: ", result);
         const { status, statusCode, message, showRequestedModal } = result;
         
         return res.status(statusCode).json({
@@ -47,13 +45,11 @@ export async function forgottenPassword(req, res, next) {
  * @returns {Object} - status, statusCode, message, errorFields
  */
 export async function confirmPassword(req, res, next) {
-    const { email, password, confirmPassword } = req.body;
+    const { email, password, confirm_password } = req.body;
 
     try {
-        const response = await confirmPassowrdService({ email, password, confirmPassword });
+        const response = await confirmPassowrdService({ email, password, confirm_password });
         const { status, statusCode, message, errorsFields } = response;
-        console.log("Confirm Password Response:", response);
-
 
         if (Array.isArray(errorsFields) && errorsFields.length > 0) {
             res.status(statusCode).json({ status, statusCode, message, errorsFields });

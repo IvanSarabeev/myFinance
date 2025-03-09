@@ -18,17 +18,9 @@ export async function verifyEmail(req, res, next) {
         const { status, statusCode, otpMethod, message } = result;
         
         if (status && statusCode === OK) {
-            return res.status(statusCode).json({ 
-                status: true,
-                statusCode: statusCode,
-                otpMethod: otpMethod, 
-                message: message
-            });
+            return res.status(statusCode).json({ status, statusCode, otpMethod, message });
         } else {   
-            return res.status(statusCode).json({ 
-                status: false, 
-                message: message
-            });
+            return res.status(statusCode).json({ status, message });
         }
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);
@@ -55,7 +47,6 @@ export async function emailConfirmation(req, res, next) {
 
     try {
         const response = await verifiyEmailConfirmation(email, otpCode);
-        console.log("OTP Controller: ", response);
         const { status, statusCode, message } = response;
 
         return res.status(statusCode).json({ status, statusCode, message });

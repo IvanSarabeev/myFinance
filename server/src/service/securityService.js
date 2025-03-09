@@ -8,7 +8,7 @@ import { JWT_SECRET } from '../config/env.js';
 import { NUMERIC_CHARACTER, SPECIAL_CHARACTER, UPPER_CASE_CHARACTER } from '../utils/regex.js';
 import UserRepository from '../repositories/UserRepository.js';
 
-const {CREATED, NOT_FOUND, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
+const {OK, CREATED, BAD_REQUEST, NOT_FOUND, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
  * Create a new User instance, in which the User
@@ -256,87 +256,84 @@ export async function forgottenPasswordService(email) {
  * @returns {Object}
  */
 export async function confirmPassowrdService(parameters) {
-    if (parameters.password !== parameters.confirmPassword) {
+    if (parameters.password !== parameters.confirm_password) {
         return {
             status: false,
-            statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+            statusCode: BAD_REQUEST,
             message: "Passwords do not match!",
-            errorsFields: ['password', 'confirmPassword']
+            errorsFields: ['password', 'confirm_password']
         };
     }
 
-    try {
-        const passwordErrors = await validatePassword(parameters.password);
+    const passwordErrors = validatePassword(parameters.password);
 
-        if (passwordErrors.length > 0) {
-            let errorsFields = [];
-            let message = "Password validation failed";
+    if (passwordErrors.length > 0) {
+        let errorsFields = [];
+        let message = "Password validation failed";
 
-            passwordErrors.forEach((error) => {
-                switch (error) {
-                    case 'Length': {
-                        message = "Password length must be at least 8 characters";
-                        errorsFields.push('password_length');
-                        break;
-                    }
-                    case 'UpperCase': {
-                        message = "Password must contain at least one uppercase character";
-                        errorsFields.push('password_uppercase');
-                        break;
-                    }
-                    case 'SpecialSymbol': {
-                        message = "Password must contain at least one special character";
-                        errorsFields.push('password_special');
-                        break;
-                    }
-                    case 'Numeric': {
-                        message = "Password must contain at least one numeric character";
-                        errorsFields.push('password_numeric');
-                        break;
-                    }
-                    default: {
-                        message = "Password validation failed";
-                        errorsFields.push('password');
-                    }
+        passwordErrors.forEach((error) => {
+            switch (error) {
+                case 'Length': {
+                    message = "Password length must be at least 8 characters";
+                    errorsFields.push('password_length');
+                    break;
                 }
-            });
-
+                case 'UpperCase': {
+                    message = "Password must contain at least one uppercase character";
+                    errorsFields.push('password_uppercase');
+                    break;
+                }
+                case 'SpecialSymbol': {
+                    message = "Password must contain at least one special character";
+                    errorsFields.push('password_special');
+                    break;
+                }
+                case 'Numeric': {
+                    message = "Password must contain at least one numeric character";
+                    errorsFields.push('password_numeric');
+                    break;
+                }
+                default: {
+                    message = "Password validation failed";
+                    errorsFields.push('password');
+                }
+            }
+            
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
-                message: message,
-                errorsFields: errorsFields
+                statusCode: BAD_REQUEST,
+                message,
+                errorsFields
             };
-        } else {
+        });
+    }
+
+    try {
             const user = await UserRepository.findByEmail(parameters.email);
 
             if (!user) {
                 return {
                     status: false,
-                    statusCode: HTTP_RESPONSE_STATUS.NOT_FOUND,
+                    statusCode: NOT_FOUND,
                     message: "User not found. Try again or contact our support center!"
                 };
             }
 
             const hashedPassword = await bcryptjs.hash(parameters.password, 12);
 
-            const result = await UserRepository.update(user._id, { password: hashedPassword });
-
-            // TODO: Check if the password was updated successfully
-            console.log("Password Update Result:", result);
+            await UserRepository.update(user._id, { password: hashedPassword });
 
             return {
                 status: true,
-                statusCode: HTTP_RESPONSE_STATUS.OK,
-                message: "Password confirmed successfully",
+                statusCode: OK,
+                message: "Password updated successfully!",
             };
-        }
     } catch (error) {
         console.error(`Unexpected Error: ${error}`);
         
         return {
             status: false,
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+            statusCode: INTERNAL_SERVER_ERROR,
             message: "Internal Server Error"
         };
     }

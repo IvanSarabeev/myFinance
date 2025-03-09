@@ -129,9 +129,11 @@ export const validatePasswords = () => {
             .withMessage("Weak password provided")
             .customSanitizer(value => xssFilters.inHTMLData(value)),
         body('confirmPassword')
-            .custom((value, { req }) => {
-                if (value !== req.body.password) {
-                    throw new Error("Passwords don't match");
+            .custom((value ,{ req }) => {
+                const { password, confirm_password } = req.body;
+                
+                if (password.length !== confirm_password.length) {
+                    throw new Error("Passwords length does not match.");
                 }
 
                 return true;
