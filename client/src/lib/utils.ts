@@ -16,3 +16,13 @@ export function hasUpperCase(str: string) {
 export function capitalizeFirstLetter(value: string) {
   return value.replace(/^./, value[0].toLocaleUpperCase()); 
 }
+
+/**
+ * @description Function to check if a string is valid (not empty and not null)
+ * 
+ * @param {string} value - String to check if it is a valid string 
+ * @returns {boolean} Boolean value indicating if the string is valid or not
+ */
+export function isString(value: string | undefined): boolean {
+  return typeof value === "string" && value.length > 0 && value !== "undefined";
+};

@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import BaseModal from "@/components/BaseModal";
 import { StandardVerificationProps } from "@/types/modal";
 
-const InitialWalletModal: React.FC<StandardVerificationProps> = ({
+const CreateWalletModal: React.FC<StandardVerificationProps> = ({
   email,
   message,
   onClose,
@@ -20,4 +20,4 @@ const InitialWalletModal: React.FC<StandardVerificationProps> = ({
   );
 };
 
-export default observer(InitialWalletModal);
+export default observer(CreateWalletModal);

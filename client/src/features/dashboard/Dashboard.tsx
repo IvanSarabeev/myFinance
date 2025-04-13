@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { observer } from "mobx-react-lite";
+import BoxLoader from "./components/loaders/BoxLoader";
+import CustomLoader from "./components/loaders/CustomLoader";
 
 const items = [
   {
@@ -28,12 +30,8 @@ const Dashboard: React.FC = () => {
       </header>
       <section className="container account-container">
         <div className="flex flex-1 flex-col space-y-4 pt-0">
-          <div className="grid auto-rows-min gap-x-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/95" />
-            <div className="aspect-video rounded-xl bg-muted/95" />
-            <div className="aspect-video rounded-xl bg-muted/95" />
-          </div>
-          <div className="min-h-96 h-full max-h-[1440px] flex-1 rounded-xl bg-muted/100" />
+          <BoxLoader boxCount={3} style="aspect-video rounded-xl bg-muted/95" />
+          <CustomLoader title="Dashboard history" />
         </div>
       </section>
     </React.Fragment>
