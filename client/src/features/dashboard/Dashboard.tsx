@@ -1,7 +1,9 @@
-import React from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { observer } from "mobx-react-lite";
 
 const items = [
   {
@@ -13,6 +15,8 @@ const items = [
 ];
 
 const Dashboard: React.FC = () => {
+  useEffect(() => {}, []);
+
   return (
     <React.Fragment>
       <header className="flex h-16 shrink-0 items-center gap-2 shadow-xs">
@@ -36,4 +40,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default observer(Dashboard);

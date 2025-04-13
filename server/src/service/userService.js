@@ -1,35 +1,33 @@
-import User from "./../model/user.js";
+import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import UserRepository from "../repositories/UserRepository.js";
+
+const {NOT_FOUND, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
- * Create new User Entity
  * 
- * @param {String} name 
- * @param {String} email 
- * @param {String} password 
- * @param {Boolean} terms 
- * @param {Number} otpCode
- * @param {Date} otpExpiration
- * @param {deviceSchema} fingerPrint
- * @returns 
+ * @param {string} email
+ * @returns {User} - User Model 
  */
-export function createUserDocument({ name, email, password, terms, otpCode, otpExpiration, fingerPrint }) {
-    return new User({
-        name: name,
-        email: email,
-        password: password,
-        terms: terms,
-        otpCode: otpCode,
-        otpExpiration: otpExpiration,
-        device: fingerPrint
-    });
-}
+export async function getUserDetails(email) {
+    try {
+        const user = await UserRepository.findByEmail(email);
 
-/**
- * Persist User Entity
- * 
- * @param {User} userDocument 
- * @returns {void}
- */
-export async function persistUser(userDocument) {
-    return await userDocument.save();
+        if (!user) {
+            return {
+                status: false,
+                statusCode: NOT_FOUND,
+                message: "Error User Not Found!"
+            };
+        }
+
+        return user;
+    } catch (error) {
+        console.error(`DataBase Fatal Error: ${error}`);
+
+        return {
+            status: false,
+            statusCode: INTERNAL_SERVER_ERROR,
+            message: "",
+        }
+    }
 }

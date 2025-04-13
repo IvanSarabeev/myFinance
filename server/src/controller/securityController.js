@@ -4,6 +4,7 @@ import { cookieOption } from '../config/cookie.js';
 import { googleService, githubService } from '../service/authManager.js';
 import { TOKEN_ID } from '../config/env.js';
 
+const {OK, CREATED, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE} = HTTP_RESPONSE_STATUS;
 
 /**
  * Proceeding the User Registration workflow
@@ -20,7 +21,7 @@ export async function registerUser(req, res, next){
 
         const { status, statusCode, showOtpModal, message, errorFields } = result;
 
-        if (statusCode !== HTTP_RESPONSE_STATUS.CREATED) {
+        if (statusCode !== CREATED) {
             res.status(statusCode).json(result);
         } else {
             res.status(statusCode).json({
@@ -34,7 +35,7 @@ export async function registerUser(req, res, next){
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
-        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
+        res.status(INTERNAL_SERVER_ERROR).json({
             status: false,
             message: "Internal Server Error"
         });
@@ -57,7 +58,7 @@ export async function loginUser(req, res, next) {
         if (result) {
             const { status, message, token, statusCode, data } = result;
             
-            if (status && statusCode === HTTP_RESPONSE_STATUS.OK) {
+            if (status && statusCode === OK) {
                 res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
                     status: true,
                     message: message,
@@ -78,7 +79,7 @@ export async function loginUser(req, res, next) {
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
-        res.status(HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR).json({
+        res.status(INTERNAL_SERVER_ERROR).json({
             status: false,
             message: "Internal Server Error"
         });
@@ -96,7 +97,7 @@ export async function loginUser(req, res, next) {
 export function logoutUser(req, res, next){
     try {
         res.clearCookie(TOKEN_ID);
-        res.status(HTTP_RESPONSE_STATUS.OK).json({
+        res.status(OK).json({
             status: true, 
             message: "User Succesfully Loged Out"
         });
@@ -122,13 +123,12 @@ export async function google(req, res, next) {
 
     try {
         const result = await googleService({ email, name, photo, fingerPrint });
-
         const {status, statusCode, data, token, message } = result;
 
         if (
             status &&
-            statusCode === HTTP_RESPONSE_STATUS.OK ||
-            statusCode === HTTP_RESPONSE_STATUS.CREATED
+            statusCode === OK ||
+            statusCode === CREATED
         ) {
             res.cookie(TOKEN_ID, token, {
                 ...cookieOption,
@@ -150,7 +150,7 @@ export async function google(req, res, next) {
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
-        res.status(HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE).json({
+        res.status(SERVICE_UNAVAILABLE).json({
             status: false,
             message: "Current service is unavailable, Please contanct our support center!"
         });
@@ -170,13 +170,10 @@ export async function github(req, res, next) {
 
     try {
         const result = await githubService({ email, name, photo, fingerPrint });
-
-        console.log("Controller Result:", result);
-
         const {status, statusCode, message, token } = result;
 
         if (result) {
-            if (status && statusCode === HTTP_RESPONSE_STATUS.CREATED) {   
+            if (status && statusCode === CREATED) {   
                 res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
                     status: true,
                     token: token,
@@ -194,7 +191,7 @@ export async function github(req, res, next) {
         console.error(`Unexpected Server Error: ${error}`);
 
         next();
-        res.status(HTTP_RESPONSE_STATUS.SERVICE_UNAVAILABLE).json({
+        res.status(SERVICE_UNAVAILABLE).json({
             status: false,
             message: "Current service is unavailable, Please contanct our support center!"
         });
