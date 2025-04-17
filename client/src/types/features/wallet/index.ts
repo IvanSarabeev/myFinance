@@ -35,3 +35,6 @@ export type CreateWalletData =
     | BaseWalletCreation
     | CustomWalletCreation
 ;
+
+export type WalletSteps = "Initial" | "CustomAccount" | "CustomWallet" | "Default";
+export type WalletCreationSteps = "Create" | "Confirm" | "Success";

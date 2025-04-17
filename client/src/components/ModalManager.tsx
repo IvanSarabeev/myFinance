@@ -10,9 +10,12 @@ const EmailVerificationModal = lazy(
 const ForgotPasswordModal = lazy(
   () => import("@/features/security/components/modals/ForgotPasswordModal")
 );
-// Import the new Modal with lazy Loading
+const CreatelWalletModal = lazy(
+  () => import("@/features/wallet/components/modals/InitialWalletSetupModal")
+);
 
-const { EMAIL_VERIFICATION, FORGOTTEN_PASSWORD } = MODAL_TYPES;
+const { EMAIL_VERIFICATION, FORGOTTEN_PASSWORD, INITIAL_WALLET_SETUP } =
+  MODAL_TYPES;
 
 const ModalManager: React.FC = () => {
   const { modalStore } = useStore();
@@ -43,6 +46,16 @@ const ModalManager: React.FC = () => {
         </Suspense>
       );
     // Add case for the New Modal
+    case INITIAL_WALLET_SETUP:
+      return (
+        <Suspense fallback={null}>
+          <CreatelWalletModal
+            email={modalProps.email as string}
+            message={modalProps.message as string}
+            onClose={() => modalStore.closeModal()}
+          />
+        </Suspense>
+      );
     default:
       return null;
   }

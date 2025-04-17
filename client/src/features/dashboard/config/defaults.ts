@@ -1,6 +1,6 @@
 import { 
   Bell, BadgeCheck, CreditCard, LogOut, Sparkles, BookOpen,
-  Frame, LifeBuoy, PieChart, Send, Settings2,
+  House, LifeBuoy, WalletMinimal, Send, Settings2,
 }  from "lucide-react";
 
 /**
@@ -9,32 +9,18 @@ import {
 export const navData = {
   navMain: [
     {
-      title: "Profile Playground",
-      url: "#",
-      icon: Frame,
+      title: "Dashboard",
+      url: "/",
+      icon: House,
       isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "/account/profile/history",
-        },
-        {
-          title: "Starred",
-          url: "/account/getting-started",
-        },
-        {
-          title: "Settings",
-          url: "/account/settings",
-        },
-      ],
     },
     {
-      title: "Transactions",
+      title: "Transactions account",
       url: "#",
-      icon: PieChart,
+      icon: WalletMinimal,
       items: [
         {
-          title: "View",
+          title: "Dashboard",
           url: "/account/transaction/dashboard",
         },
         {
@@ -42,8 +28,8 @@ export const navData = {
           url: "/account/transaction/create",
         },
         {
-          title: "Quantum",
-          url: "/account/transaction/store",
+          title: "History",
+          url: "/account/transaction/history",
         },
       ],
     },
@@ -77,19 +63,15 @@ export const navData = {
       items: [
         {
           title: "General",
-          url: "/account/profile",
+          url: "/account/profile/settings",
         },
         {
           title: "Team",
-          url: "/account/team",
+          url: "/account/team/settings",
         },
         {
           title: "Billing",
-          url: "/account/subscriptions",
-        },
-        {
-          title: "Limits",
-          url: "/account/limits",
+          url: "/account/subscriptions/history",
         },
       ],
     },
@@ -112,29 +94,29 @@ export const navData = {
  * Profile Navigation
  */
 export const userProfileNavigation = [
-  {
-    id: 1,
-    title: "Upgrade to Pro",
-    url: "/account/subscription",
-    icon: Sparkles,
-  },
   { 
-    id: 2,
+    id: 1,
     title: "Profile", 
     url: "/account/profile", 
     icon: BadgeCheck 
   },
   {
-    id: 3,
-    title: "Transaction",
-    url: "/account/transaction/dashboard",
+    id: 2,
+    title: "Documents",
+    url: "/account/profile/documents",
     icon: CreditCard,
   },
   {
-    id: 4,
+    id: 3,
     title: "Notifications",
     url: "/account/notifications",
     icon: Bell,
+  },
+  {
+    id: 4,
+    title: "Upgrade to Pro",
+    url: "/account/profile/subscription",
+    icon: Sparkles,
   },
   { 
     id: 5, 

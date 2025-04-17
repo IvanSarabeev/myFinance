@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -34,7 +33,6 @@ type NavMainProps = {
 const NavMain: React.FC<NavMainProps> = ({ items }) => {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Account Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible key={item.title} asChild defaultOpen={item.isActive}>

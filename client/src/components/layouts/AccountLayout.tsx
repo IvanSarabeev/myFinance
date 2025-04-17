@@ -3,6 +3,7 @@ import { Outlet } from "react-router";
 import { Toaster } from "../ui/toaster";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "@/app/dashboard/AppSidebar";
+import ModalManager from "../ModalManager";
 
 const AccountLayout: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const AccountLayout: React.FC = () => {
         <SidebarInset>
           <Outlet />
           <Toaster />
+          <ModalManager />
         </SidebarInset>
       </SidebarProvider>
     </main>

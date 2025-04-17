@@ -9,7 +9,6 @@ const Page404: React.FC = memo(() => {
         alt="logo"
         decoding="async"
         loading="lazy"
-        fetchPriority="high"
         className="size-12 object-cover object-center aspect-auto"
       />
     </section>

@@ -18,6 +18,7 @@ class ModalStore {
             closeRequestedEmailVerificationModal: action,
             setRequestedForgotPasswordModal: action,
             closeRequestedForgotPasswordModal: action,
+            setRequestedInitialWalletSetupModal: action,
         });
     }
 
@@ -88,6 +89,17 @@ class ModalStore {
      */
     closeRequestedForgotPasswordModal(): void {
         this.closeModal();
+    }
+
+    /**
+     * Open the requested initial wallet setup modal
+     * @param {Object} props
+     * @returns {VoidFunction}
+     */
+    setRequestedInitialWalletSetupModal(props: Record<string, unknown>): void {
+        runInAction(() => {
+            this.openModal(MODAL_TYPES.INITIAL_WALLET_SETUP, props);
+        });
     }
 }
 

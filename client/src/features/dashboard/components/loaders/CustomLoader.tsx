@@ -10,7 +10,7 @@ type CustomLoaderProps = {
 
 const CustomLoader: React.FC<CustomLoaderProps> = ({ style, title }) => {
   const titleStyle =
-    "absolute z-20 top-4 h-fit w-full border-b border-separate border-slate-900/50 animate-pulse";
+    "absolute z-20 top-4 h-fit w-full border-b border-separate border-slate-900/50 pb-1 lg:pb-2 animate-pulse";
 
   return (
     <div
@@ -32,7 +32,6 @@ const CustomLoader: React.FC<CustomLoaderProps> = ({ style, title }) => {
           alt="logo"
           decoding="async"
           loading="lazy"
-          fetchPriority="high"
           aria-label="myFinance logo"
           className="size-32 mx-auto bg-opacity-60 object-cover aspect-square"
         />
