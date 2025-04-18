@@ -56,15 +56,15 @@ const InitialWalletSetupModal: FC<StandardVerificationProps> = ({
       className="group w-80 sm:w-96 md:w-[440px] xl:w-[480px] space-y-2 rounded-lg group-hover:shadow-md z-50"
     >
       <div className="flex flex-col items-start justify-start gap-2 px-4 pt-4 pb-2 text-left">
-        <h3 className="regular-18 lg:bold-20 font-bold">
-          Initial Wallet Setup
-        </h3>
         <div className="w-full bg-gray-200 h-2 rounded-full mb-4">
           <div
             className="bg-blue-500 h-2 rounded-full"
             style={{ width: `${progressPercentage.review}%` }}
-          ></div>
+          />
         </div>
+        <h3 className="regular-18 lg:bold-20 font-bold">
+          Initial Wallet Setup
+        </h3>
         <p className="regular-16 text-muted-foreground">
           Welcome to the board!
         </p>

@@ -3,6 +3,9 @@ import { FC } from "react";
 
 type CustomWalletStepProps = {
   onFinish: () => void;
+  email: string;
+  message: string;
+  onClose: () => void;
 };
 
 const CustomWalletStep: FC<CustomWalletStepProps> = ({ onFinish }) => {

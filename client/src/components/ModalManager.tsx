@@ -13,9 +13,20 @@ const ForgotPasswordModal = lazy(
 const CreatelWalletModal = lazy(
   () => import("@/features/wallet/components/modals/InitialWalletSetupModal")
 );
+const CustomAccountStep = lazy(
+  () => import("@/features/wallet/components/modals/steps/CustomAccountStep")
+);
+const CustomWalletStep = lazy(
+  () => import("@/features/wallet/components/modals/steps/CustomWalletStep")
+);
 
-const { EMAIL_VERIFICATION, FORGOTTEN_PASSWORD, INITIAL_WALLET_SETUP } =
-  MODAL_TYPES;
+const {
+  EMAIL_VERIFICATION,
+  FORGOTTEN_PASSWORD,
+  INITIAL_WALLET_SETUP,
+  CUSTOM_WALLET,
+  CUSTOM_ACCOUNT,
+} = MODAL_TYPES;
 
 const ModalManager: React.FC = () => {
   const { modalStore } = useStore();
@@ -53,6 +64,28 @@ const ModalManager: React.FC = () => {
             email={modalProps.email as string}
             message={modalProps.message as string}
             onClose={() => modalStore.closeModal()}
+          />
+        </Suspense>
+      );
+    case CUSTOM_ACCOUNT:
+      return (
+        <Suspense fallback={null}>
+          <CustomAccountStep
+            email={modalProps.email as string}
+            message={modalProps.message as string}
+            onClose={() => modalStore.closeModal()}
+            onNext={() => modalStore.openModal(MODAL_TYPES.CUSTOM_WALLET)}
+          />
+        </Suspense>
+      );
+    case CUSTOM_WALLET:
+      return (
+        <Suspense fallback={null}>
+          <CustomWalletStep
+            email={modalProps.email as string}
+            message={modalProps.message as string}
+            onClose={() => modalStore.closeModal()}
+            onFinish={() => modalStore.closeModal()}
           />
         </Suspense>
       );

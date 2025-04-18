@@ -7,7 +7,7 @@ import { MODAL_TYPES } from "@/defines";
 
 const Dashboard: FC = () => {
   useEffect(() => {
-    modalStore.openModal(MODAL_TYPES.INITIAL_WALLET_SETUP);
+    modalStore.openModal(MODAL_TYPES.CUSTOM_ACCOUNT);
   }, []);
 
   return (

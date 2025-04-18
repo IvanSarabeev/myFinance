@@ -41,4 +41,7 @@ export const MODAL_TYPES = {
    EMAIL_VERIFICATION: "email-verification",
    FORGOTTEN_PASSWORD: "forgotten-password",
    INITIAL_WALLET_SETUP: "initial-wallet-setup",
+   CUSTOM_ACCOUNT: "custom-account",
+   CUSTOM_WALLET: "custom-wallet",
+   DEFAULT_WALLET: "default-wallet",
 } as const;
