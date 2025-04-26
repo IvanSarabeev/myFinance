@@ -7,7 +7,7 @@ import ModalManager from "../ModalManager";
 
 const AccountLayout: React.FC = () => {
   return (
-    <main className="relative size-full lg:h-screen flexCenter overflow-x-hidden">
+    <main className="relative size-full flexCenter overflow-x-hidden">
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
