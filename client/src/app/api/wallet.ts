@@ -1,4 +1,4 @@
-import api from "@/utils/axiosInstance";
+import api from "@/utils/axios";
 import { CreateWalletData } from "@/types/features/wallet";
 
 /**

@@ -1,6 +1,6 @@
-import api from "@/utils/axiosInstance";
+import api from "@/utils/axios";
 import { BaseEmailVerification, ResponseEmailVerification } from "@/types/otp";
-import { toErrorResponse } from "@/utils/errorInstance";
+import { formatAxiosError } from "@/utils/axiosErrorHandler";
 import { AxiosResponse } from "axios";
 
 /**
@@ -13,7 +13,7 @@ export async function verifyEmail(data: BaseEmailVerification): Promise<AxiosRes
     try {
         return await api.post("v1/otp/validate-email", data, { withCredentials: false });
     } catch (error: unknown) {
-        throw toErrorResponse(error);
+        throw formatAxiosError(error);
     }
 }
 
@@ -27,6 +27,6 @@ export async function emailConfirmation(data: BaseEmailVerification): Promise<Ax
     try {
         return await api.post("v1/otp/email-confirmation", data, { withCredentials: false });
     } catch (error: unknown) {
-        throw toErrorResponse(error);
+        throw formatAxiosError(error);
     }
 }

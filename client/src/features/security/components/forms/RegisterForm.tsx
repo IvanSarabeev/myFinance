@@ -9,7 +9,7 @@ import { Link } from "react-router";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ErrorMessage from "@/components/ErrorMessage";
-import isFieldValid from "@/utils/isFieldValid";
+import isFieldValid from "@/utils/validateFormField";
 import { RegisterUserData } from "@/types/auth";
 
 type RegisterFormProps = {

@@ -1,5 +1,5 @@
 
-import api from "@/utils/axiosInstance";
+import api from "@/utils/axios";
 import userStore from "@/stores/UserStore";
 import { AxiosResponse } from "axios";
 import { ExternalProviderResponse, LoginUserResponse, RegisterUserResponse, AuthResponse } from "@/types/auth/api/index";

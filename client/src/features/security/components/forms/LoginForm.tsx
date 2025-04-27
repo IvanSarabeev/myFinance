@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ErrorMessage";
 import { Link } from "react-router";
 import { Eye } from "lucide-react";
-import isFieldValid from "@/utils/isFieldValid";
+import isFieldValid from "@/utils/validateFormField";
 import { Button } from "@/components/ui/button";
 import { LoginUserData } from "@/types/auth";
 

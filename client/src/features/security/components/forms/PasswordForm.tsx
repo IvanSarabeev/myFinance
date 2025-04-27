@@ -3,7 +3,7 @@ import React from "react";
 import { FormikProps } from "formik";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import isFieldValid from "@/utils/isFieldValid";
+import isFieldValid from "@/utils/validateFormField";
 import { Input } from "@/components/ui/input";
 import ErrorMessage from "@/components/ErrorMessage";
 import { Button } from "@/components/ui/button";
