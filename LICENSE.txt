@@ -1,0 +1,18 @@
+Copyright © MY Finance OOD 2025. All rights reserved.
+
+This source code and all associated files (the “Software”) are the confidential and proprietary property of [Your Name or Organization]. Unauthorized copying, distribution, modification, or any other use of the Software is strictly prohibited without prior written permission.
+
+The Software is made available only to authorized contributors with explicit access. By accessing or contributing to this project, you agree to the following terms:
+
+1. No Redistribution: The Software may not be copied, shared, forked, or distributed publicly or privately without express permission.
+
+2. Contribution Control: All contributions are subject to mandatory review and approval by the repository owner before inclusion.
+
+3. Confidentiality: The contents of this repository are not to be disclosed or made publicly accessible.
+
+4. Limited License: Authorized users may use and modify the Software solely for the purpose of contributing to the project, under the conditions set by the repository owner.
+
+5. Termination: Any violation of these terms may result in immediate termination of access and possible legal action.
+
+This is a proprietary license and is not compatible with any open source license.
+
