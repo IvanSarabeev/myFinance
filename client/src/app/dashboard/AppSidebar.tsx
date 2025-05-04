@@ -1,21 +1,17 @@
-import React from "react";
+import { FC, ComponentProps } from 'react';
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { Link } from "react-router";
-import useStore from "@/hooks/useStore";
-import { navData } from "../../features/dashboard/config/defaults";
-// Components
-import NavMain from "./sidebar/NavMain";
-import NavUser from "./sidebar/NavUser";
-import NavSecondary from "./sidebar/NavSecondary";
-import CloudinaryImage from "@/components/CloudinaryImage";
+} from '@/components/ui/sidebar';
+import { navData } from '@/features/dashboard/config/defaults.ts';
+import NavMain from './sidebar/NavMain';
+import NavSecondary from './sidebar/NavSecondary';
+import Logo from '@/app/assets/logo.png';
+import { Link } from 'react-router';
 
 const Header = () => {
   return (
@@ -23,18 +19,17 @@ const Header = () => {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg" asChild>
-            <Link to={"#"}>
-              <CloudinaryImage
-                imgName="logos/my-finance"
-                imgFormamt="png"
-                imgAltText="logo"
-                imgAccessibility={false}
-                className="size-8 lg:size-10 drop-shadow aspect-square object-cover object-center"
+            <Link to={'/account/dashboard'}>
+              <img
+                src={Logo}
+                alt="myFinance Dashboard Logo"
+                className="size-32 lg:size-36 2xl:size-40 drop-shadow aspect-auto object-cover object-center"
+                fetchPriority="high"
+                decoding="async"
+                width={144}
+                height={144}
               />
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">myFinance</span>
-                <span className="truncate regular-12">Enterprise</span>
-              </div>
+              <span className="sr-only">myFinance</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -43,21 +38,14 @@ const Header = () => {
   );
 };
 
-const AppSidebar: React.FC = ({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) => {
-  const { userStore } = useStore();
-
-  const user = userStore.getUserDetails();
-
+const AppSidebar: FC = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="sidebar" side="left" collapsible="icon" {...props}>
       <Header />
       <SidebarContent>
         <NavMain items={navData.navMain} />
         <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>{user !== null && <NavUser user={user} />}</SidebarFooter>
     </Sidebar>
   );
 };

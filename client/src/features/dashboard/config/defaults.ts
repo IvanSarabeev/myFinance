@@ -1,6 +1,6 @@
 import { 
-  Bell, BadgeCheck, CreditCard, LogOut, Sparkles, BookOpen,
-  House, LifeBuoy, WalletMinimal, Send, Settings2,
+  Bell, BadgeCheck, CreditCard, LogOut, Sparkles, WalletMinimal,
+  House, CircleHelp, ArrowRightLeft, Settings, ChartNetwork,
 }  from "lucide-react";
 
 /**
@@ -15,9 +15,9 @@ export const navData = {
       isActive: true,
     },
     {
-      title: "Transactions account",
+      title: "Finance",
       url: "#",
-      icon: WalletMinimal,
+      icon: ArrowRightLeft,
       items: [
         {
           title: "Dashboard",
@@ -34,59 +34,26 @@ export const navData = {
       ],
     },
     {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      title: "Wallet",
+      url: "/account/wallet/wallet-overview",
+      icon: WalletMinimal,
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "/account/profile/settings",
-        },
-        {
-          title: "Team",
-          url: "/account/team/settings",
-        },
-        {
-          title: "Billing",
-          url: "/account/subscriptions/history",
-        },
-      ],
+      title: "Activity",
+      url: "/account/activity",
+      icon: ChartNetwork,
     },
   ],
   navSecondary: [
     {
-      title: "Support",
-      url: "/account/support",
-      icon: LifeBuoy,
+      title: "Help Center",
+      url: "/account/contact-us",
+      icon: CircleHelp,
     },
     {
-      title: "Feedback",
-      url: "/account/feedback",
-      icon: Send,
-    },
+      title: "Settings",
+      url: "/account/settings",
+      icon: Settings,   },
   ],
 };
 

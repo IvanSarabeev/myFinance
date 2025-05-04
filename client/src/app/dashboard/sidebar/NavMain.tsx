@@ -1,4 +1,4 @@
-import React from "react";
+import { FC, Fragment, memo } from "react";
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import {
   Collapsible,
@@ -30,48 +30,54 @@ type NavMainProps = {
   }[];
 };
 
-const NavMain: React.FC<NavMainProps> = ({ items }) => {
+const NavMain: FC<NavMainProps> = ({ items }) => {
+  const isNavigationEmpty = Array.isArray(items) && items.length > 0;
+
   return (
-    <SidebarGroup>
+    <SidebarGroup className="mt-3.5 lg:mt-4 pl-4">
       <SidebarMenu>
-        {items.map((item) => (
-          <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <Link to={item.url}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-              {item.items?.length ? (
-                <React.Fragment>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                      <span className="sr-only">Toggle</span>
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <Link to={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </React.Fragment>
-              ) : null}
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+        {isNavigationEmpty && items.map((item) => {
+          const {items, isActive, title, url} = item;
+
+          return (
+            <Collapsible key={title} asChild defaultOpen={isActive}>
+              <SidebarMenuItem className="my-0.5">
+                <SidebarMenuButton asChild tooltip={title}>
+                  <Link to={url} className={`flexStart items-center align-bottom ${isActive ? "bg-white shadow-md" : ""}`}>
+                    <item.icon height={24} width={24} className={isActive ? "text-blue-400/85" : ""}/>
+                    <p className={`regular-16 ${isActive ? "text-blue-400/85 font-semibold" : ""}`}>{title}</p>
+                  </Link>
+                </SidebarMenuButton>
+                {items?.length ? (
+                  <Fragment>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                        <span className="sr-only">Toggle</span>
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild>
+                              <Link to={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </Fragment>
+                ) : null}
+              </SidebarMenuItem>
+            </Collapsible>
+          )
+        })}
       </SidebarMenu>
     </SidebarGroup>
   );
 };
 
-export default NavMain;
+export default memo(NavMain);
