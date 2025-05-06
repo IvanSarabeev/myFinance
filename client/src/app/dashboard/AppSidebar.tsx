@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { navData } from '@/features/dashboard/config/defaults.ts';
+import { navData } from '@/app/dashboard/configs/defaults.ts';
 import NavMain from './sidebar/NavMain';
 import NavSecondary from './sidebar/NavSecondary';
 import Logo from '@/app/assets/logo.png';

@@ -181,6 +181,7 @@
 
     /* End Common Flex Classes */
 
+    /* Region Text Font-Size: */
     .bold-36 {
       @apply text-4xl font-bold;
     }
@@ -189,8 +190,16 @@
       @apply text-3xl font-bold;
     }
 
+    .bold-26 {
+      @apply text-[26px] font-bold leading-10;
+    }
+
     .bold-24 {
       @apply text-2xl font-bold;
+    }
+
+    .bold-22 {
+      @apply text-[22px] font-bold;
     }
 
     .bold-20 {
@@ -219,6 +228,37 @@
       
     .regular-12 {
       @apply text-xs font-normal;
+    }
+
+    /* Text Color */
+    .text-primary-black {
+      @apply text-[#1C1C1CFF];
+    }
+
+    /* Border Styles */
+    .border-1 {
+      @apply border border-solid;
+    }
+
+    .border-white-primary {
+      @apply border-[#FEFEFEFF];
+    }
+
+    .border-offset {
+      @apply border-[#EAEAEAFF];
+    }
+
+    .rounded-22 {
+      @apply rounded-[22px];
+    }
+
+    /* Custom Background */
+    .bg-white-primary {
+      @apply bg-[#E8F0FEFF];
+    }
+
+    .bg-white-secondary {
+      @apply bg-[#FEFEFEFF];
     }
   }
   

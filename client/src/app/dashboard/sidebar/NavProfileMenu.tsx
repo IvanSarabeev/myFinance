@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { Link } from "react-router";
-import { userProfileNavigation } from "@/features/dashboard/config/defaults";
-import useStore from "@/hooks/useStore";
+} from '@/components/ui/dropdown-menu';
+import { Link } from 'react-router';
+import { userProfileNavigation } from '@/app/dashboard/configs/defaults.ts';
+import useStore from '@/hooks/useStore';
 
 const NavProfileMenu = () => {
   const { authStore } = useStore();

@@ -1,12 +1,13 @@
-import React, { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router";
+import { FC, lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router';
 
-const TriangleLoader = lazy(() => import("@/components/icons/TriangleLoader"));
-const Middleware = lazy(() => import("@/app/auth/Middleware"));
-const AccountLayout = lazy(() => import("@/components/layouts/AccountLayout"));
-const Dashboard = lazy(() => import("@/features/dashboard/Dashboard"));
+const TriangleLoader = lazy(() => import('@/components/icons/TriangleLoader'));
+const Middleware = lazy(() => import('@/app/auth/Middleware'));
+const AccountLayout = lazy(() => import('@/components/layouts/AccountLayout'));
+const Dashboard = lazy(() => import('@/features/dashboard/Dashboard'));
+const Wallet = lazy(() => import('@/features/wallet/Page.tsx'));
 
-const AccountRoutes: React.FC = () => {
+const AccountRoutes: FC = () => {
   return (
     <Suspense
       fallback={
@@ -19,8 +20,9 @@ const AccountRoutes: React.FC = () => {
     >
       <Routes>
         <Route element={<Middleware />}>
-          <Route path="/dashboard" element={<AccountLayout />}>
-            <Route index element={<Dashboard />} />
+          <Route element={<AccountLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/wallet/overview" element={<Wallet />} />
           </Route>
         </Route>
       </Routes>

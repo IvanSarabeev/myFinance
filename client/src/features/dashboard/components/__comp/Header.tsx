@@ -10,7 +10,7 @@ const Header: FC = () => {
   const user = userStore.getUserDetails();
 
   return (
-    <header className="size-full min-h-16 block bg-inherit border-b border-slate-900">
+    <header className="w-full h-fit min-h-16 block bg-inherit border-b border-slate-900">
       <div className="size-full flex justify-between px-2 lg:px-4 regular-14">
         <div className="flexCenter items-center">
           <SearchInput />
