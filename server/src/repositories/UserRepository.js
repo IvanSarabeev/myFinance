@@ -34,13 +34,14 @@ class UserRepository {
     };
 
     /**
-     * Finds a user by their unique ID.
+     * Fetches a user by their unique ID from the database.
      *
-     * @param {string} id - The ID of the user.
-     * @returns {Promise<User|null>} - The found user or null if not found.
+     * @param {string} userId - The ID of the user to retrieve.
+     * @param {string} [fields=''] - A comma-separated string of fields to return from the result.
+     * @return {Promise<Object|null>} A promise that resolves to the user object if found, otherwise null.
      */
-    async findById(id) {
-        return await User.findById(id);
+    async findById(userId, fields = '') {
+        return User.findById(userId)?.select(fields);
     };
 
     /**

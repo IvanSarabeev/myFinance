@@ -19,7 +19,7 @@ export const navData = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '/',
+      url: '/account/dashboard',
       icon: House,
       isActive: true,
     },

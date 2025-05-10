@@ -32,7 +32,9 @@ app.use(cookieParser());
 app.use(helmetConfiguration);
 app.options('*', cors(corsConfiguration));
 app.use(cors(corsConfiguration));
-app.use(arcjectMiddleware);
+if (NODE_ENV === "prod") {
+  app.use(arcjectMiddleware);
+}
 
 connect().then(() => {
   console.log("Database connected and it's ready to handle requests.")

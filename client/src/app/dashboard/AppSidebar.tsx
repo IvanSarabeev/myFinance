@@ -24,7 +24,6 @@ const Header = () => {
                 src={Logo}
                 alt="myFinance Dashboard Logo"
                 className="size-32 lg:size-36 2xl:size-40 drop-shadow aspect-auto object-cover object-center"
-                fetchPriority="high"
                 decoding="async"
                 width={144}
                 height={144}

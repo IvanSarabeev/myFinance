@@ -1,7 +1,26 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
-import { createUserWallet, deleteUserWallet } from "../service/walletService.js";
+import {createUserWallet, deleteUserWallet, getUserWallets} from "../service/walletService.js";
 
 const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
+
+export async function getWallets(req, res) {
+    const { id } = req.user;
+
+    try {
+        const response = await getUserWallets(id);
+
+        const {status, statusCode, details} = response;
+
+        return res.status(statusCode).json({ status, details });
+    } catch (error) {
+        console.error(`Fatal error: ${error.message ?? "Unable to create Wallet"}`);
+
+        res.status(INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: `${error.message ?? "Internal Server Error"}`,
+        });
+    }
+}
 
 /**
  * Create a new Wallet to the User

@@ -4,14 +4,46 @@ import WalletRepository from "../repositories/WalletRepository.js";
 import { createAccount } from "./accountService.js";
 import { createDepositTransaction } from "./transactionService.js";
 
-const {UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST, NO_CONTENT, NOT_FOUND} = HTTP_RESPONSE_STATUS;
+const {OK, UNAUTHORIZED, INTERNAL_SERVER_ERROR, BAD_REQUEST, NO_CONTENT, NOT_FOUND, NOT_ACCEPTABLE} = HTTP_RESPONSE_STATUS;
 
 /**
- * Make validation's and then create new Wallet Instance
+ *
+ * @param userId
+ * @returns {Promise<{any}>}
+ */
+export async function getUserWallets(userId) {
+    const user = await UserRepository.findById(userId, '_id');
+
+    if (!user) {
+        return {
+            status: false,
+            statusCode: UNAUTHORIZED,
+            message: "Unauthorized",
+        }
+    }
+
+    const wallets = await WalletRepository.findAllByUserId(user._id);
+
+    if (wallets === null || wallets.length === 0) {
+        return {
+            status: false,
+            statusCode: NO_CONTENT,
+            message: "No wallets found",
+        };
+    }
+    return {
+        status: true,
+        statusCode: OK,
+        details: wallets,
+    };
+}
+
+/**
+ * Make validation and then create new Wallet Instance
  * 
- * @param {string} userId - The Id of the user (token based)
+ * @param {string} userId - The id of the user (token-based)
  * @param {string} walletName - The name of the walled
- * @param {Object | null} parameters - Additional Account parameters (currency, icon, type and etc...) 
+ * @param {Object | null} parameters - Additional Account parameters (currency, icon, type etc...)
  * @returns {Promise<Object>} - status, statusCode and message
  */
 export async function createUserWallet(userId, walletName, parameters = null) {
@@ -31,7 +63,11 @@ export async function createUserWallet(userId, walletName, parameters = null) {
         }
         
         if (user.id !== userId) {
-            throw new Error("User ID does not match");
+             return {
+                 status: false,
+                 statusCode: NOT_ACCEPTABLE,
+                 message: "User ID does not match"
+             }
         } 
 
         const wallet = await WalletRepository.create({ userId: userId, name: walletName });

@@ -29,7 +29,7 @@ const accountSchema = new Schema({
     description: {
         type: String,
         trim: true,
-        minLength: [3, "Descripton must be at least 3 characters."],
+        minLength: [3, "Description must be at least 3 characters."],
         maxLength: [50, "Description must not exceed 50 characters."],
     },
     icon: {

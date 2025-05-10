@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { addWallet, deleteWallet } from '../controller/walletController.js';
+import {addWallet, deleteWallet, getWallets} from '../controller/walletController.js';
 import { authorize } from './../middleware/authMiddleware.js';
 import { validateWalletCreate, validateRequest, validateWalletDelete } from './../middleware/walletMiddleware.js';
 
@@ -12,19 +12,19 @@ router.use((req, res, next) => {
     next();
 });
 
-// Get Wallet
-router.get("/", (req, res) => {res.send("Wallet Route")});
+// Get User Wallet's
+router.post("/list", authorize, getWallets);
 
 // Get All Wallets
-router.get("/all/user/:walledId", (req, res) => {res.send("All Wallets")});
+// router.get("/all/user/:walledId", (req, res) => {res.send("All Wallets")});
 
 // Share Wallet
 router.post("/share", (req, res) => {res.send("Share Walled")});
 
 // Get Wallet by ID
-router.get("/user/:id", (req, res) => {res.send("Wallet by ID")});
+// router.get("/user/:id", (req, res) => {res.send("Wallet by ID")});
 
-// Create new Wallet
+// Create a new Wallet
 router.post("/create", authorize, validateWalletCreate, validateRequest, addWallet);
 
 // Update Wallet
