@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import Wallet from './../model/wallet.js';
 
 /**
- *
+ * Handles operations related to the Wallet entity, such as creating, updating, retrieving,
+ * and deleting wallets in the DB. While using MongoDB transactions where necessary for data integrity.
  */
 class WalletRepository {
-
     /**
      * Retrieves all wallet information associated with a specific user ID.
      *
