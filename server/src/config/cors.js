@@ -1,5 +1,14 @@
 import { cleanUrl } from "../helpers/utils.js";
-import { CLIENT_PORT, CLIENT_URL, FIREBASE_URL, GOOGLE_API, PORT, SERVER_PROD_URL, SERVER_URL } from "./env.js";
+import {
+  CLIENT_PORT,
+  CLIENT_PROD_URL,
+  CLIENT_URL,
+  FIREBASE_URL,
+  GOOGLE_API,
+  PORT,
+  SERVER_PROD_URL,
+  SERVER_URL
+} from "./env.js";
 
 export const allowedOrigins = [
   `${CLIENT_URL + CLIENT_PORT}`,
@@ -8,6 +17,7 @@ export const allowedOrigins = [
   SERVER_PROD_URL,
   cleanUrl(FIREBASE_URL),
   cleanUrl(GOOGLE_API),
+  CLIENT_PROD_URL,
 ];
 
 const corsConfiguration = {

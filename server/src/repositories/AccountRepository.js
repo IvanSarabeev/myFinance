@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import Account from './../model/account.js';
+import {logMessage} from "../utils/helpers.js";
 
 /**
  * @class AccountRepository
@@ -19,7 +20,6 @@ class AccountRepository {
     async findWithPagination(filters, skip, limit ) {
         try {
             const excludeFromSelect = {
-                _id: 0,
                 wallet: 0,
                 __v: 0,
             };
@@ -31,7 +31,7 @@ class AccountRepository {
 
             return { accounts, total };
         } catch (error) {
-            console.error(`DataBase Exception: ${error}`);
+            logMessage(error, 'DataBase Exception');
 
             throw Error(`Failed to find accounts: ${error instanceof Error ? error.message : "An error occurred"}`);
         }

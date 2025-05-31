@@ -1,3 +1,5 @@
+import type { AccountTypeKey, CurrencyTypeKey } from '@/features/wallet/config';
+
 export type Role = 'user' | 'moderator' | 'admin';
 
 /**
@@ -63,9 +65,16 @@ export interface UserForgottenPassword extends Pick<UserBase, 'email'> {
 }
 
 export interface Wallet {
-  id: string;
+  readonly _id: string;
   name: string;
-  accountIds: string[];
+  balance: number;
+  currency: CurrencyTypeKey;
+  type: AccountTypeKey;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+  active: boolean;
+  icon?: string;
+  description?: string;
 }
 
 export interface Account {

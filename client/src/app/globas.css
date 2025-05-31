@@ -235,6 +235,10 @@
       @apply text-[#1C1C1CFF];
     }
 
+    .text-secondary-black {
+      @apply text-[#313131FF];
+    }
+
     /* Border Styles */
     .border-1 {
       @apply border border-solid;

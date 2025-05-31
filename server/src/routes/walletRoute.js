@@ -50,7 +50,6 @@ router.post("/create", authorize, validateWalletCreate, validateRequest, addWall
 // Update Wallet
 router.put("/update", (req, res) => {res.send("Update Wallet")});
 
-// Delete Wallet
 /**
  * @route DELETE /api/v1/wallet/delete
  * @summary Delete a wallet for the authenticated user

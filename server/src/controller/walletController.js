@@ -1,5 +1,6 @@
 import WalletService from "../service/walletService.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import {logMessage} from "../utils/helpers.js";
 
 const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
@@ -26,7 +27,7 @@ export async function getWallets(req, res) {
 
         return res.status(statusCode).json({ status, accounts,  total });
     } catch (error) {
-        console.error(`Fatal error: ${error.message ?? "Unable to create Wallet"}`);
+        logMessage(error, `Fatal error: ${error.message ?? "Unable to create Wallet"}`);
 
         res.status(INTERNAL_SERVER_ERROR).json({
             status: false,

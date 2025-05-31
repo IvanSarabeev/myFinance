@@ -4,7 +4,7 @@ import { Landmark } from 'lucide-react';
 
 const PaymentPreferenceGuide: FC = () => {
   return (
-    <aside className="relative size-full max-h-48 flexColStart p-4 border-1 border-white-primary rounded-22 my-4 shadow-sm shadow-[#171a1f12] bg-white-primary overflow-hidden">
+    <aside className="relative size-full h-fit md:max-h-48 flexColStart p-4 border-1 border-white-primary rounded-22 my-4 shadow-sm shadow-[#171a1f12] bg-white-primary overflow-hidden">
       <h3 className="bold-20 xl:bold-22 tracking-wide leading-8 text-[#212229FF]">
         Payment Preferences
       </h3>

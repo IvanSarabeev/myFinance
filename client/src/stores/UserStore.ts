@@ -5,7 +5,6 @@ import type {
   ExternalUser,
   UserDetails,
   InternalUser,
-  Wallet,
   Account,
   AccountType,
   CurrencyType,
@@ -49,15 +48,9 @@ class UserStore {
     userFingerPrint: this.userDetails.userFingerprint,
   };
 
-  wallet: Wallet = {
-    id: '',
-    name: '',
-    accountIds: [],
-  };
-
   account: Account = {
     id: '',
-    walletId: this.wallet.id || '',
+    walletId: '',
     name: '',
     currency: '' as keyof CurrencyType,
     balance: '',
@@ -72,7 +65,6 @@ class UserStore {
       user: observable,
       userDetails: observable,
       externalUser: observable,
-      wallet: observable,
       account: observable,
 
       // Actions
@@ -81,9 +73,7 @@ class UserStore {
       getUserDetails: action,
       setExternalUser: action,
       getExternalUser: action,
-      setWallet: action,
       setAccount: action,
-      removeAccount: action,
     });
   }
 
@@ -165,26 +155,11 @@ class UserStore {
     return this.externalUser;
   }
 
-  setWallet(key: keyof Wallet, value: Wallet) {
-    this.wallet = {
-      ...this.wallet,
-      [key]: value,
-    };
-  }
-
   setAccount(key: keyof Account, value: Account) {
     this.account = {
       ...this.account,
       [key]: value,
     };
-  }
-
-  removeAccount(id: string) {
-    runInAction(() => {
-      this.wallet.accountIds = this.wallet.accountIds.filter(
-        (account) => account !== id
-      );
-    });
   }
 }
 

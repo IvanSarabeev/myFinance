@@ -8,6 +8,7 @@ import {getCache} from "./Cache.js";
 import Encryption from "./Encryption.js";
 import AccountRepository from "../repositories/AccountRepository.js";
 import Wallet from "../model/wallet.js";
+import {logMessage} from "../utils/helpers.js";
 
 const {
     OK,
@@ -33,7 +34,7 @@ class WalletService extends AbstractController {
         const { limitIndex, offset } = this.createPaginationFromRequest(page, limit);
 
         const querySignature = JSON.stringify({ filters, limitIndex, offset });
-        const cacheKey = `wallets${Encryption.hashValue(querySignature)}`;
+        const cacheKey = `wallets_${Encryption.hashValue(querySignature)}`;
 
         const wallet = await Wallet.find({ userId }).select('_id');
 
@@ -44,16 +45,17 @@ class WalletService extends AbstractController {
                 const walletIds = wallet.map((item) => item._id);
                 const filter = { wallet: { $in: walletIds } };
 
-                console.log("Filter: ",filter);
-
                 return await AccountRepository.findWithPagination(filter, offset, limitIndex);
             });
 
-            console.log("Result: ",result);
+            if (!result) {
+                return { status: false, statusCode: NO_CONTENT, accounts: [] };
+            }
 
             return { status: true, statusCode: OK, ...result };
         } catch (error) {
-            console.error(`Database Exception: ${error}`);
+            logMessage(error, "Error retrieving wallets");
+
             throw new Error(`Failed to find wallets: ${error.message || error}`);
         }
     }

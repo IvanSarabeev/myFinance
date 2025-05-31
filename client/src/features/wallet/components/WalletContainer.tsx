@@ -1,6 +1,6 @@
 import { FC, Fragment } from 'react';
-import PaymentPreferenceGuide from '@/features/wallet/components/_comp/PaymentPreferenceGuide.tsx';
-import MyWalletsLists from '@/features/wallet/components/_comp/MyWalletsLists.tsx';
+import PaymentPreferenceGuide from '@/features/wallet/components/PaymentPreferenceGuide.tsx';
+import MyWalletsLists from '@/features/wallet/components/MyWalletsLists.tsx';
 
 const WalletContainer: FC = () => {
   return (
