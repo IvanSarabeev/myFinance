@@ -21,7 +21,6 @@ export const navData = {
       title: 'Dashboard',
       url: '/account/dashboard',
       icon: House,
-      isActive: true,
     },
     {
       title: 'Finance',
@@ -30,10 +29,10 @@ export const navData = {
       items: [
         {
           title: 'Dashboard',
-          url: '/account/transaction/dashboard',
+          url: '/account/transaction',
         },
         {
-          title: 'Create',
+          title: 'New Transaction',
           url: '/account/transaction/create',
         },
         {

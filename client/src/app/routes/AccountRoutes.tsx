@@ -5,6 +5,9 @@ const TriangleLoader = lazy(() => import('@/components/icons/TriangleLoader'));
 const Middleware = lazy(() => import('@/app/auth/Middleware'));
 const AccountLayout = lazy(() => import('@/components/layouts/AccountLayout'));
 const Dashboard = lazy(() => import('@/features/dashboard/Dashboard'));
+const TransactionContainer = lazy(
+  () => import('@/features/transaction/TransactionContainer.tsx')
+);
 const Wallet = lazy(() => import('@/features/wallet/Page.tsx'));
 
 const AccountRoutes: FC = () => {
@@ -21,7 +24,8 @@ const AccountRoutes: FC = () => {
       <Routes>
         <Route element={<Middleware />}>
           <Route element={<AccountLayout />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route index path="/dashboard" element={<Dashboard />} />
+            <Route path="/transaction" element={<TransactionContainer />} />
             <Route path="/wallet/overview" element={<Wallet />} />
           </Route>
         </Route>

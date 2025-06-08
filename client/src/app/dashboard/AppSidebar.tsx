@@ -11,7 +11,7 @@ import { navData } from '@/app/dashboard/configs/defaults.ts';
 import NavMain from './sidebar/NavMain';
 import NavSecondary from './sidebar/NavSecondary';
 import Logo from '@/app/assets/logo.png';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 const Header = () => {
   return (
@@ -38,12 +38,18 @@ const Header = () => {
 };
 
 const AppSidebar: FC = ({ ...props }: ComponentProps<typeof Sidebar>) => {
+  const location = useLocation();
+
   return (
     <Sidebar variant="sidebar" side="left" collapsible="icon" {...props}>
       <Header />
       <SidebarContent>
-        <NavMain items={navData.navMain} />
-        <NavSecondary items={navData.navSecondary} className="mt-auto" />
+        <NavMain items={navData.navMain} location={location} />
+        <NavSecondary
+          items={navData.navSecondary}
+          location={location}
+          className="mt-auto"
+        />
       </SidebarContent>
     </Sidebar>
   );
