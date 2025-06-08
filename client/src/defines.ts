@@ -45,4 +45,5 @@ export const MODAL_TYPES = {
   CUSTOM_ACCOUNT: 'custom-account',
   CUSTOM_WALLET: 'custom-wallet',
   DEFAULT_WALLET: 'default-wallet',
+  CREATE_TRANSACTION: 'create-transaction',
 } as const;

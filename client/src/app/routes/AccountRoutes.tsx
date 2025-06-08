@@ -25,7 +25,7 @@ const AccountRoutes: FC = () => {
         <Route element={<Middleware />}>
           <Route element={<AccountLayout />}>
             <Route index path="/dashboard" element={<Dashboard />} />
-            <Route path="/transaction" element={<TransactionContainer />} />
+            <Route path="/transaction/*" element={<TransactionContainer />} />
             <Route path="/wallet/overview" element={<Wallet />} />
           </Route>
         </Route>

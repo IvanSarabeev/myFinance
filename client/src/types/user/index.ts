@@ -70,8 +70,8 @@ export interface Wallet {
   balance: number;
   currency: CurrencyTypeKey;
   type: AccountTypeKey;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
   active: boolean;
   icon?: string;
   description?: string;

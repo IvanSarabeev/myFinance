@@ -1,23 +1,26 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { lazy, Suspense } from "react";
-import { observer } from "mobx-react-lite";
-import useStore from "@/hooks/useStore";
-import { MODAL_TYPES } from "@/defines";
+import React, { lazy, Suspense } from 'react';
+import { observer } from 'mobx-react-lite';
+import useStore from '@/hooks/useStore';
+import { MODAL_TYPES } from '@/defines';
 
 const EmailVerificationModal = lazy(
-  () => import("@/features/security/components/modals/EmailVerificationModal")
+  () => import('@/features/security/components/modals/EmailVerificationModal')
 );
 const ForgotPasswordModal = lazy(
-  () => import("@/features/security/components/modals/ForgotPasswordModal")
+  () => import('@/features/security/components/modals/ForgotPasswordModal')
 );
 const CreatelWalletModal = lazy(
-  () => import("@/features/wallet/components/modals/InitialWalletSetupModal")
+  () => import('@/features/wallet/components/modals/InitialWalletSetupModal')
 );
 const CustomAccountStep = lazy(
-  () => import("@/features/wallet/components/modals/steps/CustomAccountStep")
+  () => import('@/features/wallet/components/modals/steps/CustomAccountStep')
 );
 const CustomWalletStep = lazy(
-  () => import("@/features/wallet/components/modals/steps/CustomWalletStep")
+  () => import('@/features/wallet/components/modals/steps/CustomWalletStep')
+);
+const CreateTransactionModal = lazy(
+  () => import('@/features/transaction/modals/CreateTransactionModal')
 );
 
 const {
@@ -26,6 +29,7 @@ const {
   INITIAL_WALLET_SETUP,
   CUSTOM_WALLET,
   CUSTOM_ACCOUNT,
+  CREATE_TRANSACTION,
 } = MODAL_TYPES;
 
 const ModalManager: React.FC = () => {
@@ -87,6 +91,12 @@ const ModalManager: React.FC = () => {
             onClose={() => modalStore.closeModal()}
             onFinish={() => modalStore.closeModal()}
           />
+        </Suspense>
+      );
+    case CREATE_TRANSACTION:
+      return (
+        <Suspense fallback={null}>
+          <CreateTransactionModal onClose={() => modalStore.closeModal()} />
         </Suspense>
       );
     default:

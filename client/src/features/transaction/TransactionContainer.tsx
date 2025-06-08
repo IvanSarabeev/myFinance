@@ -1,4 +1,4 @@
-import { FC, lazy } from 'react';
+import { FC, lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router';
 import TransactionLayout from '@/features/transaction/components/layouts/TransactionLayout.tsx';
 import TransactionDashboard from '@/features/transaction/pages/TransactionDashboard.tsx';
@@ -18,7 +18,14 @@ const TransactionContainer: FC = () => {
     <Routes>
       <Route element={<TransactionLayout />}>
         <Route index element={<TransactionDashboard />} />
-        <Route path="create" element={<CreateTransactionPage />} />
+        <Route
+          path="create"
+          element={
+            <Suspense fallback={null}>
+              <CreateTransactionPage />
+            </Suspense>
+          }
+        />
       </Route>
     </Routes>
   );

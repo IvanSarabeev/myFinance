@@ -1,4 +1,7 @@
 import { FC, memo } from 'react';
+import { Button } from '@/components/ui/button.tsx';
+import useStore from '@/hooks/useStore.ts';
+import { MODAL_TYPES } from '@/defines.ts';
 
 /**
  * TransactionDashboard is a functional component designed to render the Transaction Dashboard view.
@@ -10,7 +13,18 @@ import { FC, memo } from 'react';
  * @constant {Function} TransactionDashboard - A functional component to represent the Transaction Dashboard.
  */
 const TransactionDashboard: FC = () => {
-  return <div>Transaction Dashboard</div>;
+  const { modalStore } = useStore();
+
+  const openTransactionModal = () => {
+    modalStore.openModal(MODAL_TYPES.CREATE_TRANSACTION);
+  };
+
+  return (
+    <div>
+      <h1>Transaction Dashboard</h1>
+      <Button onClick={openTransactionModal}>Create transaction</Button>
+    </div>
+  );
 };
 
 export default memo(TransactionDashboard);
