@@ -26,3 +26,15 @@ export const COOKIE_SITE = Object.freeze({
     NONE: "None",
     SELF: "Self",
 });
+
+/**
+ * An object containing predefined message types for logging purposes.
+ * The object is immutable to ensure the integrity of the log message types.
+ */
+export const LOG_MESSAGE_TYPES = Object.freeze({
+   'Error': 'error',
+   'Info': 'info',
+   'Warning': 'warn',
+   'Debug': 'debug',
+   'Success': 'success',
+});

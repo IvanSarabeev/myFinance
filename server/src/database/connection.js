@@ -1,30 +1,57 @@
-/* eslint-disable no-undef */
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
-import { MongoServerSelectionError } from "mongodb";
+import {MongoServerSelectionError} from "mongodb";
+import {logMessage} from "../utils/helpers.js";
+import dotenv from "dotenv";
+import {HTTP_RESPONSE_STATUS} from "../defines.js";
 
 dotenv.config();
 
-const URI = process.env.ATLAS_URI ?? "";
+// eslint-disable-next-line no-undef
+const ATLAS_URL = process.env.ATLAS_URI;
 
-if (!URI) {
-    console.error("Missing DB URI variable");
+if (!ATLAS_URL) {
+    logMessage(ATLAS_URL, "⚠️ No database connection string found.", 'warn');
 }
 
-async function connect() {    
+async function connect() {
+    const SERVER_TIMEOUT = 10000;
+    const POOL_SIZE = 10;
+
     try {
-        await mongoose.connect(URI, {
-            serverSelectionTimeoutMS: 10000,
+        await mongoose.connect(ATLAS_URL, {
+            serverSelectionTimeoutMS: SERVER_TIMEOUT,
+            retryWrites: true,
+            maxPoolSize: POOL_SIZE,
+            minPoolSize: 2,
+            connectTimeoutMS: 30000,
+            socketTimeoutMS: 45000,
+            family: 4,
+            retryReads: true,
+            maxConnecting: 2,
+            heartbeatFrequencyMS: 10000,
+            autoIndex: false,
         });
-        
-        console.log(`Connection to MongoDB was successful!`);
+
+        mongoose.connection.on('error', error => {
+            logMessage(error, "❌ Database connection error occurred");
+        });
+
+        mongoose.connection.on('disconnected', () => {
+            logMessage(false, "⚠️ Database disconnected", 'warn');
+        });
+
+        logMessage(true, "✅ Database connection successful.", 'success');
     } catch (error) {
-        console.error("Database Connection Error: ", error);
+        logMessage({
+            name: error.name,
+            message: error.message ?? 'Generic error',
+            code: error.code ?? HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+        }, "❌ Database connection failed.");
 
         if (error instanceof MongoServerSelectionError) {
-            console.error(`Mongo Server Selection Error : ${error}`);
+            logMessage(error, "⚠️ Database connection failed", 'warn');
         }
     }
 }
 
-export { connect };
+export {connect};
