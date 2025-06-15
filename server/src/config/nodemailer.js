@@ -1,6 +1,7 @@
 import nodemailer from "nodemailer";
-
 import { EMAIL_ADDRESS, EMAIL_PASSWORD, HOST_PORT, HOST_SERVICE } from "./env.js";
+import {logMessage} from "../utils/helpers.js";
+import {LOG_MESSAGE_TYPES} from "../defines.js";
 
 const host = String(HOST_SERVICE);
 const hostPort = Number(HOST_PORT);
@@ -16,13 +17,18 @@ export const emailTransportProvider = nodemailer.createTransport({
     auth: {
         user: user,
         pass: pwd
-    }
+    },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100,
+    rateLimit: 10,
+    rateDelta: 1000,
 });
 
 emailTransportProvider.verify((error, success) => {
     if (error) {
-        console.error(`Transport verification failed: ${error}`);
+        logMessage(error, `Unable to verify SMTP transport: ${error.message}`);
     } else {
-        console.info(`Transport ready: ${success}`);
+        logMessage(success, `SMTP Transport ready`, LOG_MESSAGE_TYPES.Info);
     }
 })
