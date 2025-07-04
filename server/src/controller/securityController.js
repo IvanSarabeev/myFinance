@@ -7,7 +7,7 @@ import { TOKEN_ID } from '../config/env.js';
 const {OK, CREATED, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE} = HTTP_RESPONSE_STATUS;
 
 /**
- * Proceeding the User Registration workflow
+ * Processing the User Registration workflow
  * 
  * @param req 
  * @param res 

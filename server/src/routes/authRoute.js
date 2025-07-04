@@ -1,22 +1,23 @@
-import { Router } from 'express';
-import { 
-    securityValidation, 
-    validatePasswords, 
+import {Router} from 'express';
+import {
+    securityValidation,
+    validatePasswords,
     validateProviders,
     validateUserLogin,
     validateUserRegistration,
 } from '../middleware/authMiddleware.js';
 import {
-    github, 
-    google, 
-    loginUser, 
-    logoutUser, 
+    github,
+    google,
+    loginUser,
+    logoutUser,
     registerUser
 } from '../controller/securityController.js';
 import {
     forgottenPassword,
     confirmPassword
 } from '../controller/forgottenPasswordController.js';
+import rateLimitMiddleware from "../middleware/rateLimitMiddleware.js";
 
 const router = Router();
 
@@ -27,21 +28,21 @@ router.use((req, res, next) => {
 });
 
 // Authentication Routes
-router.post("/register", validateUserRegistration(), securityValidation, registerUser);
+router.post("/register", rateLimitMiddleware(), validateUserRegistration(), securityValidation, registerUser);
 
-router.post("/login", validateUserLogin(), securityValidation, loginUser);
+router.post("/login", rateLimitMiddleware({ keyType: "ip", maxAttempts: 10 }), validateUserLogin(), securityValidation, loginUser);
 
 router.post("/logout", logoutUser);
 
 // Forgotten Password
-//  validateUserForgottenPassword(), securityValidation,
-router.post("/forgotten-password", forgottenPassword);
+// validateUserForgottenPassword(), securityValidation,
+router.post("/forgotten-password", rateLimitMiddleware({ keyType: "ip", maxAttempts: 10 }), forgottenPassword);
 
-router.post("/confirm-password", validatePasswords(), securityValidation, confirmPassword);
+router.post("/confirm-password", rateLimitMiddleware(), validatePasswords(), securityValidation, confirmPassword);
 
-// Thirt Party APIs
-router.post("/google-login", validateProviders(), securityValidation, google);
+// External oAuth / APIs
+router.post("/google-login", rateLimitMiddleware(), validateProviders(), securityValidation, google);
 
-router.post("/github-login", validateProviders(), securityValidation, github);
+router.post("/github-login", rateLimitMiddleware(), validateProviders(), securityValidation, github);
 
 export default router;
