@@ -5,8 +5,9 @@ const {CREATED, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
  * Create default Account
- * 
+ *
  * @param {string} walletId - User's Wallet ID
+ * @param {Object} parameters - Account Data
  * @returns {Promise<Account>} return {status, statusCode and message}
  */
 export async function createAccount(walletId, parameters = {}) {

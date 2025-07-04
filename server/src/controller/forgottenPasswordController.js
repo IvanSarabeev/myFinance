@@ -1,16 +1,18 @@
 import { confirmPassowrdService, forgottenPasswordService } from "../service/securityService.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import { logMessage } from "../utils/helpers.js";
 
 const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
  * Sent the User a Confirmation (email template)
  * If there's a User with the following email, update the User model
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next
- * @returns {Object} Return - status, message, showRequestedModal
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} Return - status, statusCode, message and showRequestedModal
  */
 export async function forgottenPassword(req, res, next) {
     const { email } = req.body;
@@ -19,14 +21,9 @@ export async function forgottenPassword(req, res, next) {
         const result = await forgottenPasswordService(email);
         const { status, statusCode, message, showRequestedModal } = result;
         
-        return res.status(statusCode).json({
-            status,
-            statusCode,
-            message,
-            showRequestedModal,
-        });
+        return res.status(statusCode).json({ status, statusCode, message, showRequestedModal });
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when sending forgotten password email');
 
         next();
         res.status(INTERNAL_SERVER_ERROR).json({
@@ -34,15 +31,16 @@ export async function forgottenPassword(req, res, next) {
             message: "Internal Server Error"
         });
     }
-};
+}
 
 /**
  * Confirm User new password
- * 
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- * @returns {Object} - status, statusCode, message, errorFields
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, message and errorFields
  */
 export async function confirmPassword(req, res, next) {
     const { email, password, confirm_password } = req.body;
@@ -57,7 +55,7 @@ export async function confirmPassword(req, res, next) {
 
         return res.status(statusCode).json({ status, statusCode, message });
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when confirming password');
 
         next();
         res.status(INTERNAL_SERVER_ERROR).json({
@@ -65,4 +63,4 @@ export async function confirmPassword(req, res, next) {
             message: "Internal Server Error"
         });
     }
-};
+}

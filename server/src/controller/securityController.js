@@ -3,18 +3,21 @@ import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { cookieOption } from '../config/cookie.js';
 import { googleService, githubService } from '../service/authManager.js';
 import { TOKEN_ID } from '../config/env.js';
+import { logMessage } from "../utils/helpers.js";
 
 const {OK, CREATED, INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE} = HTTP_RESPONSE_STATUS;
 
 /**
  * Processing the User Registration workflow
- * 
- * @param req 
- * @param res 
- * @param next 
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, showOtpModal, message and errorFields
  */
 export async function registerUser(req, res, next){
-    try {   
+    try {
         const { name, email, password, terms, fingerPrint } = req.body;
 
         const result = await registerUserService({ name, email, password, terms, fingerPrint});
@@ -32,7 +35,7 @@ export async function registerUser(req, res, next){
             });
         }
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when Registering User');
 
         next();
         res.status(INTERNAL_SERVER_ERROR).json({
@@ -40,32 +43,31 @@ export async function registerUser(req, res, next){
             message: "Internal Server Error"
         });
     }
-};
+}
 
 /**
- * Proceed User to their account
- * 
- * @param req 
- * @param res 
- * @param next 
+ * Process User to their account
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, message, token and data
  */
 export async function loginUser(req, res, next) {
     try {
         const { email, password } = req.body;
 
         const result = await loginUserService({ email, password });
-        
+
         if (result) {
             const { status, message, token, statusCode, data } = result;
-            
+
             if (status && statusCode === OK) {
                 res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
-                    status: true,
-                    message: message,
-                    token: token,
-                    data: data,
+                    status, message, token, data,
                 });
-            } 
+            }
         } else {
             const { statusCode, message, errorFields } = result;
 
@@ -76,7 +78,7 @@ export async function loginUser(req, res, next) {
             });
         }
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when Logging User in');
 
         next();
         res.status(INTERNAL_SERVER_ERROR).json({
@@ -84,42 +86,44 @@ export async function loginUser(req, res, next) {
             message: "Internal Server Error"
         });
     }
-};
+}
 
 /**
- * Clear a User, their Cookie Token 
- * 
- * @param {Request} req 
- * @param {Respons} res 
- * @param {NextFunction} next 
- * @returns {Object}
+ * Clear a User, their Cookie Token
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status and message
  */
 export function logoutUser(req, res, next){
     try {
         res.clearCookie(TOKEN_ID);
         res.status(OK).json({
-            status: true, 
-            message: "User Succesfully Loged Out"
+            status: true,
+            message: "User Successfully Loged Out"
         });
     } catch (error) {
-        console.error(`Unexpected Logout Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when Logging User out');
 
         next(error);
     }
 }
 
 /**
- * Authenticate/Register User through 3-th party API
- * 
- * @param {Request} req 
- * @param {Respons} res 
- * @param {NextFunction} next 
- * @returns {Object}
+ * Authenticate/Register User through 3 party oAuth/API
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, data, token and message
  */
 export async function google(req, res, next) {
     const { email, name, photo, fingerPrint } = req.body;
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    // res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     try {
         const result = await googleService({ email, name, photo, fingerPrint });
@@ -133,12 +137,7 @@ export async function google(req, res, next) {
             res.cookie(TOKEN_ID, token, {
                 ...cookieOption,
                 path: "/", // Across all routes
-            }).status(statusCode).json({
-                status: true,
-                token: token,
-                data: data,
-                message: message,
-            });
+            }).status(statusCode).json({ status, token, data, message });
         } else {
             return {
                 status: false,
@@ -147,23 +146,24 @@ export async function google(req, res, next) {
             }
         }
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when Logging User with Google');
 
         next();
         res.status(SERVICE_UNAVAILABLE).json({
             status: false,
-            message: "Current service is unavailable, Please contanct our support center!"
+            message: "Current service is unavailable, Please contact our support center."
         });
     }
-};
+}
 
 /**
- * Authentica/Register User thorugh 3-th party API
- * 
- * @param {Request} req 
- * @param {Respons} res 
- * @param {NextFunction} next 
- * @returns {Object}
+ * Authenticate/Register User through 3 party oAuth/API
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, message and token
  */
 export async function github(req, res, next) {
     const { email, name, photo, fingerPrint } = req.body;
@@ -173,11 +173,9 @@ export async function github(req, res, next) {
         const {status, statusCode, message, token } = result;
 
         if (result) {
-            if (status && statusCode === CREATED) {   
+            if (status && statusCode === CREATED) {
                 res.cookie(TOKEN_ID, token, cookieOption).status(statusCode).json({
-                    status: true,
-                    token: token,
-                    message: message,
+                    status, token, message,
                 });
             }
         } else {
@@ -188,12 +186,12 @@ export async function github(req, res, next) {
             }
         }
     } catch (error) {
-        console.error(`Unexpected Server Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when Logging User with GitHub');
 
         next();
         res.status(SERVICE_UNAVAILABLE).json({
             status: false,
-            message: "Current service is unavailable, Please contanct our support center!"
+            message: "Current service is unavailable, Please contact our support center."
         });
     }
-};
+}

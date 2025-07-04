@@ -5,11 +5,13 @@ import { fileURLToPath } from 'url';
 import { HTTP_RESPONSE_STATUS } from '../defines.js';
 import { TEMPLATE_PRE_FIX } from '../templates/defines.js';
 import { CORP_EMAIL_ADDRESS } from '../config/env.js';
+import { logMessage } from "./helpers.js";
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const { BAD_REQUEST, UNAUTHORIZED, INTERNAL_SERVER_ERROR } = HTTP_RESPONSE_STATUS;
 
 /**
  * Load an email template and replace placeholders with values
@@ -20,7 +22,7 @@ const __dirname = path.dirname(__filename);
 async function loadEmailTemplate(templateName, replacements = {}) {
     const templatePath = path.join(__dirname, '..', TEMPLATE_PRE_FIX, `${templateName}.html`);
 
-    if (!templatePath) return Error("Service under maintance! Please contact our support center!");
+    if (!templatePath) return Error("Service under maintenance! Please contact our support center!");
 
     try {
         let html = await fs.readFileSync(templatePath, "utf8");
@@ -32,8 +34,9 @@ async function loadEmailTemplate(templateName, replacements = {}) {
     
         return html;
     } catch (error) {
-        console.error(`Error loading email template: ${error.message}`);
-        throw new Error("Server under maintance! Please contact our support center!");
+        logMessage(error, 'Error loading email template');
+
+        throw new Error("Server under maintenance! Please contact our support center!");
     }
 }
 
@@ -49,18 +52,18 @@ export async function createEmailTemplate(templateName, templateSubject, paramet
         const corpEmailAddress = CORP_EMAIL_ADDRESS;
 
         if (!corpEmailAddress) {
-            console.error("Missing Corp. Email Address");
-            
-            return { status: false, statusCode: HTTP_RESPONSE_STATUS.UNAUTHORIZED, message: "Internal Server Error" };
+            logMessage(corpEmailAddress, 'Missing Corp. Email Address', 'debug');
+
+            return { status: false, statusCode: UNAUTHORIZED, message: "Internal Server Error" };
         }
 
         // eslint-disable-next-line no-prototype-builtins
         if (parameters instanceof Object && parameters.hasOwnProperty("email") === false) {
-            console.error("Exception: user trying to exploid email");
+            logMessage(parameters, 'Missing email parameter', 'debug');
 
             return {
                 status: false,
-                statusCode: HTTP_RESPONSE_STATUS.BAD_REQUEST,
+                statusCode: BAD_REQUEST,
                 message: "Bad Request, please try again later!"
             };
         }
@@ -74,11 +77,11 @@ export async function createEmailTemplate(templateName, templateSubject, paramet
             html: htmlContent,
         };
     } catch (error) {
-        console.error(`Fatal Error: ${error}`);
-    
+        logMessage(error, 'Error creating email template');
+
         return { 
             status: false, 
-            statusCode: HTTP_RESPONSE_STATUS.INTERNAL_SERVER_ERROR, 
+            statusCode: INTERNAL_SERVER_ERROR,
             message:"Internal Server Error"
         };
     }

@@ -1,5 +1,5 @@
 /**
- * Object/Enum - contaning key template names
+ * Object/Enum - containing key template names
  */
 export const TEMPLATE_TYPES = Object.freeze({
    REGISTRATION_OTP: "registration-otp",

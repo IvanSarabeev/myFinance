@@ -1,14 +1,17 @@
 import { verifiyEmailConfirmation, verifyEmailOtpCode } from "../service/otpService.js";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import { logMessage } from "../utils/helpers.js";
 
 const {OK, INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
  * Verify User's OTP password Code
- * 
- * @param {Request} req 
- * @param {Response} res 
- * @returns {Object} - Response Object with status and message
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - Response Object with status, statusCode, otpMethod and message
  */
 export async function verifyEmail(req, res, next) {
     const { email, otpCode } = req.body;
@@ -23,10 +26,10 @@ export async function verifyEmail(req, res, next) {
             return res.status(statusCode).json({ status, message });
         }
     } catch (error) {
-        console.error(`Unexpected Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when verifying email');
 
         next();
-        return { 
+        return {
             status: false, 
             statusCode: INTERNAL_SERVER_ERROR, 
             message: "Unexpected Error",
@@ -36,10 +39,11 @@ export async function verifyEmail(req, res, next) {
 
 /**
  * Confirm User's email and submitted OTP Code
- * 
- * @param {Request} req 
- * @param {Response} res
- * @param {NextFunction} next
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
  * @returns {Object} - Response Object with status, statusCode and message
  */
 export async function emailConfirmation(req, res, next) {
@@ -51,7 +55,7 @@ export async function emailConfirmation(req, res, next) {
 
         return res.status(statusCode).json({ status, statusCode, message });
     } catch (error) {
-        console.error(`Unexpected Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when confirming email');
 
         next();
         return { 

@@ -1,5 +1,6 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import { getUserDetails } from "../service/userService.js";
+import { logMessage } from "../utils/helpers.js";
 
 const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
@@ -7,22 +8,23 @@ const {INTERNAL_SERVER_ERROR} = HTTP_RESPONSE_STATUS;
 
 /**
  * Get User Details
- * 
- * @param req 
- * @param res 
- * @param next 
- * @returns {Object} - contains status, data
+ *
+ * @param {Request} req - Request Object
+ * @param {Response} res - Response Object
+ * @param {Function} next - Next Middleware
+ *
+ * @returns {Object} - contains status, statusCode and User data
  */
 export async function userDetails(req, res, next) {
     const { email } = req.body;
     
     try {
-        const response = await getUserDetails(email);  
+        const response = await getUserDetails(email);
         const {status, statusCode, data} = response;
 
         return res.status(statusCode).json({ status, data});
     } catch (error) {
-        console.error(`Fatal Error: ${error}`);
+        logMessage(error, 'Unexpected Server Error when getting User details');
 
         next();
         res.status(INTERNAL_SERVER_ERROR).json({
