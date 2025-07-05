@@ -21,7 +21,7 @@ export const authorize = async (req, res, next) => {
         }
 
         if (!token) {
-            return res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({ message: "Unauthorized" });
+            return res.status(HTTP_RESPONSE_STATUS.UNAUTHORIZED).json({ message: "Access Unauthorized" });
         }
 
         const decode = jwt.verify(token, JWT_SECRET);

@@ -9,6 +9,7 @@ import AuthenticationRouter from './routes/authRoute.js';
 import OtpRouter from "./routes/otpRoute.js";
 import WalletRouter from "./routes/walletRoute.js";
 import UserRouter from "./routes/userRoute.js";
+import incomeRoutes from "./routes/incomeRoutes.js";
 // # EndRegion Routes
 
 // # Region Configurations
@@ -39,7 +40,14 @@ if (NODE_ENV === "prod") {
 
 if (NODE_ENV === "dev") {
     app.use((req, res, next) => {
-        console.log(`Incoming request: [${req.method}], ${req.path}`);
+        const payload = {
+            method: req.method,
+            path: req.path,
+            cookies: req.cookies,
+            host: req.headers.host
+        };
+        logMessage(payload, "Incoming Development Request", 'debug');
+
         next();
     });
 }
@@ -49,13 +57,14 @@ app.use("/api/auth", AuthenticationRouter);
 app.use("/api/v1/otp", OtpRouter);
 app.use("/api/v1/wallet", WalletRouter);
 app.use("/api/v1/user", UserRouter);
+app.use('/api/v1/income', incomeRoutes);
 
 app.get("*", (req, res) => {
     const indexPath = path.join(__dirname, "client", "dist", "index.html");
 
     res.sendFile(indexPath, (error) => {
         if (error) {
-            logMessage(`Failed to send index.html: ${error}`, 'error');
+            logMessage(error, "File not found");
 
             res.status(HTTP_RESPONSE_STATUS.NOT_FOUND).send('File not found');
         }
