@@ -2,7 +2,7 @@ import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import Income from "../model/income.js";
 import { logMessage } from "../utils/helpers.js";
 
-const { BAD_REQUEST, CREATED } = HTTP_RESPONSE_STATUS;
+const { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR } = HTTP_RESPONSE_STATUS;
 
 /**
  * Create a new income entry
@@ -40,4 +40,34 @@ export async function createIncome(parameters) {
     await newIncome.save();
 
     return { status: true, statusCode: CREATED, data: newIncome }
+}
+
+/**
+ * Fetch all income entries for a User
+ * 
+ * @param {String} userId - ID of the user whose incomes are to be fetched 
+ * @returns {Object} - Response object containing status, statusCode, and data or error message
+ */
+export async function getAllUserIncomes(userId) {
+    const excludeProperties = {
+        _id: 0,
+        userId: 0,
+        __v: 0,
+    };
+
+    try {
+        const incomes = await Income.find({ userId })
+            .select(excludeProperties)
+            .sort({ date: -1 });
+
+        return { status: true, statusCode: OK, data: incomes };
+    } catch (error) {
+        logMessage(error, 'Error fetching all incomes');
+
+        return {
+            status: false,
+            statusCode: INTERNAL_SERVER_ERROR,
+            message: 'Failed to fetch incomes'
+        };
+    }
 }
