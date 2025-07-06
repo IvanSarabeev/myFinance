@@ -1,3 +1,6 @@
+import { HTTP_RESPONSE_STATUS } from "@/defines";
+import { commonStore } from "@/stores";
+import { NOTIFICATION_TYPES } from "@/types/defaults";
 import axios, {AxiosRequestConfig} from "axios";
 
 const url = import.meta.env.VITE_CLIENT_NODE_ENV === "development"
@@ -56,6 +59,10 @@ api.interceptors.response.use((response) => {
     return response;
 }, (error) => {
     if (error.response) { 
+        // Mitigate Unauthorized access -> redirect to login page
+        if (error.response.status === HTTP_RESPONSE_STATUS.UNAUTHORIZED) {
+            window.location.href = '/login';
+        }
         // API returned an error response
         const message = new Error(error.response.data.message || "API Error");
         
@@ -65,6 +72,12 @@ api.interceptors.response.use((response) => {
         const err = new Error("Network error: Unable establish connection.");
         
         return Promise.reject(err);
+    } else if (error.code === 'ECONNABORTED') {
+        commonStore.openNotification(
+            NOTIFICATION_TYPES.DESTRUCTIVE,
+            'Timeeout Error',
+            'Request timeout. Please try again.'
+        );
     } else {
         // Handle Unexpected Errors
         const err = new Error(error.message || "Unexpected error.");
