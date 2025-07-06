@@ -1,8 +1,9 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 import Income from "../model/income.js";
 import { logMessage } from "../utils/helpers.js";
+import { isValidObjectId } from "../utils/index.js";
 
-const { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR } = HTTP_RESPONSE_STATUS;
+const { BAD_REQUEST, CREATED, OK, INTERNAL_SERVER_ERROR, NOT_FOUND } = HTTP_RESPONSE_STATUS;
 
 /**
  * Create a new income entry
@@ -50,7 +51,6 @@ export async function createIncome(parameters) {
  */
 export async function getAllUserIncomes(userId) {
     const excludeProperties = {
-        _id: 0,
         userId: 0,
         __v: 0,
     };
@@ -70,4 +70,49 @@ export async function getAllUserIncomes(userId) {
             message: 'Failed to fetch incomes'
         };
     }
+}
+
+/**
+ * Deletes an income entry by ID for a User
+ * 
+ * @param {String} incomeId - ID of the income entry to be deleted
+ * @param {String} userId - ID of the User who owns the income entry
+ * @returns {Object} - Response object containing status, statusCode, and message or error details
+ */
+export async function deleteUserIncome(incomeId, userId) {
+    if (!incomeId || !userId) {
+        logMessage({ incomeId, userId }, 'Invalid parameters for deleting income');
+
+        return {
+            status: false,
+            statusCode: BAD_REQUEST,
+            message: 'Income ID and User ID are required',
+        };
+    }
+
+    if (!isValidObjectId(incomeId)) {
+        return {
+            status: false,
+            statusCode: BAD_REQUEST,
+            message: 'Invalid income ID format',
+        };
+    }
+
+    const deleteIncome = await Income.findOneAndDelete({ _id: incomeId, userId });
+
+    if (!deleteIncome) {
+        logMessage({ incomeId, userId }, 'Income not found for deletion');
+
+        return {
+            status: false,
+            statusCode: NOT_FOUND,
+            message: 'Income not found or not authorized to delete.',
+        };
+    }
+
+    return {
+        status: true,
+        statusCode: OK,
+        message: 'Income deleted successfully',
+    };
 }

@@ -1,5 +1,5 @@
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
-import { createIncome, getAllUserIncomes } from "../service/incomeService.js";
+import { createIncome, deleteUserIncome, getAllUserIncomes } from "../service/incomeService.js";
 import { logMessage } from "../utils/helpers.js";
 
 const { INTERNAL_SERVER_ERROR } = HTTP_RESPONSE_STATUS;
@@ -55,12 +55,28 @@ export async function getAllIncomes(req, res) {
 }
 
 /**
+ * Deletes an income entry by ID for the User.
  * 
  * @param {Request} req 
  * @param {Response} res 
  */
 export async function deleteIncome(req, res) {
+    const userId = req.user?.id;
+    const id = req.params?.id;
 
+    try {
+        const response = await deleteUserIncome(id, userId);
+        const { status, statusCode, message } = response;
+
+        res.status(statusCode).json({ status, message });
+    } catch (error) {
+        logMessage(error, 'Unexpected Server Error when deleting income');
+
+        res.status(INTERNAL_SERVER_ERROR).json({
+            status: false,
+            message: `${error.message ?? "Internal Server Error"}`,
+        });
+    }
 }
 
 /**

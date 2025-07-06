@@ -1,4 +1,4 @@
-import { cleanUrl } from "../helpers/utils.js";
+import { cleanUrl } from "../utils/index.js";
 import {
   CLIENT_PORT,
   CLIENT_PROD_URL,

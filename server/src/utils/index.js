@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
 
 /**
@@ -27,4 +28,18 @@ export function cleanUrl(url) {
     }
 
     return url.replace(/\/+$/, "").trim();
+}
+
+/**
+ * Check if the given ID OR IDs are a valid MongoDB ObjectId
+ * 
+ * @param {String|Array<string>} id - The ID to validate 
+ * @returns {Boolean} - True if valid ObjectId, otherwise false
+ */
+export function isValidObjectId(id) {
+    if (Array.isArray(id)) {
+        return id.every((idItem) => Types.ObjectId.isValid(idItem));
+    }
+
+    return typeof id === 'string' && Types.ObjectId.isValid(id); 
 }

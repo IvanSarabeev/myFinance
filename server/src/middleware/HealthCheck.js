@@ -4,7 +4,7 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import { format, toZonedTime } from "date-fns-tz";
 import { EUROPE_ZONE, HTTP_RESPONSE_STATUS } from './../defines.js';
-import { allowedIpLists } from './../helpers/utils.js';
+import { allowedIpLists } from '../utils/index.js';
 import { REMOVE_LEADING_TRAILING_QUOTES } from '../utils/regex.js';
 import { IP_ALLOWED_ADDRESSES, STATIC_OUTBOUND_IP_ADDRESSES } from '../config/env.js';
 
