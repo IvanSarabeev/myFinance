@@ -1,21 +1,23 @@
 import mongoose from "mongoose";
+import { IncomeEnum } from './../enums/incomeEnum.js';
 
 const incomeSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        required: [true, 'User ID is required'],
     },
     icon: {
         type: String,
     },
     source: { // E.g., Salary, Freelance, etc.
         type: String,
-        required: true,
+        enum: Object.values(IncomeEnum),
+        required: [true, 'Source is required'],
     },
     amount: {
         type: Number,
-        required: true,
+        required: [true, 'Amount is required'],
     },
     date: {
         type: Date,
