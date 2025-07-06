@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import fs from "node:fs/promises";
 import { HTTP_RESPONSE_STATUS } from "../defines.js";
+import { logMessage } from "./helpers.js";
 
 /**
  * Restrict Access to specific Endpoint/s
@@ -53,4 +54,19 @@ export function isValidObjectId(id) {
  */
 export async function isFileExisting(filePath) {
     return await fs.stat(filePath).then(() => true).catch(() => false);
+}
+
+/**
+ * 
+ * @param {Object} transactions - Transaction Data
+ * @returns {Number} - Return total transaction data
+ */
+export function transactionTotals(transactions) {    
+    if (Object.keys(transactions).length === 0) {
+        logMessage(transactions, 'Missing transactions data', 'info');
+        
+        return 0;
+    }
+
+    return transactions.reduce((sum, transaction) => sum + transaction.amount, 0);
 }
