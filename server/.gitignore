@@ -26,3 +26,4 @@ dist-ssr
 
 # Ignore Income report
 income_reports
+expense_reports

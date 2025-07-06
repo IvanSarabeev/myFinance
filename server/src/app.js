@@ -10,6 +10,7 @@ import OtpRouter from "./routes/otpRoute.js";
 import WalletRouter from "./routes/walletRoute.js";
 import UserRouter from "./routes/userRoute.js";
 import incomeRoutes from "./routes/incomeRoutes.js";
+import expenseRoutes from "./routes/expenseRoutes.js";
 // # EndRegion Routes
 
 // # Region Configurations
@@ -58,6 +59,7 @@ app.use("/api/v1/otp", OtpRouter);
 app.use("/api/v1/wallet", WalletRouter);
 app.use("/api/v1/user", UserRouter);
 app.use('/api/v1/income', incomeRoutes);
+app.use('/api/v1/expense', expenseRoutes);
 
 app.get("*", (req, res) => {
     const indexPath = path.join(__dirname, "client", "dist", "index.html");
