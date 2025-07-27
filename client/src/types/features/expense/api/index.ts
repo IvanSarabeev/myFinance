@@ -1,4 +1,4 @@
-import { ExpenseCategoryTypes } from "@/features/expense/configs";
+import { ExpenseCategoryTypes } from "@/features/dashboard/config";
 
 export interface Expense {
     readonly _id: string;

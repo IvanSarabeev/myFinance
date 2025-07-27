@@ -1,4 +1,4 @@
-import { ExpenseCategoryTypes } from "@/features/expense/configs";
+import { ExpenseCategoryTypes } from "@/features/dashboard/config";
 import { IncomeSourceTypes } from "@/features/income/configs";
 import { Income } from "./income/api";
 import { Expense } from "./expense/api";

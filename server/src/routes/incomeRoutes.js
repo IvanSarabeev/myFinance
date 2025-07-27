@@ -24,7 +24,7 @@ router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user' }), addInco
  * @summary Get all income entries for the authenticated user
  * @description Retrieve a list of all income entries for the authenticated user
 */
-router.get('/get-all', authorize, rateLimitMiddleware({ keyType: 'user' }), getAllIncomes);
+router.get('/get-all', authorize, getAllIncomes);
 
 /**
  * @access Private

@@ -3,7 +3,7 @@ import {isRateLimited} from "../service/rateLimiterService.js";
 
 const { BAD_REQUEST, TOO_MANY_REQUESTS } = HTTP_RESPONSE_STATUS;
 
-export default function rateLimitMiddleware({ keyType = "ip", maxAttempts = 5, windowMs = 60000} = {} ) {
+export default function rateLimitMiddleware({ keyType = "ip", maxAttempts = 10, windowMs = 60000} = {} ) {
     return (req, res, next) => {
         const key = keyType === "ip" ? req.ip : req.user?.id;
 
