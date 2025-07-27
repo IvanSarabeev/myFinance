@@ -1,3 +1,5 @@
+import { Transaction } from "@/types/features/defaults";
+import { Income } from "@/types/features/income/api";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -40,4 +42,8 @@ export const addThousandSeparator = (value: number): string => {
 
   const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger; 
+}
+
+export function isIncome(transaction: Transaction): transaction is Income {
+  return transaction.type === 'income';
 }

@@ -6,6 +6,7 @@ export interface Income {
     source: IncomeSourceTypes;
     amount: number;
     date: Date;
+    type: string;
     createdAt?: string | Date;
     updatedAt?: string | Date;
 }

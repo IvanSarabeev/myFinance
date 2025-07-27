@@ -11,6 +11,7 @@ export const IncomeSourceOptions = {
   BONUS: 'BONUS',
   GRANTS: 'GRANTS',
   PENSION: 'PENSION',
+  CRYPTO: 'CRYPTO',
   OTHER: 'OTHER',
 } as const;
 

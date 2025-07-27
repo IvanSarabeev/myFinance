@@ -6,6 +6,7 @@ export interface Expense {
     category: ExpenseCategoryTypes;
     amount: number;
     date: Date;
+    type: string;
     createdAt?: string | Date;
     updatedAt?: string | Date;
 }
