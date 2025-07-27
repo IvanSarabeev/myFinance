@@ -5,3 +5,4 @@ export { default as authStore } from './AuthStore';
 export { default as sessionStore } from './SessionStore';
 export { default as modalStore } from './ModalStore';
 export { default as walletStore } from './WalletStore';
+export { default as dashboardStore } from './DashboardStore';

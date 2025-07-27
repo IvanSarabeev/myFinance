@@ -30,17 +30,20 @@ export async function getIncomeDataOverview(req, res) {
         ]);
 
         res.status(OK).json({
-            // Front-end must calculate = Income - Expense / TotalBalance
-            totalIncome: totalIncome[0]?.total || 0,
-            last30DaysExpenses: {
-                total: transactionTotals(last30Days),
-                transactions: last30Days,
-            },
-            last60DaysExpenses: {
-                total: transactionTotals(last60Days),
-                transactions: last60Days,
-            },
-            recentTransactions
+            status: true,
+            data: {
+                // Front-end must calculate = Income - Expense / TotalBalance
+                totalIncome: totalIncome[0]?.total || 0,
+                last30DaysIncome: {
+                    total: transactionTotals(last30Days),
+                    transactions: last30Days,
+                },
+                last60DaysIncome: {
+                    total: transactionTotals(last60Days),
+                    transactions: last60Days,
+                },
+                recentTransactions
+            }
         });
     } catch (error) {
         logMessage(error, 'Unexpected Server Error when downloading income report');
@@ -77,19 +80,22 @@ export async function getExpenseDataOverview(req, res) {
         ]);
 
         res.status(OK).json({
-            // Front-end must calculate = Income - Expense / TotalBalance
-            totalExpense: totalExpense[0]?.total || 0,
-            last30DaysExpenses: {
-                total: transactionTotals(last30Days),
-                transactions: last30Days,
-            },
-            last60DaysExpenses: {
-                total: transactionTotals(last60Days),
-                transactions: last60Days,
-            },
-            recentTransactions
+            status: true,
+            data: {
+                // Front-end must calculate = Income - Expense / TotalBalance
+                totalExpense: totalExpense[0]?.total || 0,
+                last30DaysExpenses: {
+                    total: transactionTotals(last30Days),
+                    transactions: last30Days,
+                },
+                last60DaysExpenses: {
+                    total: transactionTotals(last60Days),
+                    transactions: last60Days,
+                },
+                recentTransactions
+            }
         });
-    } catch (error) {
+        } catch (error) {
         logMessage(error, 'Unexpected Server Error when downloading income report');
 
         res.status(INTERNAL_SERVER_ERROR).json({

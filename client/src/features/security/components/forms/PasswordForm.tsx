@@ -1,16 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
-import React from "react";
-import { FormikProps } from "formik";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
-import isFieldValid from "@/utils/validateFormField";
-import { Input } from "@/components/ui/input";
-import ErrorMessage from "@/components/ErrorMessage";
-import { Button } from "@/components/ui/button";
-import { ConfirmForgottenPasswordData } from "@/types/auth";
-import useToggle from "@/hooks/useToggle";
-import { Eye } from "lucide-react";
-import { observer } from "mobx-react-lite";
+import React from 'react';
+import { FormikProps } from 'formik';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/utils/helpers';
+import isFieldValid from '@/utils/validateFormField';
+import { Input } from '@/components/ui/input';
+import ErrorMessage from '@/components/ErrorMessage';
+import { Button } from '@/components/ui/button';
+import { ConfirmForgottenPasswordData } from '@/types/auth';
+import useToggle from '@/hooks/useToggle';
+import { Eye } from 'lucide-react';
+import { observer } from 'mobx-react-lite';
 
 type ForggotenPasswordFormProps = {
   formik: FormikProps<ConfirmForgottenPasswordData>;
@@ -54,9 +54,9 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
             htmlFor="email"
             aria-label="Email Label"
             className={cn(
-              "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+              'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
               {
-                "text-red-600": isFieldValid("email", formik, errorFields),
+                'text-red-600': isFieldValid('email', formik, errorFields),
               }
             )}
           >
@@ -68,11 +68,11 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
             title="Email input"
             placeholder="Your email address"
             disabled={formik.isSubmitting}
-            onInvalid={handleInvalidData("email")}
-            className={cn("rounded-2xl border border-slate-200", {
-              "input-error": isFieldValid("email", formik, errorFields),
+            onInvalid={handleInvalidData('email')}
+            className={cn('rounded-2xl border border-slate-200', {
+              'input-error': isFieldValid('email', formik, errorFields),
             })}
-            {...formik.getFieldProps("email")}
+            {...formik.getFieldProps('email')}
           />
           <ErrorMessage<ConfirmForgottenPasswordData>
             formik={formik}
@@ -89,10 +89,10 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
                   htmlFor="password"
                   aria-label="Password"
                   className={cn(
-                    "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                    'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                     {
-                      "text-red-600": isFieldValid(
-                        "password",
+                      'text-red-600': isFieldValid(
+                        'password',
                         formik,
                         errorFields
                       ),
@@ -104,29 +104,29 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
                 <div className="relative w-full h-fit my-2">
                   <Input
                     id="password"
-                    type={show ? "text" : "password"}
+                    type={show ? 'text' : 'password'}
                     title="Enter your new Password"
                     placeholder="Enter your password"
                     disabled={formik.isSubmitting}
-                    onInvalid={handleInvalidData("password")}
-                    className={cn("rounded-2xl border border-slate-200", {
-                      "input-error": isFieldValid(
-                        "password",
+                    onInvalid={handleInvalidData('password')}
+                    className={cn('rounded-2xl border border-slate-200', {
+                      'input-error': isFieldValid(
+                        'password',
                         formik,
                         errorFields
                       ),
                     })}
-                    {...formik.getFieldProps("password")}
+                    {...formik.getFieldProps('password')}
                   />
                   <span className="absolute inset-y-1/3 right-[3%]">
                     <Eye
                       onClick={handleToggle}
                       aria-label="toggle password input"
                       className={cn(
-                        "size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-110 hover:stroke-slate-600",
+                        'size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-110 hover:stroke-slate-600',
                         {
-                          "stroke-red-600": isFieldValid(
-                            "password",
+                          'stroke-red-600': isFieldValid(
+                            'password',
                             formik,
                             errorFields
                           ),
@@ -149,10 +149,10 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
                   htmlFor="confirm_password"
                   aria-label="Confirm password"
                   className={cn(
-                    "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                    'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                     {
-                      "text-red-600": isFieldValid(
-                        "confirm_password",
+                      'text-red-600': isFieldValid(
+                        'confirm_password',
                         formik,
                         errorFields
                       ),
@@ -164,29 +164,29 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
                 <div className="relative w-full h-fit my-2">
                   <Input
                     id="confirm_password"
-                    type={show ? "text" : "password"}
+                    type={show ? 'text' : 'password'}
                     title="Confirm Password"
                     placeholder="Confirm your password"
                     disabled={formik.isSubmitting}
-                    onInvalid={handleInvalidData("confirm_password")}
-                    className={cn("rounded-2xl border border-slate-200", {
-                      "input-error": isFieldValid(
-                        "confirm_password",
+                    onInvalid={handleInvalidData('confirm_password')}
+                    className={cn('rounded-2xl border border-slate-200', {
+                      'input-error': isFieldValid(
+                        'confirm_password',
                         formik,
                         errorFields
                       ),
                     })}
-                    {...formik.getFieldProps("confirm_password")}
+                    {...formik.getFieldProps('confirm_password')}
                   />
                   <span className="absolute inset-y-1/3 right-[3%]">
                     <Eye
                       onClick={handleToggle}
                       aria-label="toggle password input"
                       className={cn(
-                        "size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-110 hover:stroke-slate-600",
+                        'size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-110 hover:stroke-slate-600',
                         {
-                          "stroke-red-600": isFieldValid(
-                            "confirm_password",
+                          'stroke-red-600': isFieldValid(
+                            'confirm_password',
                             formik,
                             errorFields
                           ),
@@ -214,7 +214,7 @@ const PasswordForm: React.FC<ForggotenPasswordFormProps> = ({
           aria-label="Password reset button"
           className="mt-2 lg:mt-4"
         >
-          {formik.isSubmitting ? "Submitting..." : "Submit"}
+          {formik.isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
       </div>
     </form>

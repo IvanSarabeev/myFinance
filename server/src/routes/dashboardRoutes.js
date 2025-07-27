@@ -4,7 +4,7 @@ import {
     getExpenseDataOverview
 } from '../controller/dashboardController.js';
 import { authorize } from './../middleware/authMiddleware.js';
-import rateLimitMiddleware from "../middleware/rateLimitMiddleware.js";
+// import rateLimitMiddleware from "../middleware/rateLimitMiddleware.js";
 
 const router = express.Router();
 
@@ -14,7 +14,8 @@ const router = express.Router();
  * @summary Display every income transaction that the User have made
  * @description Show the User their transaction history with rate limiting (5 requests per minute)
 */
-router.get('/income/transactions', authorize, rateLimitMiddleware({ keyType: 'user' }), getIncomeDataOverview);
+// rateLimitMiddleware({ keyType: 'user' })
+router.get('/income/transactions', authorize, getIncomeDataOverview);
 
 /**
  * @access Private
@@ -22,7 +23,7 @@ router.get('/income/transactions', authorize, rateLimitMiddleware({ keyType: 'us
  * @summary Display every expense transaction that the User have made
  * @description Show the User their transaction history with rate limiting (5 requests per minute)
 */
-router.get('/expense/transactions', authorize, rateLimitMiddleware({ keyType: 'user' }), getExpenseDataOverview);
+router.get('/expense/transactions', authorize, getExpenseDataOverview);
 
 
 export default router;

@@ -9,3 +9,32 @@ export interface Income {
     createdAt?: string | Date;
     updatedAt?: string | Date;
 }
+
+export interface IncomeDetails {
+    totalIncome: number;
+    last30DaysIncome: {
+        total: number;
+        transactions: Income[] | [];
+    };
+    last60DaysIncome: {
+        total: number;
+        transactions: Income[] | [];
+    };
+    recentTransactions: Income[] | [];
+}
+
+export interface IncomeResponse {
+    status: boolean;
+    data: {
+        totalIncome: number;
+        last30DaysIncome: {
+            total: number
+            transactions: Income[] | [],
+        };
+        last60DaysIncome: {
+            total: number;
+            transactions: Income[] | [];
+        }
+        recentTransactions: Income[] | [];
+    }
+}

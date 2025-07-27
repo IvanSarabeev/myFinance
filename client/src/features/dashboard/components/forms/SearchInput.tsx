@@ -1,7 +1,7 @@
 import { ChangeEvent, FC, useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input.tsx';
 import { Search } from 'lucide-react';
-import { cn } from '@/lib/utils.ts';
+import { cn } from '@/utils/helpers';
 import useDebounce from '@/hooks/useDebounce.ts';
 
 const SearchInput: FC = () => {

@@ -1,8 +1,8 @@
-import * as React from "react";
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
-import { CheckIcon } from "@radix-ui/react-icons";
+import * as React from 'react';
+import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
+import { CheckIcon } from '@radix-ui/react-icons';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/utils/helpers';
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
@@ -15,7 +15,7 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "peer size-4 shrink-0 rounded-sm border lg:border-2 border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+      'peer size-4 shrink-0 rounded-sm border lg:border-2 border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
       className
     )}
     {...props}
@@ -25,7 +25,7 @@ const Checkbox = React.forwardRef<
       if (onChange) {
         const event = {
           target: {
-            type: "checkbox",
+            type: 'checkbox',
             name: name,
             checked: isChecked,
           },
@@ -37,7 +37,7 @@ const Checkbox = React.forwardRef<
     onBlur={onBlur}
   >
     <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
+      className={cn('flex items-center justify-center text-current')}
     >
       <CheckIcon className="size-4" />
     </CheckboxPrimitive.Indicator>

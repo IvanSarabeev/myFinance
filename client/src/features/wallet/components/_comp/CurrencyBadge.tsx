@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { CurrencyIconOptions, CurrencyKey } from '../../config/index.js';
 import { GiCoins } from 'react-icons/gi';
-import { cn } from '../../../../lib/utils.js';
+import { cn } from '../../../../utils/helpers.js';
 
 type CurrencyBadgeProps = {
   currency: CurrencyKey;

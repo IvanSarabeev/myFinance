@@ -1,15 +1,15 @@
-import React, { memo } from "react";
-import { FormikProps } from "formik";
-import useToggle from "@/hooks/useToggle";
-import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router";
-import { Eye } from "lucide-react";
-import isFieldValid from "@/utils/validateFormField";
-import { Button } from "@/components/ui/button";
-import { LoginUserData } from "@/types/auth";
+import React, { memo } from 'react';
+import { FormikProps } from 'formik';
+import useToggle from '@/hooks/useToggle';
+import { cn } from '@/utils/helpers';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import ErrorMessage from '@/components/ErrorMessage';
+import { Link } from 'react-router';
+import { Eye } from 'lucide-react';
+import isFieldValid from '@/utils/validateFormField';
+import { Button } from '@/components/ui/button';
+import { LoginUserData } from '@/types/auth';
 
 type LoginFormProps = {
   formik: FormikProps<LoginUserData>;
@@ -39,9 +39,9 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
               htmlFor="email"
               aria-label="Email Label"
               className={cn(
-                "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                 {
-                  "text-red-600": isFieldValid("email", formik, errorFields),
+                  'text-red-600': isFieldValid('email', formik, errorFields),
                 }
               )}
             >
@@ -54,11 +54,11 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
             title="Email input"
             placeholder="Your email address"
             disabled={formik.isSubmitting}
-            onInvalid={handleInvalidData("email")}
-            className={cn("rounded-2xl border border-slate-200", {
-              "input-error": isFieldValid("email", formik, errorFields),
+            onInvalid={handleInvalidData('email')}
+            className={cn('rounded-2xl border border-slate-200', {
+              'input-error': isFieldValid('email', formik, errorFields),
             })}
-            {...formik.getFieldProps("email")}
+            {...formik.getFieldProps('email')}
           />
           <ErrorMessage<LoginUserData>
             formik={formik}
@@ -73,16 +73,16 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
               htmlFor="password"
               aria-label="Password input"
               className={cn(
-                "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                 {
-                  "text-red-600": isFieldValid("password", formik, errorFields),
+                  'text-red-600': isFieldValid('password', formik, errorFields),
                 }
               )}
             >
               Password
             </Label>
             <Link
-              to={"/forgotten-password"}
+              to={'/forgotten-password'}
               title="Forgotten password link"
               aria-label="fogotten password link"
               className="text-blue-600 common-transition hover:blue-700 hover:underline focus:underline focus-visible:outline-none"
@@ -96,23 +96,23 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
           <Input
             id="password"
             title="Password input"
-            type={show ? "text" : "password"}
+            type={show ? 'text' : 'password'}
             placeholder="Your password"
             disabled={formik.isSubmitting}
-            className={cn("rounded-2xl border border-slate-200", {
-              "input-error": formik.touched.password && formik.errors.password,
+            className={cn('rounded-2xl border border-slate-200', {
+              'input-error': formik.touched.password && formik.errors.password,
             })}
-            {...formik.getFieldProps("password")}
+            {...formik.getFieldProps('password')}
           />
           <span className="absolute inset-y-1/3 right-[3%]">
             <Eye
               onClick={handleToggle}
               aria-label="toggle password input"
               className={cn(
-                "size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600",
+                'size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600',
                 {
-                  "stroke-red-600": isFieldValid(
-                    "password",
+                  'stroke-red-600': isFieldValid(
+                    'password',
                     formik,
                     errorFields
                   ),
@@ -134,7 +134,7 @@ const LoginForm: React.FC<LoginFormProps> = memo(({ formik, errorFields }) => {
           disabled={formik.isSubmitting}
           aria-label="Login button"
         >
-          {formik.isSubmitting ? "Loading.." : "Login"}
+          {formik.isSubmitting ? 'Loading..' : 'Login'}
         </Button>
       </div>
     </form>

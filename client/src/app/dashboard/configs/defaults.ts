@@ -7,9 +7,10 @@ import {
   WalletMinimal,
   House,
   CircleHelp,
-  ArrowRightLeft,
   Settings,
   ChartNetwork,
+  Wallet,
+  HandCoins,
 } from 'lucide-react';
 
 /**
@@ -23,24 +24,34 @@ export const navData = {
       icon: House,
     },
     {
-      title: 'Finance',
-      url: '#',
-      icon: ArrowRightLeft,
-      items: [
-        {
-          title: 'Dashboard',
-          url: '/account/transaction',
-        },
-        {
-          title: 'New Transaction',
-          url: '/account/transaction/create',
-        },
-        {
-          title: 'History',
-          url: '/account/transaction/history',
-        },
-      ],
+      title: 'Income',
+      url: '/account/income',
+      icon: Wallet,
     },
+    {
+      title: 'Expenses',
+      url: '/account/expenses',
+      icon: HandCoins,
+    },
+    // {
+    //   title: 'Finance',
+    //   url: '#',
+    //   icon: ArrowRightLeft,
+    //   items: [
+    //     {
+    //       title: 'Dashboard',
+    //       url: '/account/transaction',
+    //     },
+    //     {
+    //       title: 'New Transaction',
+    //       url: '/account/transaction/create',
+    //     },
+    //     {
+    //       title: 'History',
+    //       url: '/account/transaction/history',
+    //     },
+    //   ],
+    // },
     {
       title: 'Wallet',
       url: '/account/wallet/overview',

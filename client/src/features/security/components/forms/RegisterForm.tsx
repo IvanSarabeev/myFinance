@@ -1,16 +1,16 @@
-import React, { memo } from "react";
-import useToggle from "@/hooks/useToggle";
-import { FormikProps } from "formik";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Link } from "react-router";
-import { Eye } from "lucide-react";
-import { cn } from "@/lib/utils";
-import ErrorMessage from "@/components/ErrorMessage";
-import isFieldValid from "@/utils/validateFormField";
-import { RegisterUserData } from "@/types/auth";
+import React, { memo } from 'react';
+import useToggle from '@/hooks/useToggle';
+import { FormikProps } from 'formik';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Link } from 'react-router';
+import { Eye } from 'lucide-react';
+import { cn } from '@/utils/helpers';
+import ErrorMessage from '@/components/ErrorMessage';
+import isFieldValid from '@/utils/validateFormField';
+import { RegisterUserData } from '@/types/auth';
 
 type RegisterFormProps = {
   formik: FormikProps<RegisterUserData>;
@@ -40,9 +40,9 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               htmlFor="name"
               aria-label="Name Label"
               className={cn(
-                "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                 {
-                  "text-red-600": isFieldValid("name", formik, errorFields),
+                  'text-red-600': isFieldValid('name', formik, errorFields),
                 }
               )}
             >
@@ -54,11 +54,11 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               title="Name input"
               placeholder="Your name"
               disabled={formik.isSubmitting}
-              onInvalid={handleInvalidData("name")}
-              className={cn("rounded-2xl border border-slate-200", {
-                "input-error": isFieldValid("name", formik, errorFields),
+              onInvalid={handleInvalidData('name')}
+              className={cn('rounded-2xl border border-slate-200', {
+                'input-error': isFieldValid('name', formik, errorFields),
               })}
-              {...formik.getFieldProps("name")}
+              {...formik.getFieldProps('name')}
             />
             <ErrorMessage<RegisterUserData>
               formik={formik}
@@ -72,9 +72,9 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
                 htmlFor="email"
                 aria-label="Email Label"
                 className={cn(
-                  "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                  'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                   {
-                    "text-red-600": isFieldValid("email", formik, errorFields),
+                    'text-red-600': isFieldValid('email', formik, errorFields),
                   }
                 )}
               >
@@ -87,11 +87,11 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               title="Email input"
               placeholder="Your email address"
               disabled={formik.isSubmitting}
-              onInvalid={handleInvalidData("email")}
-              className={cn("rounded-2xl border border-slate-200", {
-                "input-error": isFieldValid("email", formik, errorFields),
+              onInvalid={handleInvalidData('email')}
+              className={cn('rounded-2xl border border-slate-200', {
+                'input-error': isFieldValid('email', formik, errorFields),
               })}
-              {...formik.getFieldProps("email")}
+              {...formik.getFieldProps('email')}
             />
             <ErrorMessage<RegisterUserData>
               formik={formik}
@@ -106,10 +106,10 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
                 htmlFor="password"
                 aria-label="Password input"
                 className={cn(
-                  "regular-14 lg:regular-16 2xl:regular-18 font-semibold",
+                  'regular-14 lg:regular-16 2xl:regular-18 font-semibold',
                   {
-                    "text-red-600": isFieldValid(
-                      "password",
+                    'text-red-600': isFieldValid(
+                      'password',
                       formik,
                       errorFields
                     ),
@@ -119,7 +119,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
                 Password
               </Label>
               <Link
-                to={"/forgotten-password"}
+                to={'/forgotten-password'}
                 title="Forgotten password link"
                 aria-label="fogotten password link"
                 className="text-blue-600 common-transition hover:blue-700 hover:underline focus:underline focus-visible:outline-none"
@@ -133,24 +133,24 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
             <Input
               id="password"
               title="Password input"
-              type={show ? "text" : "password"}
+              type={show ? 'text' : 'password'}
               placeholder="Your password"
               disabled={formik.isSubmitting}
-              className={cn("rounded-2xl border border-slate-200", {
-                "input-error":
+              className={cn('rounded-2xl border border-slate-200', {
+                'input-error':
                   formik.touched.password && formik.errors.password,
               })}
-              {...formik.getFieldProps("password")}
+              {...formik.getFieldProps('password')}
             />
             <span className="absolute inset-y-1/3 right-[3%]">
               <Eye
                 onClick={handleToggle}
                 aria-label="toggle password input"
                 className={cn(
-                  "size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600",
+                  'size-4 stroke-slate-400 common-transition duration-150 hover:cursor-pointer hover:scale-105 hover:stroke-slate-600',
                   {
-                    "stroke-red-600": isFieldValid(
-                      "password",
+                    'stroke-red-600': isFieldValid(
+                      'password',
                       formik,
                       errorFields
                     ),
@@ -172,22 +172,22 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
               title="terms"
               disabled={formik.isSubmitting}
               checked={formik.values.terms}
-              className={cn("border-slate-700", {
-                "border-slate-700": isFieldValid("terms", formik, errorFields),
+              className={cn('border-slate-700', {
+                'border-slate-700': isFieldValid('terms', formik, errorFields),
               })}
-              {...formik.getFieldProps("terms")}
+              {...formik.getFieldProps('terms')}
             />
             <Label
               htmlFor="terms"
               aria-label="terms"
               className={cn(
-                "regular-12 lg:regular-14 2xl:regular-16 text-slate-800",
+                'regular-12 lg:regular-14 2xl:regular-16 text-slate-800',
                 {
-                  "input-error": isFieldValid("terms", formik, errorFields),
+                  'input-error': isFieldValid('terms', formik, errorFields),
                 }
               )}
             >
-              I agree to the{" "}
+              I agree to the{' '}
               <span
                 className="underline cursor-pointer"
                 title="View Company Privay and Policy Terms"
@@ -210,7 +210,7 @@ const RegisterForm: React.FC<RegisterFormProps> = memo(
           disabled={formik.isSubmitting}
           aria-label="Register button"
         >
-          {formik.isSubmitting ? "Loading.." : "Register"}
+          {formik.isSubmitting ? 'Loading..' : 'Register'}
         </Button>
       </form>
     );

@@ -1,7 +1,7 @@
-import React from "react";
-import Logo from "@/app/assets/preview-logo.png";
-import { cn } from "./../../../../../src";
-import { isString } from "@/lib/utils";
+import React from 'react';
+import Logo from '@/app/assets/preview-logo.png';
+import { cn } from './../../../../../src';
+import { isString } from '@/utils/helpers';
 
 type CustomLoaderProps = {
   style?: string;
@@ -10,23 +10,23 @@ type CustomLoaderProps = {
 
 const CustomLoader: React.FC<CustomLoaderProps> = ({ style, title }) => {
   const titleStyle =
-    "absolute z-20 top-4 h-fit w-full border-b border-separate border-slate-900/50 pb-1 lg:pb-2 animate-pulse";
+    'absolute z-20 top-4 h-fit w-full border-b border-separate border-slate-900/50 pb-1 lg:pb-2 animate-pulse';
 
   return (
     <div
       className={cn(
-        "relative min-h-96 h-full max-h-[1440px] flexCenter rounded-xl bg-muted/100",
+        'relative min-h-96 h-full max-h-[1440px] flexCenter rounded-xl bg-muted/100',
         style
       )}
     >
-      <div className={isString(title) ? titleStyle : ""}>
+      <div className={isString(title) ? titleStyle : ''}>
         {isString(title) && (
           <h2 className="regular-16 xl:regular-18 font-semibold pl-2 xl:pl-4 animate-pulse">
             {title}
           </h2>
         )}
       </div>
-      <div className={`size-40 relative animate-pulse ${title ? "mt-8" : ""}`}>
+      <div className={`size-40 relative animate-pulse ${title ? 'mt-8' : ''}`}>
         <img
           src={Logo}
           alt="logo"

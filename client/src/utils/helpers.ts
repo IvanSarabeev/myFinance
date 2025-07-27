@@ -26,3 +26,18 @@ export function capitalizeFirstLetter(value: string) {
 export function isString(value: string | undefined): boolean {
   return typeof value === "string" && value.length > 0 && value !== "undefined";
 };
+
+/**
+ * @description Function to format a number with thousand separators
+ * 
+ * @param value - Number to format with thousand separators
+ * @returns {string} Formatted number with thousand separators
+ */
+export const addThousandSeparator = (value: number): string => {
+  if (isNaN(value)) return '';
+
+  const [integerPart, decimalPart] = value.toString().split('.');
+
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger; 
+}

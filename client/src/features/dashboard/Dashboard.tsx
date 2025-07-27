@@ -1,40 +1,54 @@
 /* eslint-disable react-refresh/only-export-components */
-import { FC, Fragment } from "react";
-import { observer } from "mobx-react-lite";
-// import BoxLoader from "./components/loaders/BoxLoader";
+import { FC, Fragment, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import BoxLoader from './components/loaders/BoxLoader';
 // import TransactionsChart from "./components/charts/transactions-bar";
-import CategoryPieChart from "./components/charts/category-pie";
-import CountryPieChart from "./components/charts/country-pie";
-import TrendingRadialChart from "./components/charts/trending-radial";
-import { DataTable } from "./components/tables/data-table";
-import data from "./config/data.json";
-import { ChartAreaInteractive } from "./components/charts/interactive-chart-area";
-// import { modalStore } from "@/stores";
-// import { MODAL_TYPES } from "@/defines";
+import useStore from '@/hooks/useStore';
+import InfoCard from '@/components/InfoCard';
+import { addThousandSeparator } from '@/utils/helpers';
+import { CreditCard, HandCoins, Wallet } from 'lucide-react';
 
 const Dashboard: FC = () => {
-  // useEffect(() => {
-  //   modalStore.openModal(MODAL_TYPES.CUSTOM_ACCOUNT);
-  // }, []);
+  const { dashboardStore } = useStore();
+
+  const { isLoading, incomeDetails, expenseDetails, loadDashboardData } =
+    dashboardStore;
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  if (isLoading) return <BoxLoader boxCount={3} />;
+
+  const totalBalance =
+    incomeDetails?.totalIncome !== undefined &&
+    expenseDetails?.totalExpense !== undefined
+      ? incomeDetails.totalIncome - expenseDetails.totalExpense
+      : 0;
 
   return (
     <Fragment>
-      <header className="flex h-16 shrink-0 items-center gap-2 shadow-xs">
-        <div className="flex items-center gap-2 pl-4 xl:pl-6">
-          <h2 className="regular-18 lg:bold-20 2xl:text-3xl font-semibold">
-            Dashboard
-          </h2>
-        </div>
-      </header>
       <section className="container account-container flex flex-col justify-center gap-4">
-        <div className="flex flex-wrap gap-1 lg:gap-2 xl:gap-3 2xl:gap-4">
-          <TrendingRadialChart />
-          <CategoryPieChart />
-          <CountryPieChart />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <InfoCard
+            Icon={CreditCard}
+            label="Total Balance"
+            value={addThousandSeparator(totalBalance || 0)}
+            color="bg-primary"
+          />
+          <InfoCard
+            Icon={Wallet}
+            label="Total Income"
+            value={addThousandSeparator(incomeDetails?.totalIncome || 0)}
+            color="bg-orange-500"
+          />
+          <InfoCard
+            Icon={HandCoins}
+            label="Total Expense"
+            value={addThousandSeparator(expenseDetails?.totalExpense || 0)}
+            color="bg-red-500"
+          />
         </div>
-        {/* <TransactionsChart /> */}
-        <ChartAreaInteractive />
-        <DataTable data={data} />
       </section>
     </Fragment>
   );
