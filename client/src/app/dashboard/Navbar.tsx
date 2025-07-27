@@ -37,7 +37,7 @@ const Header = () => {
   );
 };
 
-const AppSidebar: FC = ({ ...props }: ComponentProps<typeof Sidebar>) => {
+const Navbar: FC = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   const location = useLocation();
 
   return (
@@ -55,4 +55,4 @@ const AppSidebar: FC = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   );
 };
 
-export default AppSidebar;
+export default Navbar;
