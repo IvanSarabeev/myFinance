@@ -32,7 +32,7 @@ app.use(
     express.urlencoded({ extended: true }),
     cookieParser(),
     helmetConfiguration,
-    cors(corsConfiguration),
+    // cors(corsConfiguration),
     express.static(path.join(__dirname, "/client/dist")),
 );
 
