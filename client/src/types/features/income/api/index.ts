@@ -1,4 +1,4 @@
-import { IncomeSourceTypes } from "@/features/income/configs";
+import { IncomeSourceTypes } from "@/features/dashboard/config";
 
 export interface Income {
     readonly _id: string;
