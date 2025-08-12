@@ -21,15 +21,15 @@ export const allowedOrigins = [
 ];
 
 const corsConfiguration = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+  // origin: (origin, callback) => {
+  //   if (allowedOrigins.includes(origin) || !origin) {
+  //     callback(null, true);
+  //   } else {
+  //     callback(new Error('Not allowed by CORS'));
+  //   }
 
-    console.log('CORS received origin:', origin);
-  },
+  //   console.log('CORS received origin:', origin);
+  // },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
     'Content-Type',
