@@ -16,30 +16,30 @@ const router = express.Router();
  * @summary Add a new income entry for the authenticated user
  * @description Add a new income entry with rate limiting (5 requests per minute)
 */
-router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user' }), addIncome);
+router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 15 }), addIncome);
 
 /**
  * @access Private
- * @route GET /api/v1/income/get-all
+ * @route GET /api/v1/income/list
  * @summary Get all income entries for the authenticated user
  * @description Retrieve a list of all income entries for the authenticated user
 */
-router.get('/get-all', authorize, getAllIncomes);
+router.get('/list', authorize, getAllIncomes);
 
 /**
  * @access Private
- * @route GET /api/v1/income/download-report
+ * @route POST /api/v1/income/download-report
  * @summary Download income report for the authenticated user
  * @description Download income report in CSV format
  */
-router.get('/download-report', authorize, rateLimitMiddleware({ keyType: 'user' }), downloadIncomeReport);
+router.post('/download-report', authorize, rateLimitMiddleware({ keyType: 'user' }), downloadIncomeReport);
 
 /**
  * @route DELETE /api/v1/income/:id
  * @summary Delete an income entry by ID for the authenticated user
  * @description Delete an income entry by ID
  */
-router.delete('/:id', authorize, rateLimitMiddleware({ keyType: 'user' }), deleteIncome);
+router.delete('/:id', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 5 }), deleteIncome);
 
 
 export default router;

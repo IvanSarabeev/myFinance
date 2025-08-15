@@ -16,30 +16,30 @@ const router = express.Router();
  * @summary Add a new expense entry for the authenticated user
  * @description Add a new expense entry with rate limiting (5 requests per minute)
 */
-router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user' }), addExpense);
+router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 15 }), addExpense);
 
 /**
  * @access Private
- * @route GET /api/v1/expense/get-all
+ * @route GET /api/v1/expense/list
  * @summary Get all expense entries for the authenticated user
  * @description Retrieve a list of all expense entries for the authenticated user
 */
-router.get('/get-all', authorize, rateLimitMiddleware({ keyType: 'user' }), getAllExpenses);
+router.get('/list', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 20 }), getAllExpenses);
 
 /**
  * @access Private
- * @route GET /api/v1/expense/download-report
+ * @route POST /api/v1/expense/download-report
  * @summary Download expense report for the authenticated user
  * @description Download expense report in CSV format
  */
-router.get('/download-report', authorize, rateLimitMiddleware({ keyType: 'user' }), downloadExpenseReport);
+router.post('/download-report', authorize, rateLimitMiddleware({ keyType: 'user' }), downloadExpenseReport);
 
 /**
  * @route DELETE /api/v1/expense/:id
  * @summary Delete an expense entry by ID for the authenticated user
  * @description Delete an expense entry by ID
  */
-router.delete('/:id', authorize, rateLimitMiddleware({ keyType: 'user' }), deleteExpense);
+router.delete('/:id', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 5 }), deleteExpense);
 
 
 export default router;
