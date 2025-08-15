@@ -38,6 +38,8 @@ class DashboardStore {
         try {
             const response = await incomeDetails();
 
+            console.log("Income transactions data:", response);
+
             this.setIncomeDetails(response);
 
             return this.incomeDetails;
@@ -55,6 +57,8 @@ class DashboardStore {
     loadExpenseTransactions = async () => {
         try {
             const response = await expenseDetails();
+
+            console.log("Expense transactions data:", response);
 
             this.setExpenseDetails(response);
 

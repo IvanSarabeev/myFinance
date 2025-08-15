@@ -7,6 +7,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
+import CustomTooltip from '../__comp/CustomTooltip';
+import CustomLegend from '../__comp/CustomLegend';
 
 type CustomPieChartProps = {
   data: { name: string; amount: number }[];
@@ -43,19 +45,8 @@ const CustomPieChart: FC<CustomPieChartProps> = ({ ...props }) => {
             );
           })}
         </Pie>
-        <Tooltip
-          content={({ active, payload }) => {
-            if (active && payload && payload.length) {
-              return (
-                <div className="custom-tooltip">
-                  <p className="label">{`${payload[0].name} : $${payload[0].value}`}</p>
-                </div>
-              );
-            }
-            return null;
-          }}
-        />
-        <Legend />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend content={<CustomLegend />} />
 
         {showTextAnchor && (
           <Fragment>

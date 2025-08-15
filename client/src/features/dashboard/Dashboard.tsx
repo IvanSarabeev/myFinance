@@ -8,6 +8,8 @@ import { addThousandSeparator } from '@/utils/helpers';
 import { CreditCard, HandCoins, Wallet } from 'lucide-react';
 import RecentTransactions from './components/RecentTransactions';
 import FinanceOverview from './components/FinanceOverview';
+import ExpenseTransactions from './components/ExpenseTransactions';
+import LastMonthExpenses from './components/LastMonthExpenses';
 
 const Dashboard: FC = () => {
   const { dashboardStore } = useStore();
@@ -34,6 +36,11 @@ const Dashboard: FC = () => {
     ...(expenseDetails?.recentTransactions || []),
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  console.log(
+    'expenseDetails?.last30DaysExpense?.transactions',
+    expenseDetails?.last30DaysExpenses?.transactions
+  );
+
   return (
     <Fragment>
       <section className="container account-container flex flex-col justify-center gap-4">
@@ -47,13 +54,17 @@ const Dashboard: FC = () => {
           <InfoCard
             Icon={Wallet}
             label="Total Income"
-            value={addThousandSeparator(incomeDetails?.totalIncome || 0)}
+            value={addThousandSeparator(
+              Number(incomeDetails?.totalIncome.toFixed(2) || 0)
+            )}
             color="bg-orange-500"
           />
           <InfoCard
             Icon={HandCoins}
             label="Total Expense"
-            value={addThousandSeparator(expenseDetails?.totalExpense || 0)}
+            value={addThousandSeparator(
+              Number(expenseDetails?.totalExpense.toFixed(2) || 0)
+            )}
             color="bg-red-500"
           />
         </div>
@@ -70,6 +81,17 @@ const Dashboard: FC = () => {
             totalIncome={incomeDetails?.totalIncome || 0}
             totalExpense={expenseDetails?.totalExpense || 0}
           />
+
+          <ExpenseTransactions
+            transactions={expenseDetails?.recentTransactions || []}
+          />
+
+          {expenseDetails?.last30DaysExpenses !== undefined &&
+            expenseDetails.last30DaysExpenses.transactions.length > 0 && (
+              <LastMonthExpenses
+                data={expenseDetails?.last30DaysExpenses?.transactions || []}
+              />
+            )}
         </div>
       </section>
     </Fragment>

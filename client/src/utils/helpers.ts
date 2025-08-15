@@ -47,3 +47,9 @@ export const addThousandSeparator = (value: number): string => {
 export function isIncome(transaction: Transaction): transaction is Income {
   return transaction.type === 'income';
 }
+
+export function prepareChartData(data: Array<[string, number]> = []) {
+  return data.map(([category, amount]) => ({
+    category,
+    amount
+  }));}

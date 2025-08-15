@@ -13,11 +13,11 @@ export interface Expense {
 
 export interface ExpenseDetails {
     totalExpense: number;
-    last30DaysExpense: {
+    last30DaysExpenses: {
         total: number;
         transactions: Expense[];
     };
-    last60DaysExpense: {
+    last60DaysExpenses: {
         total: number;
         transactions: Expense[];
     };
@@ -28,11 +28,11 @@ export interface ExpenseResponse {
     status: boolean;
     data: {
         totalExpense: number;
-        last30DaysExpense: {
+        last30DaysExpenses: {
             total: number;
             transactions: Expense[];
         };
-        last60DaysExpense: {
+        last60DaysExpenses: {
             total: number;
             transactions: Expense[];
         };
