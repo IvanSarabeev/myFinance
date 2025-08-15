@@ -19,7 +19,7 @@ const FinanceOverview: FC<FinanceOverviewProps> = ({ ...props }) => {
   ];
 
   return (
-    <div className="card mt-6">
+    <div className="card">
       <div className="felxBetween">
         <h5 className="regular-18">Financial Overview</h5>
       </div>

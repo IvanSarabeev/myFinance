@@ -10,6 +10,8 @@ import RecentTransactions from './components/RecentTransactions';
 import FinanceOverview from './components/FinanceOverview';
 import ExpenseTransactions from './components/ExpenseTransactions';
 import LastMonthExpenses from './components/LastMonthExpenses';
+import RecentIncomeTransactionChart from './components/RecentIncomeTransactionChart';
+import RecentIncome from './components/RecentIncome';
 
 const Dashboard: FC = () => {
   const { dashboardStore } = useStore();
@@ -68,7 +70,7 @@ const Dashboard: FC = () => {
             color="bg-red-500"
           />
         </div>
-        <div className="grid-grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="size-full grid grid-cols-1 md:grid-cols-2 gap-6">
           {mergeTransactions.length > 0 && (
             <RecentTransactions
               transactions={mergeTransactions}
@@ -90,6 +92,23 @@ const Dashboard: FC = () => {
             expenseDetails.last30DaysExpenses.transactions.length > 0 && (
               <LastMonthExpenses
                 data={expenseDetails?.last30DaysExpenses?.transactions || []}
+              />
+            )}
+
+          {incomeDetails?.last60DaysIncome !== undefined &&
+            incomeDetails.last60DaysIncome?.transactions?.length > 0 && (
+              <RecentIncomeTransactionChart
+                data={incomeDetails?.last30DaysIncome?.transactions || []}
+                totalIncome={incomeDetails.totalIncome || 0}
+              />
+            )}
+
+          {incomeDetails?.last60DaysIncome !== undefined &&
+            incomeDetails.last60DaysIncome?.transactions?.length > 0 && (
+              <RecentIncome
+                transactions={
+                  incomeDetails?.last60DaysIncome?.transactions || []
+                }
               />
             )}
         </div>

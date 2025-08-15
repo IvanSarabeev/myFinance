@@ -33,7 +33,7 @@ export async function getIncomeDataOverview(req, res) {
             status: true,
             data: {
                 // Front-end must calculate = Income - Expense / TotalBalance
-                totalIncome: totalIncome[0]?.total || 0,
+                totalIncome: Number(totalIncome[0]?.total.toFixed(2) || 0),
                 last30DaysIncome: {
                     total: transactionTotals(last30Days),
                     transactions: last30Days,
@@ -83,7 +83,7 @@ export async function getExpenseDataOverview(req, res) {
             status: true,
             data: {
                 // Front-end must calculate = Income - Expense / TotalBalance
-                totalExpense: totalExpense[0]?.total || 0,
+                totalExpense: Number(totalExpense[0]?.total.toFixed(2) || 0),
                 last30DaysExpenses: {
                     total: transactionTotals(last30Days),
                     transactions: last30Days,
