@@ -1,7 +1,8 @@
 import { Transaction } from "@/types/features/defaults";
-import { Income } from "@/types/features/income/api";
+import { Income } from "@/types/features/dashboard";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,4 +53,21 @@ export function prepareChartData(data: Array<[string, number]> = []) {
   return data.map(([category, amount]) => ({
     category,
     amount
-  }));}
+  }));
+}
+
+type IncomeBarChart = {
+  date: string | Date;
+  amount: number;
+  source: string;
+}
+
+export function prepareIncomeBarChartData(data: Array<IncomeBarChart>) {
+  const sortedData = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  return sortedData?.map((item) => ({
+    month: format(item?.date, 'Do MMM'),
+    amount: item?.amount,
+    source: item?.source,
+  }));
+}

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Expense } from '@/types/features/expense/api';
+import { Expense } from '@/types/features/dashboard';
 import useRedirect from '@/hooks/useRedirect';
 import { Button } from '@/components/ui/button';
 import { LucideArrowRight } from 'lucide-react';

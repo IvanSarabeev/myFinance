@@ -11,11 +11,16 @@ import {
 } from 'recharts';
 
 type CustomBarChartProps = {
-  data: { category: string; amount: number }[];
+  data: {
+    month?: string;
+    source?: string;
+    category?: string;
+    amount: number;
+  }[];
 };
 
 const getBarColor = (index: number) => {
-  return index % 2 === 0 ? '876cf5' : 'cfbefb';
+  return index % 2 === 0 ? '#876cf5' : '#cfbefb';
 };
 
 const CustomTooltip = ({
@@ -55,13 +60,12 @@ const CustomBarChart: FC<CustomBarChartProps> = ({ data }) => {
           <YAxis tick={{ fontSize: 12, fill: '#555' }} stroke="none" />
 
           <Tooltip content={<CustomTooltip />} />
-          {/* <Legend content={<CustomLegend />} /> */}
 
           <Bar
             dataKey="amount"
             fill="#FF8042"
             radius={[10, 10, 0, 0]}
-            activeBar={{ r: 8, fill: 'yellow' }}
+            activeBar={{ r: 8, fill: 'green' }}
           >
             {data.map((entry, index) => (
               <Cell

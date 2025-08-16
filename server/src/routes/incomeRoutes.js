@@ -12,11 +12,11 @@ const router = express.Router();
 
 /**
  * @access Private
- * @route POST /api/v1/income/add
+ * @route POST /api/v1/income/create
  * @summary Add a new income entry for the authenticated user
  * @description Add a new income entry with rate limiting (5 requests per minute)
 */
-router.post('/add', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 15 }), addIncome);
+router.post('/create', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 15 }), addIncome);
 
 /**
  * @access Private
@@ -41,5 +41,6 @@ router.post('/download-report', authorize, rateLimitMiddleware({ keyType: 'user'
  */
 router.delete('/:id', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 5 }), deleteIncome);
 
+// router.put('/:id', authorize, rateLimitMiddleware({ keyType: 'user', maxAttempts: 10 }), console.log("Update Income DATA"));
 
 export default router;

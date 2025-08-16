@@ -5,37 +5,32 @@ export interface Income {
     icon: string;
     source: IncomeSourceTypes;
     amount: number;
-    date: Date;
     type: string;
+    date: Date;
     createdAt?: string | Date;
     updatedAt?: string | Date;
 }
 
-export interface IncomeDetails {
-    totalIncome: number;
-    last30DaysIncome: {
-        total: number;
-        transactions: Income[] | [];
-    };
-    last60DaysIncome: {
-        total: number;
-        transactions: Income[] | [];
-    };
-    recentTransactions: Income[] | [];
+export interface IncomeListResponse {
+    status: boolean;
+    data: Income[];
 }
 
-export interface IncomeResponse {
+export interface IncomeDetailsResponse {
     status: boolean;
-    data: {
-        totalIncome: number;
-        last30DaysIncome: {
-            total: number
-            transactions: Income[] | [],
-        };
-        last60DaysIncome: {
-            total: number;
-            transactions: Income[] | [];
-        }
-        recentTransactions: Income[] | [];
-    }
+    data: Income;
+}
+
+export interface CreateIncomeResponse {
+    status: boolean;
+    data: Income;
+}
+
+export interface DeleteIncomeResponse {
+    status: boolean;
+}
+
+export interface DownloadIncomeResponse {
+    status: boolean;
+    data: string;
 }

@@ -1,6 +1,6 @@
 import api from "@/utils/axios";
-import { ExpenseDetails, ExpenseResponse } from "@/types/features/expense/api";
-import { IncomeDetails, IncomeResponse } from "@/types/features/income/api";
+import { ExpenseDetails, ExpenseResponse } from "@/types/features/dashboard";
+import { IncomeDetails, IncomeResponse } from "@/types/features/dashboard";
 import { formatAxiosError } from "@/utils/axiosErrorHandler";
 
 /**
@@ -8,10 +8,10 @@ import { formatAxiosError } from "@/utils/axiosErrorHandler";
  * 
  * @returns {IncomeDetails} Income details including total income, last 30 days and 60 days income, and recent transactions.
  */
-export async function incomeDetails(): Promise<IncomeDetails> {
+export async function incomeTransactionDetails(): Promise<IncomeDetails> {
     try {
         const {status, data} = await api.get<IncomeResponse>("/v1/dashboard/income/transactions", {
-             withCredentials: true
+            withCredentials: true
         });
 
         if (!data.status && !status) {
@@ -29,7 +29,7 @@ export async function incomeDetails(): Promise<IncomeDetails> {
  * 
  * @returns {ExpenseDetails} Expense details including total expense, last 30 days and 60 days expense, and recent transactions. 
  */
-export async function expenseDetails(): Promise<ExpenseDetails> {
+export async function expenseTransactionDetails(): Promise<ExpenseDetails> {
     try {
         const {status, data} = await api.get<ExpenseResponse>("/v1/dashboard/expense/transactions", {
             withCredentials: true

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Button } from '@/components/ui/button';
 import { LucideArrowRight } from 'lucide-react';
 import TransactionInfoCard from './TransactionInfoCard';
-import { Income } from '@/types/features/income/api';
+import { Income } from '@/types/features/dashboard';
 import { format } from 'date-fns';
 
 type RecentIncomeProps = {
@@ -13,7 +13,7 @@ const RecentIncome: FC<RecentIncomeProps> = ({ transactions }) => {
   return (
     <div className="card">
       <div className="flexBetween">
-        <h5 className="regular-18">Income</h5>
+        <h5 className="regular-18">Recent Incomes</h5>
 
         <Button className="card-btn">
           See All <LucideArrowRight className="regular-14" />

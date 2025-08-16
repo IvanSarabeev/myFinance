@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Income } from '@/types/features/income/api';
+import { Income } from '@/types/features/dashboard';
 import CustomPieChart from './charts/CustomPieChart';
 
 type RecentTransactionsProps = {

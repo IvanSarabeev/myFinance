@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Expense } from '@/types/features/expense/api';
+import { Expense } from '@/types/features/dashboard';
 import { prepareChartData } from '@/utils/helpers';
 import CustomBarChart from './charts/CustomBarChart';
 

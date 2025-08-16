@@ -1,10 +1,10 @@
 import { action, makeObservable, observable } from "mobx";
-import { expenseDetails, incomeDetails } from "@/app/api/dashboard";
+import { expenseTransactionDetails, incomeTransactionDetails } from "@/app/api/dashboard";
 import commonStore from "./CommonStore";
 import { NOTIFICATION_TYPES } from "@/types/defaults";
 import { ApiErrorResponse } from "@/types/defaultApi";
-import { IncomeDetails } from "@/types/features/income/api";
-import { ExpenseDetails } from "@/types/features/expense/api";
+import { IncomeDetails } from "@/types/features/dashboard";
+import { ExpenseDetails } from "@/types/features/dashboard";
 
 class DashboardStore {
     incomeDetails: IncomeDetails | null = null;
@@ -36,9 +36,7 @@ class DashboardStore {
 
     loadIncomeTransactions = async () => {
         try {
-            const response = await incomeDetails();
-
-            console.log("Income transactions data:", response);
+            const response = await incomeTransactionDetails();
 
             this.setIncomeDetails(response);
 
@@ -56,9 +54,7 @@ class DashboardStore {
 
     loadExpenseTransactions = async () => {
         try {
-            const response = await expenseDetails();
-
-            console.log("Expense transactions data:", response);
+            const response = await expenseTransactionDetails();
 
             this.setExpenseDetails(response);
 
