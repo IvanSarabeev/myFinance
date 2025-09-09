@@ -1,9 +1,12 @@
+/* eslint-disable react-refresh/only-export-components */
 import { FC, useEffect, useState } from 'react';
 import { Income } from '@/types/features/income/api';
 import { prepareIncomeBarChartData } from '@/utils/helpers';
 import { LucidePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button.tsx';
 import CustomBarChart from '@/features/dashboard/components/charts/CustomBarChart';
+import useStore from '@/hooks/useStore';
+import { observer } from 'mobx-react-lite';
 
 type IncomeOverviewProps = {
   transactions: Income[];
@@ -16,7 +19,13 @@ type chartDataState = {
 };
 
 const IncomeOverview: FC<IncomeOverviewProps> = ({ transactions }) => {
+  const { modalStore } = useStore();
+
   const [chartData, setChartData] = useState<chartDataState[]>([]);
+
+  const handleModalOpen = () => {
+    modalStore.setIncomeCreateModal({ message: '' });
+  };
 
   useEffect(() => {
     const result = prepareIncomeBarChartData(transactions);
@@ -39,7 +48,7 @@ const IncomeOverview: FC<IncomeOverviewProps> = ({ transactions }) => {
           size="sm"
           variant="ghost"
           className="add-btn bg-[#876cf5] text-slate-100"
-          onClick={() => console.log('Open Modal')}
+          onClick={handleModalOpen}
         >
           <LucidePlus className="regular-18" />
           Add Income
@@ -53,4 +62,4 @@ const IncomeOverview: FC<IncomeOverviewProps> = ({ transactions }) => {
   );
 };
 
-export default IncomeOverview;
+export default observer(IncomeOverview);

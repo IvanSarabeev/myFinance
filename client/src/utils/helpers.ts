@@ -66,7 +66,7 @@ export function prepareIncomeBarChartData(data: Array<IncomeBarChart>) {
   const sortedData = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return sortedData?.map((item) => ({
-    month: format(item?.date, 'Do MMM'),
+    month: format(item?.date, 'MMMM'),
     amount: item?.amount,
     source: item?.source,
   }));

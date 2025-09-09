@@ -22,6 +22,9 @@ const CustomWalletStep = lazy(
 const CreateTransactionModal = lazy(
   () => import('@/features/transaction/modals/CreateTransactionModal')
 );
+const CreateIncomeTransactionModal = lazy(
+  () => import('@/features/incomes/components/CreateIncomeModal')
+);
 
 const {
   EMAIL_VERIFICATION,
@@ -30,6 +33,7 @@ const {
   CUSTOM_WALLET,
   CUSTOM_ACCOUNT,
   CREATE_TRANSACTION,
+  CREATE_INCOME_TRANSACTION,
 } = MODAL_TYPES;
 
 const ModalManager: React.FC = () => {
@@ -97,6 +101,14 @@ const ModalManager: React.FC = () => {
       return (
         <Suspense fallback={null}>
           <CreateTransactionModal onClose={() => modalStore.closeModal()} />
+        </Suspense>
+      );
+    case CREATE_INCOME_TRANSACTION:
+      return (
+        <Suspense fallback={null}>
+          <CreateIncomeTransactionModal
+            onClose={() => modalStore.closeModal()}
+          />
         </Suspense>
       );
     default:

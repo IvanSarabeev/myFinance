@@ -38,11 +38,6 @@ const Dashboard: FC = () => {
     ...(expenseDetails?.recentTransactions || []),
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  console.log(
-    'expenseDetails?.last30DaysExpense?.transactions',
-    expenseDetails?.last30DaysExpenses?.transactions
-  );
-
   return (
     <Fragment>
       <section className="container account-container flex flex-col justify-center gap-4">
